@@ -19,10 +19,6 @@
 			]
 		},
 		{
-			"Name": "WebAPI",
-			"Enabled": true
-		},
-		{
 			"Name": "HttpBlueprint",
 			"Enabled": true
 		},
