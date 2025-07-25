@@ -55,20 +55,20 @@ void ADTCameraPawn::BeginPlay()
 	
 	//限制摄像机视角
 	APlayerCameraManager* PlayerCameraManager = GetWorld()->GetFirstPlayerController()->PlayerCameraManager;
-	PlayerCameraManager->ViewPitchMax = -5.f;
-	PlayerCameraManager->ViewPitchMin = -60.f;
+	PlayerCameraManager->ViewPitchMax = C_ViewPitchMax;
+	PlayerCameraManager->ViewPitchMin = C_ViewPitchMin;
 	//摄像机转动延迟
 	PC_SpringArm->bEnableCameraRotationLag = true;
-	PC_SpringArm->CameraRotationLagSpeed = 16.f;
-	//摄像机初始位置
-	AddControllerPitchInput(-35.f);
-	PC_SpringArm->TargetArmLength = 3000.f;
+	PC_SpringArm->CameraRotationLagSpeed = C_CameraRotationLagSpeed;
+	//摄像机初始位置;
+	PC_SpringArm->TargetArmLength = C_InitialSpringArmLength;
+	AddControllerPitchInput(C_InitialPitchInput);
 	//Pawn移动组件
-	PC_Movement->MaxSpeed = 4800.f;
-	PC_Movement->Acceleration= 48000.f;
-	PC_Movement->Deceleration = 12000.f;
-	PC_Movement->TurningBoost = 8.f;
-	
+	PC_Movement->MaxSpeed = P_MaxSpeed;
+	PC_Movement->Acceleration= P_Acceleration;
+	PC_Movement->Deceleration = P_Deceleration;
+	PC_Movement->TurningBoost = P_TurningBoost;
+
 }
 
 // 绑定增强输入
@@ -94,9 +94,9 @@ void ADTCameraPawn::OnMoveOngoing(const FInputActionValue& Value)
 	FVector3d MoveForward = GetActorForwardVector();
 	FVector3d MoveRight = GetActorRightVector();
 	//前后移动
-	PC_Movement->AddInputVector(FVector{MoveForward.X*MoveActionValue.Y*-2.f , MoveForward.Y*MoveActionValue.Y*-2.f, 0});
+	PC_Movement->AddInputVector(FVector{MoveForward.X * MoveActionValue.Y * I_ForwardMovementScale * -1.f , MoveForward.Y * MoveActionValue.Y * I_ForwardMovementScale * -1.f, 0});
 	//左右移动
-	PC_Movement->AddInputVector(FVector{MoveRight.X*MoveActionValue.X*-1.f, MoveRight.Y*MoveActionValue.X*-1.f, 0});	
+	PC_Movement->AddInputVector(FVector{MoveRight.X * MoveActionValue.X *I_RightMovementScale * -1.f, MoveRight.Y*MoveActionValue.X * I_RightMovementScale * -1.f, 0});	
 
 }
 
@@ -105,13 +105,14 @@ void ADTCameraPawn::OnRotateOngoing(const FInputActionValue& Value)
 	//获取IA_Move的值
 	const FVector2D MoveActionValue = EnhancedInput->GetBoundActionValue(IA_Move).Get<FVector2D>();
 	//纵向旋转
-	AddControllerPitchInput(MoveActionValue.Y*-2.f);
-	AddControllerYawInput(MoveActionValue.X*2.f);
+	AddControllerPitchInput(MoveActionValue.Y * I_PitchInputScale * -1.f);
+	AddControllerYawInput(MoveActionValue.X * I_YawInputScale);
 }
 
 void ADTCameraPawn::OnZoomTriggered(const FInputActionValue& Value)
 {
-	PC_SpringArm->TargetArmLength += Value.Get<float>()*20.f;
+	PC_SpringArm->TargetArmLength = FMath::Clamp(PC_SpringArm->TargetArmLength + Value.Get<float>()*I_ZoomScale, C_MinSpringArmLength, C_MaxSpringArmLength);
+	//PC_SpringArm->TargetArmLength += Value.Get<float>()*I_ZoomScale;
 }
 
 // Called every frame
@@ -119,6 +120,5 @@ void ADTCameraPawn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 }
-
 
 
