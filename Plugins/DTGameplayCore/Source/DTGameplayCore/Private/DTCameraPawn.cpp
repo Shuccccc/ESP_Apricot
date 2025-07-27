@@ -112,7 +112,6 @@ void ADTCameraPawn::OnRotateOngoing(const FInputActionValue& Value)
 void ADTCameraPawn::OnZoomTriggered(const FInputActionValue& Value)
 {
 	PC_SpringArm->TargetArmLength = FMath::Clamp(PC_SpringArm->TargetArmLength + Value.Get<float>()*I_ZoomScale, C_MinSpringArmLength, C_MaxSpringArmLength);
-	//PC_SpringArm->TargetArmLength += Value.Get<float>()*I_ZoomScale;
 }
 
 // Called every frame
