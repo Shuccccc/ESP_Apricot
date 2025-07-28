@@ -3,18 +3,22 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "HttpFwd.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "TestHttp.generated.h"
 
 /**
  * 
  */
+
 UENUM(BlueprintType)
-enum class ETestHttp : uint8
+enum class HttpVerb : uint8
 {
-	testhttp UMETA(DisplayName = "testhttp"),
-	Local UMETA(DisplayName = "Local"),
-	MaxNum UMETA(Hidden)
+	GET,
+	POST,
+	PUT,
+	DELETE,
+	CONNECT 
 } ;
 
 USTRUCT(BlueprintType)
@@ -24,7 +28,7 @@ struct FMyStruct
 	
 };
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_FourParams(FTestHttpDynamicDelegate, bool,IsSuccess, int32, StatusCode, FString,Message, FGuid, AsyncID);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FTestHttpDynamicDelegate, bool,IsSuccess, int32, StatusCode, FString,data);
 
 UCLASS()
 class ESP_APRICOT_API UTestHttp : public UBlueprintAsyncActionBase
@@ -36,7 +40,7 @@ public:
 	UTestHttp();
 
 	UFUNCTION(BlueprintCallable , meta = (BlueprintInternalUseOnly = "true", WorldContext = "WorldContextObject",DisplayName = "TestHttp" ))
-	static UTestHttp* TestHttpAsyncAction(UObject* WorldContextObject, ETestHttp TestHttp);
+	static UTestHttp* TestHttpAsyncAction(UObject* WorldContextObject, FString Url , HttpVerb Verb);
 
 	UPROPERTY(BlueprintAssignable)
 	FTestHttpDynamicDelegate OnCompleted;
@@ -44,12 +48,16 @@ public:
 	UPROPERTY(BlueprintAssignable)
 	FTestHttpDynamicDelegate OnFail;
 
-
-
-
-
-	
+	virtual void Activate() override;
 private:
 
+	void OnHttpRequestCompleted(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
+	void OnHttpRequestReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
+
+	void SendHttp(FString ServerURL);
 	
+	FString M_URL;
+	UPROPERTY(Transient)
+	UObject* M_WorldContextObject;
+	HttpVerb M_Verb = HttpVerb::GET;
 };
