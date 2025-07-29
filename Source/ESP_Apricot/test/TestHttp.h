@@ -22,11 +22,26 @@ enum class HttpVerb : uint8
 } ;
 
 USTRUCT(BlueprintType)
-struct FMyStruct
+struct FHttpRequestParams
 {
 	GENERATED_BODY()
-	
+
+	UPROPERTY()
+	FString URL;
+
+	UPROPERTY()
+	HttpVerb Verb;
+
+	UPROPERTY()
+	TMap<FString, FString> Headers;
+
+	UPROPERTY()
+	TMap<FString, FString> Params;
+
+	UPROPERTY()
+	TMap<FString, FString> Body;
 };
+
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FTestHttpDynamicDelegate, bool,IsSuccess, int32, StatusCode, FString,data);
 
@@ -40,7 +55,8 @@ public:
 	UTestHttp();
 
 	UFUNCTION(BlueprintCallable , meta = (BlueprintInternalUseOnly = "true", WorldContext = "WorldContextObject",DisplayName = "TestHttp" ))
-	static UTestHttp* TestHttpAsyncAction(UObject* WorldContextObject, FString Url , HttpVerb Verb);
+	static UTestHttp* TestHttpAsyncAction(UObject* WorldContextObject,
+		FString Url ,TMap<FString,FString> Headers, TMap<FString,FString> Params,TMap<FString,FString> Body);
 
 	UPROPERTY(BlueprintAssignable)
 	FTestHttpDynamicDelegate OnCompleted;
@@ -49,15 +65,27 @@ public:
 	FTestHttpDynamicDelegate OnFail;
 
 	virtual void Activate() override;
+	
 private:
 
-	void OnHttpRequestCompleted(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
-	void OnHttpRequestReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
+	void OnHttpRequestCompleted( FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
 
 	void SendHttp(FString ServerURL);
 	
 	FString M_URL;
+	
 	UPROPERTY(Transient)
 	UObject* M_WorldContextObject;
+	
 	HttpVerb M_Verb = HttpVerb::GET;
+
+
+	UPROPERTY()
+	TMap<FString,FString> M_Headers;
+
+	UPROPERTY()
+	TMap<FString,FString> M_Params;
+
+	UPROPERTY()
+	TMap<FString,FString> M_Body;
 };
