@@ -3,6 +3,7 @@
 
 #include "TestHttp.h"
 #include "Http.h"
+#include "Reflection/FunctionUtils.h"
 
 UTestHttp::UTestHttp()
 {
@@ -12,7 +13,6 @@ UTestHttp* UTestHttp::TestHttpAsyncAction(UObject* WorldContextObject, FString U
 {
 	UTestHttp* AsyncAction = NewObject<UTestHttp>();
 	AsyncAction->M_WorldContextObject = WorldContextObject;
-	//复制太多次了 移动语义思密达！
 	AsyncAction->M_URL = MoveTemp(URL); 
 	AsyncAction->M_Headers = MoveTemp(Headers);
 	AsyncAction->M_Params = MoveTemp(Params);
@@ -26,14 +26,13 @@ void UTestHttp::Activate()
 //	Async(EAsyncExecution::Thread , [this](){});
 	
 	RegisterWithGameInstance(M_WorldContextObject);
-	// 检查URL格式
 	
 	SendHttp(M_URL);
 }
 
 
 
-void UTestHttp::OnHttpRequestCompleted( FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
+void UTestHttp::OnHttpRequestCompleted( FHttpRequestPtr Request,UE::Reflection::, FHttpResponsePtr Response, bool bWasSuccessful)
 {
 	
 	// 检查 Response 是否有效
@@ -56,21 +55,16 @@ void UTestHttp::OnHttpRequestCompleted( FHttpRequestPtr Request, FHttpResponsePt
 		FString ErrorMessage = TEXT("Request failed or invalid response");
 		if (Request.IsValid())
 		{
-				ErrorMessage = FString::Printf(TEXT("Request failed - Status code: %d"), (int32)Request->GetStatus());
+			ErrorMessage = FString::Printf(TEXT("Request failed - Status code: %d"), (int32)Request->GetStatus());
 		}
 		if (Response.IsValid())
 		{
 			ErrorMessage += FString::Printf(TEXT(", Code: %d, Content: %s"), 
-				Response->GetResponseCode(), *Response->GetContentAsString());
+			Response->GetResponseCode(), *Response->GetContentAsString());
 		}
         
 		OnFail.Broadcast(false, 0, ErrorMessage);
 	}
-
-	//GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Red, ErrorMessage);
-	// 调试信息
-	/*GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Cyan, 
-		FString::Printf(TEXT("HTTP Request to: %s"), *M_URL));*/
 	
 	SetReadyToDestroy();
 }
@@ -83,9 +77,11 @@ void UTestHttp::SendHttp(FString ServerURL)
 	Request->OnProcessRequestComplete().BindUObject(this, &UTestHttp::OnHttpRequestCompleted);
 	Request->SetURL(ServerURL);
 	Request->SetVerb("GET");
-	/*Request->SetHeader(TEXT("User-Agent"), TEXT("UnrealEngine/5.5"));
-	Request->SetHeader(TEXT("Content-Type"), TEXT("application/json"));
-	Request->SetHeader(TEXT("Accept"), TEXT("application/json"));*/
 	Request->ProcessRequest();
 }
 
+/*
+	GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Red, ErrorMessage);
+	GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Cyan, 
+	FString::Printf(TEXT("HTTP Request to: %s"), *M_URL));
+*/
