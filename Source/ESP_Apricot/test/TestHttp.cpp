@@ -32,7 +32,7 @@ void UTestHttp::Activate()
 
 
 
-void UTestHttp::OnHttpRequestCompleted( FHttpRequestPtr Request,UE::Reflection::, FHttpResponsePtr Response, bool bWasSuccessful)
+void UTestHttp::OnHttpRequestCompleted( FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
 {
 	
 	// 检查 Response 是否有效
