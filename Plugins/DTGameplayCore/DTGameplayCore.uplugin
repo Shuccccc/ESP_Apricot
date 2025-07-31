@@ -2,7 +2,7 @@
 	"FileVersion": 3,
 	"Version": 1,
 	"VersionName": "1.0",
-	"FriendlyName": "DTGameplayCore",
+	"FriendlyName": "DtGameplayCore",
 	"Description": "",
 	"Category": "Other",
 	"CreatedBy": "abing",
@@ -16,7 +16,7 @@
 	"Installed": false,
 	"Modules": [
 		{
-			"Name": "DTGameplayCore",
+			"Name": "DtGameplayCore",
 			"Type": "Runtime",
 			"LoadingPhase": "Default"
 		}

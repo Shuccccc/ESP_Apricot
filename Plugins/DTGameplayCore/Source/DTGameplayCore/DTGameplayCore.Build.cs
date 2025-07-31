@@ -2,9 +2,9 @@
 
 using UnrealBuildTool;
 
-public class DTGameplayCore : ModuleRules
+public class DtGameplayCore : ModuleRules
 {
-	public DTGameplayCore(ReadOnlyTargetRules Target) : base(Target)
+	public DtGameplayCore(ReadOnlyTargetRules Target) : base(Target)
 	{
 		PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
 		
@@ -25,8 +25,7 @@ public class DTGameplayCore : ModuleRules
 		PublicDependencyModuleNames.AddRange(
 			new string[]
 			{
-				"Core",
-				"EnhancedInput"
+				"Core"
 				// ... add other public dependencies that you statically link with here ...
 			}
 			);
@@ -39,6 +38,7 @@ public class DTGameplayCore : ModuleRules
 				"Engine",
 				"Slate",
 				"SlateCore",
+				"EnhancedInput"
 				// ... add private dependencies that you statically link with here ...	
 			}
 			);

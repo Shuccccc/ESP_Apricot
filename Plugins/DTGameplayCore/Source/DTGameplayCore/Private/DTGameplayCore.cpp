@@ -1,15 +1,15 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
-#include "DTGameplayCore.h"
+#include "DtGameplayCore.h"
 
-#define LOCTEXT_NAMESPACE "FDTGameplayCoreModule"
+#define LOCTEXT_NAMESPACE "FDtGameplayCoreModule"
 
-void FDTGameplayCoreModule::StartupModule()
+void FDtGameplayCoreModule::StartupModule()
 {
 	// This code will execute after your module is loaded into memory; the exact timing is specified in the .uplugin file per-module
 }
 
-void FDTGameplayCoreModule::ShutdownModule()
+void FDtGameplayCoreModule::ShutdownModule()
 {
 	// This function may be called during shutdown to clean up your module.  For modules that support dynamic reloading,
 	// we call this function before unloading the module.
@@ -17,4 +17,4 @@ void FDTGameplayCoreModule::ShutdownModule()
 
 #undef LOCTEXT_NAMESPACE
 	
-IMPLEMENT_MODULE(FDTGameplayCoreModule, DTGameplayCore)
+IMPLEMENT_MODULE(FDtGameplayCoreModule, DtGameplayCore)

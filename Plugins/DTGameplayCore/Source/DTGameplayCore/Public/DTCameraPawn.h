@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
 #include "EnhancedInputSubsystems.h"
-#include "DTCameraPawn.generated.h"
+#include "DtCameraPawn.generated.h"
 
 //前向声明
 class UStaticMeshComponent ;
@@ -15,13 +15,13 @@ class UArrowComponent;
 class UFloatingPawnMovement;
 class UEnhancedInputComponent;
 UCLASS()
-class DTGAMEPLAYCORE_API ADTCameraPawn : public APawn
+class DTGAMEPLAYCORE_API ADtCameraPawn : public APawn
 {
 	GENERATED_BODY()
 
 public:
 	// Sets default values for this pawn's properties
-	ADTCameraPawn();
+	ADtCameraPawn();
 
 //组件
 	UPROPERTY(BlueprintReadOnly,Category="PawnComponent")

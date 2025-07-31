@@ -4,7 +4,7 @@
 
 #include "Modules/ModuleManager.h"
 
-class FDTGameplayCoreModule : public IModuleInterface
+class FDtGameplayCoreModule : public IModuleInterface
 {
 public:
 

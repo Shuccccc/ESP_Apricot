@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "DTCameraPawn.h"
+#include "DtCameraPawn.h"
 
 #include "EnhancedInputComponent.h"
 #include "Camera/CameraComponent.h"
@@ -10,7 +10,7 @@
 #include "GameFramework/SpringArmComponent.h"
 
 // Sets default values
-ADTCameraPawn::ADTCameraPawn()
+ADtCameraPawn::ADtCameraPawn()
 {
 	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
@@ -34,7 +34,7 @@ ADTCameraPawn::ADTCameraPawn()
 }
 
 // Called when the game starts or when spawned
-void ADTCameraPawn::BeginPlay()
+void ADtCameraPawn::BeginPlay()
 {
 	Super::BeginPlay();
 	
@@ -52,7 +52,7 @@ void ADTCameraPawn::BeginPlay()
 	//Pawn
 	bUseControllerRotationPitch = true;
 	bUseControllerRotationYaw = true;
-	
+	PC_SpringArm->bDoCollisionTest = false;
 	//限制摄像机视角
 	APlayerCameraManager* PlayerCameraManager = GetWorld()->GetFirstPlayerController()->PlayerCameraManager;
 	PlayerCameraManager->ViewPitchMax = C_ViewPitchMax;
@@ -72,21 +72,21 @@ void ADTCameraPawn::BeginPlay()
 }
 
 // 绑定增强输入
-void ADTCameraPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+void ADtCameraPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 	EnhancedInput = Cast<UEnhancedInputComponent>(PlayerInputComponent);
 	
-	EnhancedInput->BindAction(IA_Combo_move, ETriggerEvent::Ongoing, this, &ADTCameraPawn::OnMoveOngoing);
+	EnhancedInput->BindAction(IA_Combo_move, ETriggerEvent::Ongoing, this, &ADtCameraPawn::OnMoveOngoing);
 
-	EnhancedInput->BindAction(IA_Combo_rotate, ETriggerEvent::Ongoing, this, &ADTCameraPawn::OnRotateOngoing);
+	EnhancedInput->BindAction(IA_Combo_rotate, ETriggerEvent::Ongoing, this, &ADtCameraPawn::OnRotateOngoing);
 
-	EnhancedInput->BindAction(IA_Zoom, ETriggerEvent::Triggered, this, &ADTCameraPawn::OnZoomTriggered);
+	EnhancedInput->BindAction(IA_Zoom, ETriggerEvent::Triggered, this, &ADtCameraPawn::OnZoomTriggered);
 	
 	EnhancedInput->BindActionValue(IA_Move);
 	
 }
-void ADTCameraPawn::OnMoveOngoing(const FInputActionValue& Value) 
+void ADtCameraPawn::OnMoveOngoing(const FInputActionValue& Value) 
 {
 	//获取IA_Move的值
 	FVector2D MoveActionValue = EnhancedInput->GetBoundActionValue(IA_Move).Get<FVector2D>();
@@ -100,7 +100,7 @@ void ADTCameraPawn::OnMoveOngoing(const FInputActionValue& Value)
 
 }
 
-void ADTCameraPawn::OnRotateOngoing(const FInputActionValue& Value)
+void ADtCameraPawn::OnRotateOngoing(const FInputActionValue& Value)
 {
 	//获取IA_Move的值
 	const FVector2D MoveActionValue = EnhancedInput->GetBoundActionValue(IA_Move).Get<FVector2D>();
@@ -109,13 +109,13 @@ void ADTCameraPawn::OnRotateOngoing(const FInputActionValue& Value)
 	AddControllerYawInput(MoveActionValue.X * I_YawInputScale);
 }
 
-void ADTCameraPawn::OnZoomTriggered(const FInputActionValue& Value)
+void ADtCameraPawn::OnZoomTriggered(const FInputActionValue& Value)
 {
 	PC_SpringArm->TargetArmLength = FMath::Clamp(PC_SpringArm->TargetArmLength + Value.Get<float>()*I_ZoomScale, C_MinSpringArmLength, C_MaxSpringArmLength);
 }
 
 // Called every frame
-void ADTCameraPawn::Tick(float DeltaTime)
+void ADtCameraPawn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 }
