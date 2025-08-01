@@ -93,10 +93,30 @@ void ADtCameraPawn::OnMoveOngoing(const FInputActionValue& Value)
 	//获取方向
 	FVector3d MoveForward = GetActorForwardVector();
 	FVector3d MoveRight = GetActorRightVector();
-	//前后移动
-	PC_Movement->AddInputVector(FVector{MoveForward.X * MoveActionValue.Y * I_ForwardMovementScale * -1.f , MoveForward.Y * MoveActionValue.Y * I_ForwardMovementScale * -1.f, 0});
-	//左右移动
-	PC_Movement->AddInputVector(FVector{MoveRight.X * MoveActionValue.X *I_RightMovementScale * -1.f, MoveRight.Y*MoveActionValue.X * I_RightMovementScale * -1.f, 0});	
+	
+	M_CurrentLocation = GetActorLocation();
+	
+	M_MoveForward =
+		{
+			MoveForward.X * MoveActionValue.Y * I_ForwardMovementScale * -1.f,
+			MoveForward.Y * MoveActionValue.Y * I_ForwardMovementScale * -1.f,
+			0.f
+		};
+
+	M_MoveRight = 	{
+		MoveRight.X * MoveActionValue.X * I_RightMovementScale * -1.f,
+		MoveRight.Y * MoveActionValue.X * I_RightMovementScale * -1.f,
+		0.f
+	};
+
+	if (FMath::IsWithinInclusive((M_CurrentLocation+M_MoveForward).Y,C_CameraBounds.Min.Y,C_CameraBounds.Max.Y))
+	{
+		PC_Movement->AddInputVector(M_MoveForward);
+	}
+	if (FMath::IsWithinInclusive((M_CurrentLocation+M_MoveRight).X,C_CameraBounds.Min.X,C_CameraBounds.Max.X))
+	{
+		PC_Movement->AddInputVector(M_MoveRight);
+	}
 
 }
 
