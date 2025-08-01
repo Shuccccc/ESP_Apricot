@@ -147,9 +147,8 @@ private:
 	FVector3d M_MoveForward ;
 	UPROPERTY(Transient)
 	FVector3d M_MoveRight ;
-	UPROPERTY(Transient)
-	FVector3d M_CurrentLocation;
-
+	
+	
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

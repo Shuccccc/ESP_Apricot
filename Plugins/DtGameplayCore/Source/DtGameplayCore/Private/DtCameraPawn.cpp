@@ -15,23 +15,24 @@ ADtCameraPawn::ADtCameraPawn()
 	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
 
-//初始化组件
-	
+	//初始化组件
 	PC_RootMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PC_RootMesh"));
 	PC_SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("PC_SpringArm"));
 	PC_PawnCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("PC_PawnCamera"));
 	PC_Arrow = CreateDefaultSubobject<UArrowComponent>(TEXT("PC_Arrow"));
 	
-//Pawn移动组件
+	//Pawn移动组件
 	PC_Movement = CreateDefaultSubobject<UFloatingPawnMovement>(TEXT("PC_Movement"));
 	
-//设置组件层级
+	//设置组件层级
 	SetRootComponent(PC_RootMesh);
 	PC_SpringArm->SetupAttachment(PC_RootMesh);
 	PC_PawnCamera->SetupAttachment(PC_SpringArm);
 	PC_Arrow->SetupAttachment(PC_RootMesh);
 	
 }
+
+
 
 // Called when the game starts or when spawned
 void ADtCameraPawn::BeginPlay()
@@ -86,6 +87,7 @@ void ADtCameraPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 	EnhancedInput->BindActionValue(IA_Move);
 	
 }
+
 void ADtCameraPawn::OnMoveOngoing(const FInputActionValue& Value) 
 {
 	//获取IA_Move的值
@@ -93,9 +95,7 @@ void ADtCameraPawn::OnMoveOngoing(const FInputActionValue& Value)
 	//获取方向
 	FVector3d MoveForward = GetActorForwardVector();
 	FVector3d MoveRight = GetActorRightVector();
-	
-	M_CurrentLocation = GetActorLocation();
-	
+
 	M_MoveForward =
 		{
 			MoveForward.X * MoveActionValue.Y * I_ForwardMovementScale * -1.f,
@@ -103,12 +103,27 @@ void ADtCameraPawn::OnMoveOngoing(const FInputActionValue& Value)
 			0.f
 		};
 
-	M_MoveRight = 	{
+	M_MoveRight =
+		{
 		MoveRight.X * MoveActionValue.X * I_RightMovementScale * -1.f,
 		MoveRight.Y * MoveActionValue.X * I_RightMovementScale * -1.f,
 		0.f
-	};
+		};
 
+	PC_Movement->AddInputVector(M_MoveForward);
+	PC_Movement->AddInputVector(M_MoveRight);
+
+
+	//PC_Movement有隧穿 需要用碰撞限制
+	/*if (IsInBounds(M_MoveForward)) {
+		PC_Movement->AddInputVector(M_MoveForward);
+	}
+	if (IsInBounds(M_MoveRight)) {
+		PC_Movement->AddInputVector(M_MoveRight);
+	}*/
+
+	
+	/*
 	if (FMath::IsWithinInclusive((M_CurrentLocation+M_MoveForward).Y,C_CameraBounds.Min.Y,C_CameraBounds.Max.Y))
 	{
 		PC_Movement->AddInputVector(M_MoveForward);
@@ -116,7 +131,7 @@ void ADtCameraPawn::OnMoveOngoing(const FInputActionValue& Value)
 	if (FMath::IsWithinInclusive((M_CurrentLocation+M_MoveRight).X,C_CameraBounds.Min.X,C_CameraBounds.Max.X))
 	{
 		PC_Movement->AddInputVector(M_MoveRight);
-	}
+	}*/
 
 }
 
