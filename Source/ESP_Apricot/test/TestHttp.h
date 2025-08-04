@@ -12,7 +12,7 @@
  */
 
 UENUM(BlueprintType)
-enum class HttpVerb : uint8
+enum class HttpVerbA : uint8
 {
 	GET,
 	POST,
@@ -22,7 +22,7 @@ enum class HttpVerb : uint8
 } ;
 
 USTRUCT(BlueprintType)
-struct FHttpRequestParams
+struct FHttpRequestParamsA
 {
 	GENERATED_BODY()
 
@@ -30,7 +30,7 @@ struct FHttpRequestParams
 	FString URL;
 
 	UPROPERTY()
-	HttpVerb Verb;
+	HttpVerbA Verb;
 
 	UPROPERTY()
 	TMap<FString, FString> Headers;
@@ -77,7 +77,7 @@ private:
 	UPROPERTY(Transient)
 	UObject* M_WorldContextObject;
 	
-	HttpVerb M_Verb = HttpVerb::GET;
+	HttpVerbA M_Verb = HttpVerbA::GET;
 
 
 	UPROPERTY()

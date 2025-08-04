@@ -9,7 +9,7 @@ public class DtBpAsyncRequest : ModuleRules
         PublicDependencyModuleNames.AddRange(
             new string[]
             {
-                "Core",
+                "Core", "HTTP",
             }
         );
 
