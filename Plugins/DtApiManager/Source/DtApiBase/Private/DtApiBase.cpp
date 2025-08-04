@@ -1,0 +1,32 @@
+﻿#include "DtApiBase.h"
+
+#include "DtApiBaseConfig.h"
+#include "ISettingsModule.h"
+
+#define LOCTEXT_NAMESPACE "FDtApiBaseModule"
+
+
+void FDtApiBaseModule::StartupModule()
+{
+	//注册设置
+	if (ISettingsModule* SettingsModule = FModuleManager::GetModulePtr<ISettingsModule>("Settings"))
+	{
+		SettingsModule->RegisterSettings("Project","Plugins", "ApiManager",
+			LOCTEXT("ApiManager", "ApiManager"),
+			LOCTEXT("ApiManagerDescription", "Settings for ApiManager"),
+			GetMutableDefault<UDtApiBaseConfig>()
+		);
+	}
+}
+
+void FDtApiBaseModule::ShutdownModule()
+{
+	if (ISettingsModule* SettingsModule = FModuleManager::GetModulePtr<ISettingsModule>("Settings"))
+	{
+		SettingsModule->UnregisterSettings("Project", "Plugins", "ApiManager");
+	}
+}
+
+#undef LOCTEXT_NAMESPACE
+    
+IMPLEMENT_MODULE(FDtApiBaseModule, DtApiBase)

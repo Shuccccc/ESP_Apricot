@@ -19,6 +19,11 @@
 			"Name": "DtApiManager",
 			"Type": "Runtime",
 			"LoadingPhase": "Default"
+		},
+		{
+			"Name": "DtApiBase",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
 		}
 	]
 }
