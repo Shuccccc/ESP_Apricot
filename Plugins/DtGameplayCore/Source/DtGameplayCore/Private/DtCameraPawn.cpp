@@ -149,6 +149,21 @@ void ADtCameraPawn::OnZoomTriggered(const FInputActionValue& Value)
 	PC_SpringArm->TargetArmLength = FMath::Clamp(PC_SpringArm->TargetArmLength + Value.Get<float>()*I_ZoomScale, C_MinSpringArmLength, C_MaxSpringArmLength);
 }
 
+//@TODO 接近边界时调低移动速度
+void ADtCameraPawn::test()
+{
+	auto temLocation = PC_RootMesh->GetComponentLocation();
+	auto temBounds = FCameraBounds{};
+	auto temDistance  = FVector::Distance(temLocation, FVector(temBounds.Max.X, temBounds.Max.Y,0));
+	if (temDistance < 500)
+	{
+		//限制摄像机移动速度
+		
+	}
+	//恢复摄像机移动速度
+	
+}
+
 // Called every frame
 void ADtCameraPawn::Tick(float DeltaTime)
 {

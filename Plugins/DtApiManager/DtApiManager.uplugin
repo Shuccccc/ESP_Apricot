@@ -2,7 +2,7 @@
 	"FileVersion": 3,
 	"Version": 1,
 	"VersionName": "1.0",
-	"FriendlyName": "DtGameplayCore",
+	"FriendlyName": "DtApiManager",
 	"Description": "",
 	"Category": "Other",
 	"CreatedBy": "abing",
@@ -16,12 +16,7 @@
 	"Installed": false,
 	"Modules": [
 		{
-			"Name": "DtGameplayCore",
-			"Type": "Runtime",
-			"LoadingPhase": "Default"
-		},
-		{
-			"Name": "DtApiBase",
+			"Name": "DtApiManager",
 			"Type": "Runtime",
 			"LoadingPhase": "Default"
 		}

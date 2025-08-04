@@ -3,7 +3,6 @@
 
 #include "TestHttp.h"
 #include "Http.h"
-#include "Reflection/FunctionUtils.h"
 
 UTestHttp::UTestHttp()
 {

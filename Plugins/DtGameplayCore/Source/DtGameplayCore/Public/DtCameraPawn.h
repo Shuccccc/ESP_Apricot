@@ -141,14 +141,14 @@ public:
 	void OnRotateOngoing(const FInputActionValue& Value);
 	UFUNCTION()
 	void OnZoomTriggered(const FInputActionValue& Value);
-
+	void test();
 private:
 	UPROPERTY(Transient)
 	FVector3d M_MoveForward ;
 	UPROPERTY(Transient)
 	FVector3d M_MoveRight ;
 	
-	
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
