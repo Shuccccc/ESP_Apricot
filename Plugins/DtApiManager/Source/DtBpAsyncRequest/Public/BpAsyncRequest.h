@@ -22,21 +22,19 @@ class DTBPASYNCREQUEST_API UBpAsyncRequest : public UBlueprintAsyncActionBase
 
 public:
 	
-	//创建Http异步请求
 	UFUNCTION(BlueprintCallable , meta = (BlueprintInternalUseOnly = "true", WorldContext = "WorldContextObject",DisplayName = "GetDataWithParamter" ))
 	static UBpAsyncRequest* CreateAsyncRequest(UObject* WorldContextObject,FString Url,TMap<FString,FString> Headers,TMap<FString,FString> Params,TMap<FString,FString> Body);
 
-	//成功回调
 	UPROPERTY(BlueprintAssignable)
 	FHttpDynamicDelegate OnCompleted;
-	//失败回调
+
 	UPROPERTY(BlueprintAssignable)
 	FHttpDynamicDelegate OnFail;
-
-	//开始异步请求
+	
 	virtual void Activate() override;
 	
 private:
+	
 	void OnHttpRequestCompleted( FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
 	
 	UBpAsyncRequest();

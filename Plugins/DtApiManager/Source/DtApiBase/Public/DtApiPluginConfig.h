@@ -4,19 +4,17 @@
 
 #include "CoreMinimal.h"
 #include "UObject/Object.h"
-#include "DtApiBaseConfig.generated.h"
+#include "DtApiPluginConfig.generated.h"
 
 /**
  * 
  */
 UCLASS(Config="ApiManager",DefaultConfig)
-class DTAPIBASE_API UDtApiBaseConfig : public UObject
+class DTAPIBASE_API UDtApiPluginConfig : public UObject
 {
 	GENERATED_BODY()
 public:
 	UPROPERTY(Config, EditAnywhere, Category = "ApiManager")
-	TMap<FName,FString> TestVla;
-
-	
+	TSoftObjectPtr<UDataTable> ApiDataTable;
 	
 };

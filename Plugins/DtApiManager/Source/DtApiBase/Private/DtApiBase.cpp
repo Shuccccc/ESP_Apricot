@@ -1,6 +1,6 @@
 ﻿#include "DtApiBase.h"
 
-#include "DtApiBaseConfig.h"
+#include "DtApiPluginConfig.h"
 #include "ISettingsModule.h"
 
 #define LOCTEXT_NAMESPACE "FDtApiBaseModule"
@@ -14,7 +14,7 @@ void FDtApiBaseModule::StartupModule()
 		SettingsModule->RegisterSettings("Project","Plugins", "ApiManager",
 			LOCTEXT("ApiManager", "ApiManager"),
 			LOCTEXT("ApiManagerDescription", "Settings for ApiManager"),
-			GetMutableDefault<UDtApiBaseConfig>()
+			GetMutableDefault<UDtApiPluginConfig>()
 		);
 	}
 }
