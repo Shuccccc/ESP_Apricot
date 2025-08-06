@@ -13,4 +13,5 @@ UCLASS()
 class DTAPIBASE_API UServerConfigLoader : public UObject
 {
 	GENERATED_BODY()
+	
 };

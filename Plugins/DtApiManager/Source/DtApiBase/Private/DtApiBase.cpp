@@ -1,8 +1,7 @@
 ﻿#include "DtApiBase.h"
-
 #include "DtApiPluginConfig.h"
-#include "ISettingsModule.h"
-
+#include "Developer/Settings/Public/ISettingsModule.h"
+	
 #define LOCTEXT_NAMESPACE "FDtApiBaseModule"
 
 
@@ -17,6 +16,7 @@ void FDtApiBaseModule::StartupModule()
 			GetMutableDefault<UDtApiPluginConfig>()
 		);
 	}
+	
 }
 
 void FDtApiBaseModule::ShutdownModule()

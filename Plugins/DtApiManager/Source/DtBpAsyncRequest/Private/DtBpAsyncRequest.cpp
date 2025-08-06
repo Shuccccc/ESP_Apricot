@@ -1,5 +1,7 @@
 ﻿#include "DtBpAsyncRequest.h"
 
+DEFINE_LOG_CATEGORY(LogBpAsyncRequest);
+
 #define LOCTEXT_NAMESPACE "FDtBpAsyncRequestModule"
 
 void FDtBpAsyncRequestModule::StartupModule()

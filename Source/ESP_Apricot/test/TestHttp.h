@@ -30,8 +30,7 @@ struct FHttpRequestParamsDemo
 	FString URL;
 
 	UPROPERTY()
-	HttpVerbDemo Verb;
-
+	HttpVerbDemo Verb = HttpVerbDemo::GET;  // 添加默认初始化值
 	UPROPERTY()
 	TMap<FString, FString> Headers;
 

@@ -36,7 +36,7 @@ struct FHttpRequestParams
 	FString URL;
 
 	UPROPERTY()
-	HttpVerb Verb;
+	HttpVerb Verb = HttpVerb::GET;
 
 	UPROPERTY()
 	TMap<FString, FString> Headers;
@@ -57,13 +57,13 @@ struct FApiDataTable : public FTableRowBase
 	FString Value;
 
 	UPROPERTY(EditDefaultsOnly, meta = (Display = "请求类型"), BlueprintReadWrite, Category = "Table")
-	HttpVerb RequestType;
+	HttpVerb Verb = HttpVerb::GET;
 
 	UPROPERTY(EditDefaultsOnly, meta = (Display = "平台"), BlueprintReadWrite, Category = "Table")
 	FName PlatForm;
 	
 	UPROPERTY(EditDefaultsOnly, meta = (Display = "请求数据类型"), BlueprintReadWrite, Category = "Table")
-	EDtContentType ContentType;
+	EDtContentType ContentType = EDtContentType::JSON;
 	
 	UPROPERTY(EditDefaultsOnly, meta = (Display = "备注"), BlueprintReadWrite, Category = "Table")
 	FString Marks;
