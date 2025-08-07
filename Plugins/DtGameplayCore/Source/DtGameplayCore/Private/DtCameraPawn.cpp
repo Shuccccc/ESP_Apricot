@@ -96,7 +96,11 @@ void ADtCameraPawn::OnMoveOngoing(const FInputActionValue& Value)
 	FVector3d MoveForward = GetActorForwardVector();
 	FVector3d MoveRight = GetActorRightVector();
 
-	M_MoveForward =
+	PC_Movement->AddInputVector(FVector{MoveForward.X * MoveActionValue.Y * I_ForwardMovementScale * -1.f,MoveForward.Y * MoveActionValue.Y * I_ForwardMovementScale * -1.f,0.f});
+	
+	PC_Movement->AddInputVector(FVector{MoveRight.X * MoveActionValue.X * I_RightMovementScale * -1.f,MoveRight.Y * MoveActionValue.X * I_RightMovementScale * -1.f,0.f});
+	
+	/*M_MoveForward =
 		{
 			MoveForward.X * MoveActionValue.Y * I_ForwardMovementScale * -1.f,
 			MoveForward.Y * MoveActionValue.Y * I_ForwardMovementScale * -1.f,
@@ -111,7 +115,7 @@ void ADtCameraPawn::OnMoveOngoing(const FInputActionValue& Value)
 		};
 
 	PC_Movement->AddInputVector(M_MoveForward);
-	PC_Movement->AddInputVector(M_MoveRight);
+	PC_Movement->AddInputVector(M_MoveRight);*/
 
 
 	//PC_Movement有隧穿 需要用碰撞限制
