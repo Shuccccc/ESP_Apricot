@@ -1,0 +1,24 @@
+{
+	"FileVersion": 3,
+	"Version": 1,
+	"VersionName": "1.0",
+	"FriendlyName": "DtPoiManager",
+	"Description": "",
+	"Category": "Other",
+	"CreatedBy": "abing",
+	"CreatedByURL": "",
+	"DocsURL": "",
+	"MarketplaceURL": "",
+	"SupportURL": "",
+	"CanContainContent": true,
+	"IsBetaVersion": false,
+	"IsExperimentalVersion": false,
+	"Installed": false,
+	"Modules": [
+		{
+			"Name": "DtPoiManager",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		}
+	]
+}
