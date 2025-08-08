@@ -83,8 +83,8 @@ public:
 	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category = "DefaultProperty|CameraSettings", meta = (DisplayName = "限制最小Pitch"))
 	float C_ViewPitchMin = -60.f;
 	//摄像机边界限制
-	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category = "DefaultProperty|CameraSettings", meta = (DisplayName = "限制摄像机边界"))
-	FCameraBounds C_CameraBounds = FCameraBounds(168000.f, 168000.f, -168000.f, -168000.f);
+//	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category = "DefaultProperty|CameraSettings", meta = (DisplayName = "限制摄像机边界"))
+//	FCameraBounds C_CameraBounds = FCameraBounds(168000.f, 168000.f, -168000.f, -168000.f);
 	//最大摄像机臂长度
 	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category = "DefaultProperty|CameraSettings", meta = (DisplayName = "最大摄像机臂长度"))
 	float C_MaxSpringArmLength = 5000.f;
@@ -133,6 +133,9 @@ public:
 	//Pawn旋转时加速度
 	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category = "DefaultProperty|MovementSettings", meta = (DisplayName = "Pawn旋转时加速度",EditCondition="SetPawnDef"))
 	float P_TurningBoost = 8.f;
+	//Pawn目标臂缓动
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "DefaultProperty|CameraSettings", meta = (DisplayName = "缩放平滑插值",EditCondition="SetPawnDef"))
+	float ZoomInterpSpeed = 8.0f;
 	
 	//增强输入::CallBack
 	UFUNCTION()
@@ -141,16 +144,24 @@ public:
 	void OnRotateOngoing(const FInputActionValue& Value);
 	UFUNCTION()
 	void OnZoomTriggered(const FInputActionValue& Value);
-	void test();
+//	UFUNCTION()
+//	void OnZoomCompleted(const FInputActionValue& Value);
 	
 private:
 	
+	UPROPERTY()
+	bool bIsZooming = false; 
+	
+	UPROPERTY()
+	float M_TargetSpringArmLength = 0.0f; 
+
+	void UpdateZoomSmoothing(float DeltaTime);
+	/*
 	UPROPERTY(Transient)
 	FVector3d M_MoveForward;
-	
 	UPROPERTY(Transient)
 	FVector3d M_MoveRight;
-	
+	*/
 protected:
 	
 	// Called when the game starts or when spawned
@@ -164,3 +175,5 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 };
+
+

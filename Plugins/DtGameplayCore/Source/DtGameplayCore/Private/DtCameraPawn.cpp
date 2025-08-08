@@ -13,17 +13,14 @@
 ADtCameraPawn::ADtCameraPawn()
 {
 	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = false;
-
+	PrimaryActorTick.bCanEverTick = true;
 	//初始化组件
 	PC_RootMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PC_RootMesh"));
 	PC_SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("PC_SpringArm"));
 	PC_PawnCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("PC_PawnCamera"));
 	PC_Arrow = CreateDefaultSubobject<UArrowComponent>(TEXT("PC_Arrow"));
-	
 	//Pawn移动组件
 	PC_Movement = CreateDefaultSubobject<UFloatingPawnMovement>(TEXT("PC_Movement"));
-	
 	//设置组件层级
 	SetRootComponent(PC_RootMesh);
 	PC_SpringArm->SetupAttachment(PC_RootMesh);
@@ -61,15 +58,21 @@ void ADtCameraPawn::BeginPlay()
 	//摄像机转动延迟
 	PC_SpringArm->bEnableCameraRotationLag = true;
 	PC_SpringArm->CameraRotationLagSpeed = C_CameraRotationLagSpeed;
+	/*摄像机臂延迟
+	PC_SpringArm->bEnableCameraLag = true;
+	PC_SpringArm->CameraLagSpeed = 100;
+	PC_SpringArm->CameraLagMaxDistance = 1000.0f; // 限制最大滞后距离
+	*/
 	//摄像机初始位置;
 	PC_SpringArm->TargetArmLength = C_InitialSpringArmLength;
+	M_TargetSpringArmLength = C_InitialSpringArmLength; // 初始化目标臂长
 	AddControllerPitchInput(C_InitialPitchInput);
 	//Pawn移动组件
 	PC_Movement->MaxSpeed = P_MaxSpeed;
 	PC_Movement->Acceleration= P_Acceleration;
 	PC_Movement->Deceleration = P_Deceleration;
 	PC_Movement->TurningBoost = P_TurningBoost;
-
+	
 }
 
 // 绑定增强输入
@@ -100,43 +103,7 @@ void ADtCameraPawn::OnMoveOngoing(const FInputActionValue& Value)
 	
 	PC_Movement->AddInputVector(FVector{MoveRight.X * MoveActionValue.X * I_RightMovementScale * -1.f,MoveRight.Y * MoveActionValue.X * I_RightMovementScale * -1.f,0.f},true);
 	
-	/*M_MoveForward =
-		{
-			MoveForward.X * MoveActionValue.Y * I_ForwardMovementScale * -1.f,
-			MoveForward.Y * MoveActionValue.Y * I_ForwardMovementScale * -1.f,
-			0.f
-		};
-
-	M_MoveRight =
-		{
-		MoveRight.X * MoveActionValue.X * I_RightMovementScale * -1.f,
-		MoveRight.Y * MoveActionValue.X * I_RightMovementScale * -1.f,
-		0.f
-		};
-
-	PC_Movement->AddInputVector(M_MoveForward);
-	PC_Movement->AddInputVector(M_MoveRight);*/
-
-
-	//PC_Movement有隧穿 需要用碰撞限制
-	/*if (IsInBounds(M_MoveForward)) {
-		PC_Movement->AddInputVector(M_MoveForward);
-	}
-	if (IsInBounds(M_MoveRight)) {
-		PC_Movement->AddInputVector(M_MoveRight);
-	}*/
-
-	
-	/*
-	if (FMath::IsWithinInclusive((M_CurrentLocation+M_MoveForward).Y,C_CameraBounds.Min.Y,C_CameraBounds.Max.Y))
-	{
-		PC_Movement->AddInputVector(M_MoveForward);
-	}
-	if (FMath::IsWithinInclusive((M_CurrentLocation+M_MoveRight).X,C_CameraBounds.Min.X,C_CameraBounds.Max.X))
-	{
-		PC_Movement->AddInputVector(M_MoveRight);
-	}*/
-
+	//PC_Movement有隧穿 需要用碰撞限制移动
 }
 
 void ADtCameraPawn::OnRotateOngoing(const FInputActionValue& Value)
@@ -150,28 +117,36 @@ void ADtCameraPawn::OnRotateOngoing(const FInputActionValue& Value)
 
 void ADtCameraPawn::OnZoomTriggered(const FInputActionValue& Value)
 {
-	PC_SpringArm->TargetArmLength = FMath::Clamp(PC_SpringArm->TargetArmLength + Value.Get<float>()*I_ZoomScale, C_MinSpringArmLength, C_MaxSpringArmLength);
+	// 计算新的目标臂长
+	float NewTargetArmLength = M_TargetSpringArmLength + Value.Get<float>()*I_ZoomScale;
+	NewTargetArmLength = FMath::Clamp(NewTargetArmLength, C_MinSpringArmLength, C_MaxSpringArmLength);
+	
+	// 设置目标臂长
+	M_TargetSpringArmLength = NewTargetArmLength;
+	bIsZooming = true;
 }
 
-//@TODO 接近边界时调低移动速度
-void ADtCameraPawn::test()
+void ADtCameraPawn::UpdateZoomSmoothing(float DeltaTime)
 {
-	auto temLocation = PC_RootMesh->GetComponentLocation();
-	auto temBounds = FCameraBounds{};
-	auto temDistance  = FVector::Distance(temLocation, FVector(temBounds.Max.X, temBounds.Max.Y,0));
-	if (temDistance < 500)
+	if (PC_SpringArm || bIsZooming)
 	{
-		//限制摄像机移动速度
-		
-	}
-	//恢复摄像机移动速度
+		PC_SpringArm->TargetArmLength = FMath::FInterpTo(PC_SpringArm->TargetArmLength, M_TargetSpringArmLength, DeltaTime, ZoomInterpSpeed);
 	
+		if (FMath::IsNearlyEqual(PC_SpringArm->TargetArmLength, M_TargetSpringArmLength, 0.1f))
+		{
+			PC_SpringArm->TargetArmLength = M_TargetSpringArmLength;
+			bIsZooming = false;
+		}
+	}
 }
 
 // Called every frame
 void ADtCameraPawn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	
+	UpdateZoomSmoothing(DeltaTime);
+
 }
 
 
