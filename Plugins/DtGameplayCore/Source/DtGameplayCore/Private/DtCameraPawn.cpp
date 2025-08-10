@@ -86,6 +86,8 @@ void ADtCameraPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 	EnhancedInput->BindAction(IA_Combo_rotate, ETriggerEvent::Ongoing, this, &ADtCameraPawn::OnRotateOngoing);
 
 	EnhancedInput->BindAction(IA_Zoom, ETriggerEvent::Triggered, this, &ADtCameraPawn::OnZoomTriggered);
+
+	EnhancedInput->BindAction(IA_Zoom, ETriggerEvent::Completed, this, &ADtCameraPawn::OnZoomCompleted);
 	
 	EnhancedInput->BindActionValue(IA_Move);
 	
@@ -126,6 +128,11 @@ void ADtCameraPawn::OnZoomTriggered(const FInputActionValue& Value)
 	bIsZooming = true;
 }
 
+void ADtCameraPawn::OnZoomCompleted(const FInputActionValue& Value)
+{
+	bIsZooming = false;
+}
+
 void ADtCameraPawn::UpdateZoomSmoothing(float DeltaTime)
 {
 	if (PC_SpringArm || bIsZooming)
@@ -135,7 +142,7 @@ void ADtCameraPawn::UpdateZoomSmoothing(float DeltaTime)
 		if (FMath::IsNearlyEqual(PC_SpringArm->TargetArmLength, M_TargetSpringArmLength, 0.1f))
 		{
 			PC_SpringArm->TargetArmLength = M_TargetSpringArmLength;
-			bIsZooming = false;
+//			bIsZooming = false;
 		}
 	}
 }
@@ -146,7 +153,6 @@ void ADtCameraPawn::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 	
 	UpdateZoomSmoothing(DeltaTime);
-
 }
 
 

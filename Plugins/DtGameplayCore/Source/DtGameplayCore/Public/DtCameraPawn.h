@@ -144,8 +144,8 @@ public:
 	void OnRotateOngoing(const FInputActionValue& Value);
 	UFUNCTION()
 	void OnZoomTriggered(const FInputActionValue& Value);
-//	UFUNCTION()
-//	void OnZoomCompleted(const FInputActionValue& Value);
+	UFUNCTION()
+	void OnZoomCompleted(const FInputActionValue& Value);
 	
 private:
 	
