@@ -6,6 +6,7 @@
 #include "GlobalSearchSubsystem.h"
 #include "Blueprint/UserWidget.h"
 #include "Components/WidgetComponent.h"
+#include "Components/ChildActorComponent.h"
 
 
 // Sets default values
@@ -14,9 +15,7 @@ ADtPoiActor::ADtPoiActor()
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	PoiWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("PoiWidget"));
-	
-	RootComponent->SetupAttachment(PoiWidget);
-	
+	MountActor = CreateDefaultSubobject<UChildActorComponent>(TEXT("SubActor"));
 }
 
 ADtPoiActor* ADtPoiActor::SetWidget(UUserWidget* Widget)

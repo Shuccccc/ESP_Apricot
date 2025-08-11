@@ -3,6 +3,7 @@
 
 #include "PoiAbilityComponent.h"
 #include "DtPoiActor.h"
+#include "Components/WidgetComponent.h"
 
 // Sets default values for this component's properties
 UPoiAbilityComponent::UPoiAbilityComponent()
@@ -22,17 +23,20 @@ ADtPoiActor* UPoiAbilityComponent::GetPoiActor(FString PoiID)
 
 void UPoiAbilityComponent::ReleasesPoi(ADtPoiActor* PoiActor)
 {
-	for (auto i :PoiActor->Children)
-	{
-		i->Destroy();
-	}
+	PoiActor->PoiWidget->GetWidget()->RemoveFromParent();
 	PoiActor->Destroy();
-	
 }
 
-void UPoiAbilityComponent::SetPoiVisibility(bool bHide)
+void UPoiAbilityComponent::SetPoiVisibility(ADtPoiActor* PoiActor,bool bHide)
 {
-	
+	PoiActor->SetActorHiddenInGame(!bHide);
+	for (auto i : PoiActor->GetComponents())
+	{
+		if (USceneComponent* SceneComponent = Cast<USceneComponent>(i))
+		{
+			SceneComponent->SetHiddenInGame(!bHide);
+		}
+	}
 }
 
 

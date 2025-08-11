@@ -24,7 +24,7 @@ public:
 	void ReleasesPoi(ADtPoiActor *PoiActor);
 
 	UFUNCTION(BlueprintCallable , Category = "Poi")
-	void SetPoiVisibility(bool bHide);
+	void SetPoiVisibility(ADtPoiActor *PoiActor,bool bHide);
 
 	
 private:

@@ -18,9 +18,11 @@ public:
 	// Sets default values for this actor's properties
 	ADtPoiActor();
 	
-	UPROPERTY(BlueprintReadOnly)
-	UWidgetComponent *PoiWidget;
+	UPROPERTY(BlueprintReadWrite)
+	UWidgetComponent* PoiWidget;
 
+	UPROPERTY(BlueprintReadWrite)
+	UChildActorComponent* MountActor;
 //设置Widget
 	UFUNCTION(BlueprintCallable , Category = "SetPoiWidget")
 	ADtPoiActor* SetWidget(UUserWidget *Widget);
@@ -28,11 +30,6 @@ public:
 	UFUNCTION(BlueprintCallable , Category = "SetPoiWidget")
 	ADtPoiActor* SetPivot(FVector2D Pivot);
 
-private:
-
-	UPROPERTY()
-	TArray<AActor*> SubActor ;  
-	
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
