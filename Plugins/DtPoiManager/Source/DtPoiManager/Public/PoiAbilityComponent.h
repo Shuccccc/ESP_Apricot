@@ -6,7 +6,9 @@
 #include "Components/ActorComponent.h"
 #include "PoiAbilityComponent.generated.h"
 
-class ADtPoiActor;
+class ADtPoiActorBase;
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FWidgetClickedDelegate, ADtPoiActorBase*,POIActor, FString,data);
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class DTPOIMANAGER_API UPoiAbilityComponent : public UActorComponent
@@ -17,20 +19,34 @@ public:
 	// Sets default values for this component's properties
 	UPoiAbilityComponent();
 
-	UFUNCTION(BlueprintCallable , Category = "Poi")
-	ADtPoiActor* GetPoiActor(FString PoiID);
+	UFUNCTION(BlueprintCallable , Category = "PoiComponent",Meta = (DeterminesOutputType = "PoiClass"))
+	ADtPoiActorBase* GetPoiActor(TSubclassOf<ADtPoiActorBase> PoiClass,FString PoiID);
 	
-	UFUNCTION(BlueprintCallable , Category = "Poi")
-	void ReleasesPoi(ADtPoiActor *PoiActor);
+	UFUNCTION(BlueprintCallable , Category = "PoiComponent")
+	void ReleasesPoi(ADtPoiActorBase *PoiActor);
 
-	UFUNCTION(BlueprintCallable , Category = "Poi")
-	void SetPoiVisibility(ADtPoiActor *PoiActor,bool bHide);
+	UFUNCTION(BlueprintCallable , Category = "PoiComponent")
+	void SetPoiVisibility(ADtPoiActorBase *PoiActor,bool bHide);
 
+	UFUNCTION(BlueprintCallable , Category = "PoiComponent")
+	void ReleasesAllPoi();
+
+	UFUNCTION(BlueprintCallable , Category = "PoiComponent")
+	ADtPoiActorBase* GetPoiActorById(FString PoiID) const;
+
+	UPROPERTY(BlueprintAssignable , Category = "PoiDelegate")
+	FWidgetClickedDelegate OnWidgetClicked_B;
+
+	UPROPERTY(BlueprintAssignable , Category = "PoiDelegate")
+	FWidgetClickedDelegate OnWidgetClicked_C;
+
+	UPROPERTY(BlueprintAssignable , Category = "PoiDelegate")
+	FWidgetClickedDelegate OnWidgetClicked_D;
 	
 private:
 	
 	UPROPERTY()
-	TMap<FString , ADtPoiActor*> PoiActorMap;
+	TMap<FString , ADtPoiActorBase*> PoiActorMap;
 	
 protected:
 	// Called when the game starts

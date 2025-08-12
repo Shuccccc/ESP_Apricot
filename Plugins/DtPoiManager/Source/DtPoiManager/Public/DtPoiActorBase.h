@@ -5,18 +5,18 @@
 #include "CoreMinimal.h"
 #include "GlobalSearchInterface.h"
 #include "GameFramework/Actor.h"
-#include "DtPoiActor.generated.h"
+#include "DtPoiActorBase.generated.h"
 
 class UWidgetComponent;
 
 UCLASS()
-class DTPOIMANAGER_API ADtPoiActor : public AActor
+class DTPOIMANAGER_API ADtPoiActorBase : public AActor
 {
 	GENERATED_BODY()
 
 public:
 	// Sets default values for this actor's properties
-	ADtPoiActor();
+	ADtPoiActorBase();
 	
 	UPROPERTY(BlueprintReadWrite)
 	UWidgetComponent* PoiWidget;
@@ -25,11 +25,13 @@ public:
 	UChildActorComponent* MountActor;
 //设置Widget
 	UFUNCTION(BlueprintCallable , Category = "SetPoiWidget")
-	ADtPoiActor* SetWidget(UUserWidget *Widget);
+	ADtPoiActorBase* SetWidget(UUserWidget *Widget);
 	
 	UFUNCTION(BlueprintCallable , Category = "SetPoiWidget")
-	ADtPoiActor* SetPivot(FVector2D Pivot);
-
+	ADtPoiActorBase* SetPivot(FVector2D Pivot);
+	
+	UFUNCTION(BlueprintCallable , Category = "PoiComponent")
+	ADtPoiActorBase* GetPoiActorById(FString PoiID) const;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

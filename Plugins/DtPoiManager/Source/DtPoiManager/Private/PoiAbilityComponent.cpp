@@ -2,7 +2,7 @@
 
 
 #include "PoiAbilityComponent.h"
-#include "DtPoiActor.h"
+#include "DtPoiActorBase.h"
 #include "Components/WidgetComponent.h"
 
 // Sets default values for this component's properties
@@ -15,19 +15,26 @@ UPoiAbilityComponent::UPoiAbilityComponent()
 	// ...
 }
 
-ADtPoiActor* UPoiAbilityComponent::GetPoiActor(FString PoiID)
+ADtPoiActorBase* UPoiAbilityComponent::GetPoiActor(TSubclassOf<ADtPoiActorBase> PoiClass,FString PoiID)
 {
+	//生成actor
+	auto i= GetWorld()->SpawnActor<ADtPoiActorBase>(PoiClass);
 	
-	return nullptr;
+	PoiActorMap.Add(PoiID,i);
+	
+	return i ;
 }
-
-void UPoiAbilityComponent::ReleasesPoi(ADtPoiActor* PoiActor)
+ADtPoiActorBase* UPoiAbilityComponent::GetPoiActorById(FString PoiID) const
+{
+	return PoiActorMap.FindRef(PoiID);
+}
+void UPoiAbilityComponent::ReleasesPoi(ADtPoiActorBase* PoiActor)
 {
 	PoiActor->PoiWidget->GetWidget()->RemoveFromParent();
 	PoiActor->Destroy();
 }
 
-void UPoiAbilityComponent::SetPoiVisibility(ADtPoiActor* PoiActor,bool bHide)
+void UPoiAbilityComponent::SetPoiVisibility(ADtPoiActorBase* PoiActor,bool bHide)
 {
 	PoiActor->SetActorHiddenInGame(!bHide);
 	for (auto i : PoiActor->GetComponents())
@@ -39,6 +46,14 @@ void UPoiAbilityComponent::SetPoiVisibility(ADtPoiActor* PoiActor,bool bHide)
 	}
 }
 
+void UPoiAbilityComponent::ReleasesAllPoi()
+{
+	for (auto i : PoiActorMap)
+	{
+		ReleasesPoi(i.Value);
+	}
+	PoiActorMap.Empty();
+}
 
 // Called when the game starts
 void UPoiAbilityComponent::BeginPlay()
