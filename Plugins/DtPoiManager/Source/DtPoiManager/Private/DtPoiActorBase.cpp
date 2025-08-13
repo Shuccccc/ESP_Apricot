@@ -18,12 +18,17 @@ ADtPoiActorBase::ADtPoiActorBase()
 	MountActor = CreateDefaultSubobject<UChildActorComponent>(TEXT("SubActor"));
 }
 
+ADtPoiActorBase* ADtPoiActorBase::SetWidget(UUserWidget* Widget)
+{
+	PoiWidget->SetWidget(Widget);
+	return this;
+}
+
 ADtPoiActorBase* ADtPoiActorBase::SetPivot(FVector2D Pivot)
 {
 	PoiWidget->SetPivot(Pivot);
 	return this;
 }
-
 
 // Called when the game starts or when spawned
 void ADtPoiActorBase::BeginPlay()

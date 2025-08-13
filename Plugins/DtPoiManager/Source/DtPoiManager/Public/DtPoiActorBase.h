@@ -29,9 +29,7 @@ public:
 	
 	UFUNCTION(BlueprintCallable , Category = "SetPoiWidget")
 	ADtPoiActorBase* SetPivot(FVector2D Pivot);
-	
-	UFUNCTION(BlueprintCallable , Category = "PoiComponent")
-	ADtPoiActorBase* GetPoiActorById(FString PoiID) const;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

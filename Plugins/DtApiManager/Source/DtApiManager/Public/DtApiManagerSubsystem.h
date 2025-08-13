@@ -4,13 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "Subsystems/GameInstanceSubsystem.h"
-#include "DtApiManagerSubSystem.generated.h"
+#include "DtApiManagerSubsystem.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class DTAPIMANAGER_API UDtApiManagerSubSystem : public UGameInstanceSubsystem
+class DTAPIMANAGER_API UDtApiManagerSubsystem : public UGameInstanceSubsystem
 {
 	GENERATED_BODY()
 	

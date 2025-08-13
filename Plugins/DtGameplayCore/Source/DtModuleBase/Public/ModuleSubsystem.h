@@ -24,11 +24,13 @@ public:
 	virtual void Deinitialize() override;
 
 	UFUNCTION(BlueprintCallable)
-	TArray<AModuleBaseActor*> InitModule();
+	TArray<AModuleBaseActor*> InitModuleSubsystem();
 	
 	UFUNCTION(BlueprintCallable,Meta = (DeterminesOutputType = "ModuleClass"))
 	AModuleBaseActor* GetModule(TSubclassOf<AModuleBaseActor> ModuleClass);
 private:
 	UPROPERTY()
 	TArray<AModuleBaseActor*> ModuleActors;
+
+	void ForceLoadBlueprints();
 };
