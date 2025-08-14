@@ -28,6 +28,10 @@ void UModuleSubsystem::ForceLoadBlueprints()
 	FARFilter Filter;
 	Filter.ClassPaths.Add(UBlueprint::StaticClass()->GetClassPathName());
 	Filter.bRecursiveClasses = true;
+	//@TODO 路径可配置
+	// 添加指定文件夹路径，只搜索指定目录下的蓝图
+	Filter.PackagePaths.Add(TEXT("/Game/ESafetyPlatform_Content/Module"));
+	Filter.bRecursivePaths = true;
 
 	TArray<FAssetData> Assets;
 	AssetRegistry.GetAssets(Filter, Assets);
