@@ -48,13 +48,11 @@ void UModuleSubsystem::ForceLoadBlueprints()
 
 TArray<AModuleBaseActor*> UModuleSubsystem::InitModuleSubsystem()
 {
-	//妥协  强制加载 用这个巨卡 后期可以规范模块的路径 按路径加载蓝图资产
-		ForceLoadBlueprints();
-
 	
+	ForceLoadBlueprints();
 	//获取所有派生类
 	TArray<UClass*> ModuleBaseClassArray;
-	//必须在Edit中打开蓝图资产才能获取到反射信息
+
 	GetDerivedClasses(AModuleBaseActor::StaticClass(),ModuleBaseClassArray , true);
 	if (ModuleBaseClassArray.Num() == 0)
 	{
@@ -63,7 +61,8 @@ TArray<AModuleBaseActor*> UModuleSubsystem::InitModuleSubsystem()
 	//剔除骨架蓝图和未实现方法的蓝图
 	ModuleBaseClassArray.RemoveAll([&](const UClass* P_Class)
 	{
-		return !P_Class->IsFunctionImplementedInScript(TEXT("InitModule")) || P_Class->GetName().StartsWith(TEXT("SKEL"));
+		FString tem_name = P_Class->GetName();
+		return !P_Class->IsFunctionImplementedInScript(TEXT("InitModule")) || tem_name.StartsWith(TEXT("SKEL")) ||tem_name.StartsWith(TEXT("REINST"));
 	});
 
 	auto World = GetWorld();
@@ -78,7 +77,7 @@ TArray<AModuleBaseActor*> UModuleSubsystem::InitModuleSubsystem()
 	
 }
 
-AModuleBaseActor* UModuleSubsystem::GetModule(TSubclassOf<AModuleBaseActor> ModuleClass)
+AModuleBaseActor* UModuleSubsystem::GetModule(TSubclassOf<AModuleBaseActor> ModuleClass) 
 {
 	for (auto i : ModuleActors)  
 	{

@@ -153,7 +153,10 @@ private:
 	bool bIsZooming = false; 
 	
 	UPROPERTY()
-	float M_TargetSpringArmLength = 0.0f; 
+	float M_TargetSpringArmLength = 0.0f;
+
+	UPROPERTY()
+	float M_NormalizedArmLength = 1.0f;
 
 	void UpdateZoomSmoothing(float DeltaTime);
 	/*
