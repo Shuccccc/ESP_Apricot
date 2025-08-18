@@ -102,12 +102,18 @@ void ADtCameraPawn::OnMoveOngoing(const FInputActionValue& Value)
 	FVector3d MoveRight = GetActorRightVector();
 
 	// 根据摄像机臂长度动态调整移动速度
-	
-	float ZoomFactor = 1.0f + (14.0f * M_NormalizedArmLength);
+	float ZoomFactor = 1.0f + (50.0f * M_NormalizedArmLength);
 
-	PC_Movement->AddInputVector(FVector{MoveForward.X * MoveActionValue.Y * I_ForwardMovementScale * -1.f * ZoomFactor,MoveForward.Y * MoveActionValue.Y * I_ForwardMovementScale * -1.f * ZoomFactor,0.f},true);
+	//
+	auto temForward = MoveActionValue.Y * I_ForwardMovementScale * -1.f * ZoomFactor;
+	auto temRight =  MoveActionValue.X * I_RightMovementScale * -1.f * ZoomFactor;
 	
-	PC_Movement->AddInputVector(FVector{MoveRight.X * MoveActionValue.X * I_RightMovementScale * -1.f * ZoomFactor,MoveRight.Y * MoveActionValue.X * I_RightMovementScale * -1.f * ZoomFactor,0.f},true);
+//	PC_Movement->AddInputVector(FVector{MoveForward.X * MoveActionValue.Y * I_ForwardMovementScale * -1.f * ZoomFactor,MoveForward.Y * MoveActionValue.Y * I_ForwardMovementScale * -1.f * ZoomFactor,0.f},false);
+//	PC_Movement->AddInputVector(FVector{MoveRight.X * MoveActionValue.X * I_RightMovementScale * -1.f * ZoomFactor,MoveRight.Y * MoveActionValue.X * I_RightMovementScale * -1.f * ZoomFactor,0.f},false);
+
+	PC_Movement->AddInputVector(FVector{MoveForward.X * temForward,MoveForward.Y * temForward,0.f},false);
+	
+	PC_Movement->AddInputVector(FVector{MoveRight.X * temRight,MoveRight.Y * temRight,0.f},false);
 	
 	//PC_Movement有隧穿 需要用碰撞限制移动
 }
@@ -132,6 +138,7 @@ void ADtCameraPawn::OnZoomTriggered(const FInputActionValue& Value)
 	bIsZooming = true;
 	
 	M_NormalizedArmLength = FMath::Clamp((PC_SpringArm->TargetArmLength ) / (C_MaxSpringArmLength - C_MinSpringArmLength), 0.0f, 1.0f);
+	//PC_Movement->Deceleration =  P_Deceleration * (1 - M_NormalizedArmLength);
 }
 
 void ADtCameraPawn::OnZoomCompleted(const FInputActionValue& Value)

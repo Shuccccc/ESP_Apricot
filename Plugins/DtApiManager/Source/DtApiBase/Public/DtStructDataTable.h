@@ -1,32 +1,27 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
+#include "DtStructHttpBase.h"
+#include "DtStructDataTable.generated.h"
 
-#include "CoreMinimal.h"
-#include "UObject/Object.h"
-#include "ApiBaseStruct.generated.h"
-
-/**
- * 
- */
-
-UENUM(BlueprintType)
-enum class HttpVerb : uint8
+USTRUCT()
+struct FApiDataInfo
 {
-	GET,
-	POST,
-	PUT,
-	DELETE,
-	CONNECT 
-} ;
-
-UENUM(BlueprintType)
-enum class EDtContentType : uint8
-{
-	JSON,
-	FORMDATA,
-	FORMURLENCODED
+	GENERATED_BODY()
+	
+	UPROPERTY()
+	FString ApiName;
+	UPROPERTY()
+	FString ApiUrl;
+	UPROPERTY()
+	EDtHttpMethod ApiMethod;
+	UPROPERTY()//
+	FString ServerIP;
+	UPROPERTY()
+	FDtRequestBody ApiParamType;
+	
 };
+
 USTRUCT(BlueprintType)
 struct FHttpRequestParams
 {
@@ -36,7 +31,7 @@ struct FHttpRequestParams
 	FString URL;
 
 	UPROPERTY()
-	HttpVerb Verb = HttpVerb::GET;
+	EDtHttpMethod Verb = EDtHttpMethod::GET;
 
 	UPROPERTY()
 	TMap<FString, FString> Headers;
@@ -57,13 +52,13 @@ struct FApiDataTable : public FTableRowBase
 	FString Value;
 
 	UPROPERTY(EditDefaultsOnly, meta = (Display = "请求类型"), BlueprintReadWrite, Category = "Table")
-	HttpVerb Verb = HttpVerb::GET;
+	EDtHttpMethod Verb = EDtHttpMethod::GET;
 
 	UPROPERTY(EditDefaultsOnly, meta = (Display = "平台"), BlueprintReadWrite, Category = "Table")
 	FName PlatForm;
 	
 	UPROPERTY(EditDefaultsOnly, meta = (Display = "请求数据类型"), BlueprintReadWrite, Category = "Table")
-	EDtContentType ContentType = EDtContentType::JSON;
+	FDtRequestBody ContentType = FDtRequestBody::JSON;
 	
 	UPROPERTY(EditDefaultsOnly, meta = (Display = "备注"), BlueprintReadWrite, Category = "Table")
 	FString Marks;
@@ -99,10 +94,4 @@ struct FServerConfig
 	UPROPERTY(DisplayName="UserIp")
 	FString UserIp;
 
-};
-
-UCLASS()
-class DTAPIBASE_API UApiBaseStruct : public UObject
-{
-	GENERATED_BODY()
 };

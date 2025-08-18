@@ -19,3 +19,8 @@ void UDtApiManagerSubsystem::Deinitialize()
 {
 	Super::Deinitialize();
 }
+
+void UDtApiManagerSubsystem::InitApiManager(UDataTable* ApiConfigTable)
+{
+	
+}

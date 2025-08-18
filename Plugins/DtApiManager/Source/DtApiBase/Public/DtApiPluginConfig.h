@@ -14,7 +14,7 @@ class DTAPIBASE_API UDtApiPluginConfig : public UObject
 {
 	GENERATED_BODY()
 public:
-	UPROPERTY(Config, EditAnywhere, Category = "ApiManager")
+	UPROPERTY()
 	TSoftObjectPtr<UDataTable> ApiDataTable;
 	
 };

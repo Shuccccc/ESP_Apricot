@@ -9,6 +9,8 @@
 /**
  * 
  */
+
+
 UCLASS()
 class DTAPIMANAGER_API UDtApiManagerSubsystem : public UGameInstanceSubsystem
 {
@@ -23,8 +25,10 @@ public:
 	
 	virtual void Deinitialize() override;
 
+//Blueprint
 
-private:
-	
+	UFUNCTION(BlueprintCallable, Category = "DtApiManager")
+	void InitApiManager(UDataTable *ApiConfigTable);
+
 	
 };
