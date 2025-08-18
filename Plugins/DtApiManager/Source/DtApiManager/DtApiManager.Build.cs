@@ -37,7 +37,8 @@ public class DtApiManager : ModuleRules
 				"CoreUObject",
 				"Engine",
 				"Slate",
-				"SlateCore",
+				"SlateCore", 
+				"DtApiBase",
 				// ... add private dependencies that you statically link with here ...	
 			}
 			);

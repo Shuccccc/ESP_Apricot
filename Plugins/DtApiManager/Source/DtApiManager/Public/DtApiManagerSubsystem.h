@@ -30,5 +30,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "DtApiManager")
 	void InitApiManager(UDataTable *ApiConfigTable);
 
-	
+	UFUNCTION(BlueprintCallable, Category = "DtApiManager")
+	bool InitDefaultPlatform(FString &PlatformName);
+
+private:
+	UPROPERTY()
+	TMap<FString, FString> ConfigMap;
 };
