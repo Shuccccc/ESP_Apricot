@@ -24,9 +24,13 @@ void UDtApiManagerSubsystem::Deinitialize()
 
 void UDtApiManagerSubsystem::InitApiManager(UDataTable* ApiConfigTable)
 {
+	if (InitDefaultPlatform())
+	{
+		
+	}
 }
 
-bool UDtApiManagerSubsystem::InitDefaultPlatform(FString &PlatformName)
+bool UDtApiManagerSubsystem::InitDefaultPlatform()
 {
 	FConfigFile tDefaultPlatform;
 	tDefaultPlatform.Read(DtApiManagerConfig::GetApiConfigIni());
