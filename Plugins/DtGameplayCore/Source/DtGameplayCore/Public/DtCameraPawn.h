@@ -96,45 +96,30 @@ public:
 	float C_InitialSpringArmLength = 3000.f;
 	//摄像机初始Pitch(Add)
 	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category = "DefaultProperty|CameraSettings", meta = (DisplayName = "摄像机初始旋转"))
-	float C_InitialPitchInput = 15.f;
+	float C_InitialPitchInput = -45;
 	//摄像机旋转缓动
 	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category = "DefaultProperty|CameraSettings", meta = (DisplayName = "摄像机旋转延迟"))
-	float C_CameraRotationLagSpeed = 16.f;
+	float C_CameraRotationLagSpeed = 18;
 	
 // 移动输入缩放因子
 	//向前输入缩放因子
 	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category = "DefaultProperty|InputSettings", meta = (DisplayName = "摄像机移动速度(向前)"))
-	float I_ForwardMovementScale = 2.f;
+	float I_ForwardMovementScale = 125.f;
 	//左右输入缩放因子
 	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category = "DefaultProperty|InputSettings", meta = (DisplayName = "摄像机移动速度(左右)"))
-	float I_RightMovementScale = 1.f;
+	float I_RightMovementScale = 125.f;
 	//Pitch输入缩放因子
 	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category = "DefaultProperty|InputSettings", meta = (DisplayName = "摄像机旋转速度(Pitch)"))
-	float I_PitchInputScale = 2.f;
+	float I_PitchInputScale = 4.f;
 	//Yaw输入缩放因子
 	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category = "DefaultProperty|InputSettings", meta = (DisplayName = "摄像机旋转速度(Yaw)"))
-	float I_YawInputScale = 2.f;
+	float I_YawInputScale = 4.f;
 	//Zoom输入缩放因子
 	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category = "DefaultProperty|InputSettings", meta = (DisplayName = "视角缩放速度"))
-	float I_ZoomScale = 40.f;
-
-	// Pawn移动组件设置
-	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category = "DefaultProperty|MovementSettings", meta = (DisplayName = "设置Pwan"))
-	bool SetPawnDef = false;
-	//Pawn移动最大速度
-	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category = "DefaultProperty|MovementSettings", meta = (DisplayName = "Pawn移动最大速度",EditCondition="SetPawnDef"))
-	float P_MaxSpeed = 4800.f;
-	//Pawn移动加速度
-	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category = "DefaultProperty|MovementSettings", meta = (DisplayName = "Pawn移动加速度",EditCondition="SetPawnDef"))
-	float P_Acceleration = 48000.f;
-	//Pawn移动减速度
-	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category = "DefaultProperty|MovementSettings", meta = (DisplayName = "Pawn移动减速度",EditCondition="SetPawnDef"))
-	float P_Deceleration = 12000.f;
-	//Pawn旋转时加速度
-	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category = "DefaultProperty|MovementSettings", meta = (DisplayName = "Pawn旋转时加速度",EditCondition="SetPawnDef"))
-	float P_TurningBoost = 8.f;
+	float I_ZoomScale = 1400;
+	
 	//Pawn目标臂缓动
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "DefaultProperty|CameraSettings", meta = (DisplayName = "缩放平滑插值",EditCondition="SetPawnDef"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "DefaultProperty|CameraSettings", meta = (DisplayName = "缩放平滑插值"))
 	float ZoomInterpSpeed = 8.0f;
 	
 	//增强输入::CallBack
@@ -150,7 +135,7 @@ public:
 private:
 	
 	UPROPERTY()
-	bool bIsZooming = false; 
+	bool bIsZooming = true; 
 	
 	UPROPERTY()
 	float M_TargetSpringArmLength = 0.0f;
@@ -158,7 +143,12 @@ private:
 	UPROPERTY()
 	float M_NormalizedArmLength = 1.0f;
 
-	void UpdateZoomSmoothing(float DeltaTime);
+	UPROPERTY()
+	FVector M_TargetMovement = FVector::ZeroVector;
+	UPROPERTY()
+	FVector M_TargetPosition = FVector::ZeroVector;
+	UPROPERTY()
+	FRotator M_TargetRotation = FRotator::ZeroRotator;
 	/*
 	UPROPERTY(Transient)
 	FVector3d M_MoveForward;

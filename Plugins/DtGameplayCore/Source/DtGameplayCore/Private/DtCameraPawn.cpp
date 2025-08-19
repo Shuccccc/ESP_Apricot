@@ -6,7 +6,6 @@
 #include "EnhancedInputComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Components/ArrowComponent.h"
-#include "GameFramework/FloatingPawnMovement.h"
 #include "GameFramework/SpringArmComponent.h"
 
 // Sets default values
@@ -19,14 +18,11 @@ ADtCameraPawn::ADtCameraPawn()
 	PC_SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("PC_SpringArm"));
 	PC_PawnCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("PC_PawnCamera"));
 	PC_Arrow = CreateDefaultSubobject<UArrowComponent>(TEXT("PC_Arrow"));
-	//Pawn移动组件
-	PC_Movement = CreateDefaultSubobject<UFloatingPawnMovement>(TEXT("PC_Movement"));
 	//设置组件层级
 	SetRootComponent(PC_RootMesh);
 	PC_SpringArm->SetupAttachment(PC_RootMesh);
 	PC_PawnCamera->SetupAttachment(PC_SpringArm);
 	PC_Arrow->SetupAttachment(PC_RootMesh);
-	
 }
 
 
@@ -58,21 +54,24 @@ void ADtCameraPawn::BeginPlay()
 	//摄像机转动延迟
 	PC_SpringArm->bEnableCameraRotationLag = true;
 	PC_SpringArm->CameraRotationLagSpeed = C_CameraRotationLagSpeed;
-	/*摄像机臂延迟
+
+	//移动延迟
+
 	PC_SpringArm->bEnableCameraLag = true;
-	PC_SpringArm->CameraLagSpeed = 100;
-	PC_SpringArm->CameraLagMaxDistance = 1000.0f; // 限制最大滞后距离
-	*/
+	PC_SpringArm->CameraLagSpeed = 24;
+	PC_SpringArm->CameraLagMaxDistance = 640; // 限制最大滞后距离
+
 	//摄像机初始位置;
-	PC_SpringArm->TargetArmLength = C_InitialSpringArmLength;
+	//PC_SpringArm->TargetArmLength = C_InitialSpringArmLength;
 	M_TargetSpringArmLength = C_InitialSpringArmLength; // 初始化目标臂长
-	AddControllerPitchInput(C_InitialPitchInput);
-	//Pawn移动组件
-	PC_Movement->MaxSpeed = P_MaxSpeed;
-	PC_Movement->Acceleration= P_Acceleration;
-	PC_Movement->Deceleration = P_Deceleration;
-	PC_Movement->TurningBoost = P_TurningBoost;
+	M_TargetRotation.Pitch = C_InitialPitchInput;
+
 	
+	GetController()->SetControlRotation(M_TargetRotation);
+
+	OnZoomTriggered(FInputActionValue{});
+	//M_NormalizedArmLength = FMath::Clamp((PC_SpringArm->TargetArmLength ) / (C_MaxSpringArmLength - C_MinSpringArmLength), 0.0f, 1.0f);
+
 }
 
 // 绑定增强输入
@@ -97,38 +96,45 @@ void ADtCameraPawn::OnMoveOngoing(const FInputActionValue& Value)
 {
 	//获取IA_Move的值
 	FVector2D MoveActionValue = EnhancedInput->GetBoundActionValue(IA_Move).Get<FVector2D>();
-	//获取方向
-	FVector3d MoveForward = GetActorForwardVector();
-	FVector3d MoveRight = GetActorRightVector();
-
+	
 	// 根据摄像机臂长度动态调整移动速度
-	float ZoomFactor = 1.0f + (50.0f * M_NormalizedArmLength);
+	float ZoomFactor = 1.0f + (8 * M_NormalizedArmLength);
 
-	//
-	auto temForward = MoveActionValue.Y * I_ForwardMovementScale * -1.f * ZoomFactor;
-	auto temRight =  MoveActionValue.X * I_RightMovementScale * -1.f * ZoomFactor;
+	// 计算移动向量
+	float ForwardMovement = MoveActionValue.Y * I_ForwardMovementScale * -1.f * ZoomFactor * 2;
+	float RightMovement = MoveActionValue.X * I_RightMovementScale * -1.f * ZoomFactor;
 	
-//	PC_Movement->AddInputVector(FVector{MoveForward.X * MoveActionValue.Y * I_ForwardMovementScale * -1.f * ZoomFactor,MoveForward.Y * MoveActionValue.Y * I_ForwardMovementScale * -1.f * ZoomFactor,0.f},false);
-//	PC_Movement->AddInputVector(FVector{MoveRight.X * MoveActionValue.X * I_RightMovementScale * -1.f * ZoomFactor,MoveRight.Y * MoveActionValue.X * I_RightMovementScale * -1.f * ZoomFactor,0.f},false);
-
-	PC_Movement->AddInputVector(FVector{MoveForward.X * temForward,MoveForward.Y * temForward,0.f},false);
+	// 获取方向向量
+	FVector ForwardDirection = GetActorForwardVector();
+	FVector RightDirection = GetActorRightVector();
 	
-	PC_Movement->AddInputVector(FVector{MoveRight.X * temRight,MoveRight.Y * temRight,0.f},false);
+	// 计算目标移动向量
+	FVector TargetMovement = (ForwardDirection * ForwardMovement) + (RightDirection * RightMovement);
 	
-	//PC_Movement有隧穿 需要用碰撞限制移动
+	TargetMovement.Z = 0.f;
+	SetActorLocation(GetActorLocation() + TargetMovement);
 }
 
 void ADtCameraPawn::OnRotateOngoing(const FInputActionValue& Value)
 {
 	//获取IA_Move的值
 	const FVector2D MoveActionValue = EnhancedInput->GetBoundActionValue(IA_Move).Get<FVector2D>();
+
+	M_TargetRotation = GetControlRotation();
+	
 	//纵向旋转
-	AddControllerPitchInput(MoveActionValue.Y * I_PitchInputScale * -1.f);
-	AddControllerYawInput(MoveActionValue.X * I_YawInputScale);
+	M_TargetRotation.Pitch = FMath::Clamp(M_TargetRotation.Pitch + (MoveActionValue.Y * I_PitchInputScale), C_ViewPitchMin, C_ViewPitchMax);
+	//横向旋转
+	M_TargetRotation.Yaw += MoveActionValue.X * I_YawInputScale ;
+	
+	// 设置目标旋转
+	GetController()->SetControlRotation(M_TargetRotation);
+
 }
 
 void ADtCameraPawn::OnZoomTriggered(const FInputActionValue& Value)
 {
+	bIsZooming = true;
 	// 计算新的目标臂长
 	float NewTargetArmLength = M_TargetSpringArmLength + Value.Get<float>()*I_ZoomScale;
 	NewTargetArmLength = FMath::Clamp(NewTargetArmLength, C_MinSpringArmLength, C_MaxSpringArmLength);
@@ -143,29 +149,26 @@ void ADtCameraPawn::OnZoomTriggered(const FInputActionValue& Value)
 
 void ADtCameraPawn::OnZoomCompleted(const FInputActionValue& Value)
 {
-	bIsZooming = false;
+	//bIsZooming = false;
 }
 
-void ADtCameraPawn::UpdateZoomSmoothing(float DeltaTime)
-{
-	if (PC_SpringArm || bIsZooming)
-	{
-		PC_SpringArm->TargetArmLength = FMath::FInterpTo(PC_SpringArm->TargetArmLength, M_TargetSpringArmLength, DeltaTime, ZoomInterpSpeed);
-	
-		if (FMath::IsNearlyEqual(PC_SpringArm->TargetArmLength, M_TargetSpringArmLength, 0.1f))
-		{
-			PC_SpringArm->TargetArmLength = M_TargetSpringArmLength;
-//			bIsZooming = false;
-		}
-	}
-}
 
 // Called every frame
 void ADtCameraPawn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	//摄像机臂平滑
+	if (bIsZooming)
+	{
+		PC_SpringArm->TargetArmLength = FMath::FInterpTo(PC_SpringArm->TargetArmLength, M_TargetSpringArmLength, DeltaTime, ZoomInterpSpeed);
+
+		if (FMath::IsNearlyEqual(PC_SpringArm->TargetArmLength, M_TargetSpringArmLength, 0.1f))
+		{
+			PC_SpringArm->TargetArmLength = M_TargetSpringArmLength;
+			bIsZooming = false;
+		}
+	}
 	
-	UpdateZoomSmoothing(DeltaTime);
 }
 
 
