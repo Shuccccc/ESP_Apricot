@@ -44,6 +44,21 @@ struct FHttpRequestParams
 };
 
 USTRUCT(BlueprintType)
+struct FIpDataTable : public FTableRowBase
+{
+	GENERATED_BODY()
+public:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Table")
+	FString Value;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Table")
+	FString Marks;
+
+	UPROPERTY(EditDefaultsOnly, meta = (Display = "私有化部署键值"), BlueprintReadWrite, Category = "Table")
+	FString PrivateKey;
+};
+
+USTRUCT(BlueprintType)
 struct FApiDataTable : public FTableRowBase
 {
 	GENERATED_BODY()

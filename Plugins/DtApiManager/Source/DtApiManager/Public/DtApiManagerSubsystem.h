@@ -28,13 +28,18 @@ public:
 //Blueprint
 
 	UFUNCTION(BlueprintCallable, Category = "DtApiManager")
-	void InitApiManager(UDataTable *ApiConfigTable);
+	void InitApiManager(UDataTable *ApiConfigTable,UDataTable *ServerIpTable);
 	
 
 
 private:
 	UPROPERTY()
-	TMap<FString, FString> ConfigMap;
+	TMap<FString, FString> M_PlatformConfigMap;
+	UPROPERTY()
+	UDataTable* M_ApiConfigDataTable ;
+	UPROPERTY()
+	UDataTable* M_ServerIpDataTable ;
 
+	
 	bool InitDefaultPlatform();
 };
