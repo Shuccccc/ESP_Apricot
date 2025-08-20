@@ -21,15 +21,13 @@ void UModuleSubsystem::Deinitialize()
 }
 void UModuleSubsystem::ForceLoadBlueprints()
 {
-#if WITH_EDITOR
+//#if WITH_EDITOR
 	FAssetRegistryModule& AssetRegistryModule = FModuleManager::LoadModuleChecked<FAssetRegistryModule>("AssetRegistry");
 	IAssetRegistry& AssetRegistry = AssetRegistryModule.Get();
 
 	FARFilter Filter;
 	Filter.ClassPaths.Add(UBlueprint::StaticClass()->GetClassPathName());
 	Filter.bRecursiveClasses = true;
-	//@TODO 路径可配置
-	// 添加指定文件夹路径，只搜索指定目录下的蓝图
 	Filter.PackagePaths.Add(TEXT("/Game/ESafetyPlatform_Content/Module"));
 	Filter.bRecursivePaths = true;
 
@@ -43,7 +41,7 @@ void UModuleSubsystem::ForceLoadBlueprints()
 			Asset.GetAsset();
 		}
 	}
-#endif
+//#endif
 }
 
 TArray<AModuleBaseActor*> UModuleSubsystem::InitModuleSubsystem()

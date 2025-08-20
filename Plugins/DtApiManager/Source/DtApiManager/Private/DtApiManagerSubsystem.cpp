@@ -4,6 +4,7 @@
 #include "DtApiManagerSubsystem.h"
 #include "DtStructDataTable.h"
 #include "DtApiManagerDefault.h"
+#include "Http.h"
 
 bool UDtApiManagerSubsystem::ShouldCreateSubsystem(UObject* Outer) const
 {
@@ -14,12 +15,7 @@ void UDtApiManagerSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);
 
-	//初始化PlatformMap
-	TArray<FString> ConfigKeys = PlatformConfigKeys::GetAllPlatformConfigKeys();
-	for (const FString& Key : ConfigKeys)
-	{
-		M_PlatformConfigMap.Add(Key, TEXT(""));
-	}
+
 }
 
 void UDtApiManagerSubsystem::Deinitialize()
@@ -29,9 +25,7 @@ void UDtApiManagerSubsystem::Deinitialize()
 
 void UDtApiManagerSubsystem::InitApiManager(UDataTable* ApiDataTable,UDataTable *ServerIpTable)
 {
-	//初始化配置文件
-	InitDefaultPlatform();
-	
+
 	//初始化数据表
 	if ( !ApiDataTable && !ServerIpTable)
 	{
@@ -68,10 +62,12 @@ void UDtApiManagerSubsystem::InitApiManager(UDataTable* ApiDataTable,UDataTable 
 	TArray<FIpDataTable*> RowMap;
 	M_ServerIpDataTable->GetAllRows("GetRowMap", RowMap);
 
-	for (auto i : RowMap)
+	for (FIpDataTable* i : RowMap)
 	{
-		UE_LOG(LogTemp, Error, TEXT("他奶奶滴看看Key %s") , *i->PrivateKey);
+		PrivatePlatformUrl.Append(i->PrivateKey+",");
 	}
+	//请求地址
+	FHttpRequestRef Request = FHttpModule::Get().CreateRequest();
 }
 
 bool UDtApiManagerSubsystem::InitDefaultPlatform()
@@ -83,20 +79,38 @@ bool UDtApiManagerSubsystem::InitDefaultPlatform()
 		return false;
 	}
 	tDefaultPlatform.Read(DtApiManagerConfig::GetApiConfigIni());
+
+	//初始化PlatformMap
 	
+	namespace Name =  PlatformNames;
+	namespace Key =  PlatformConfigKeys;
+	
+	M_PlatformConfigMap.Empty();
 	FString temString;
 	
-	for (auto i : M_PlatformConfigMap)
+	TArray<FString> ConfigKeys = Key::GetAllPlatformConfigKeys();
+	for ( FString& Key : ConfigKeys)
 	{
-		if (tDefaultPlatform.GetString(TEXT("PlatformConfig"), *i.Key, temString))
+		if (tDefaultPlatform.GetString(TEXT("PlatformConfig"), *Key, temString))
 		{
-			i.Value=temString.Replace(TEXT(":/"), TEXT("://"));;
-			UE_LOG(LogTemp, Log, TEXT("初始化配置列表: %s = %s"), *i.Key, *i.Value)
+			M_PlatformConfigMap.Add(Key,temString.Replace(TEXT(":/"), TEXT("://")));
+
+			UE_LOG(LogTemp, Log, TEXT("初始化配置列表: %s = %s"),*Key, *temString.Replace(TEXT(":/"), TEXT("://")) )
 		}
 		else
 		{
-			UE_LOG(LogTemp, Log, TEXT("初始化配置列表失败: %s"), *i.Key)
+			UE_LOG(LogTemp, Log, TEXT("初始化配置列表失败: %s"), *Key)
 		}
+	}
+
+	//初始化平台地址
+	M_PlatformIpMap.Add(Name::IndustryPlatform, *M_PlatformConfigMap.Find(Key::CServerIp));
+	M_PlatformIpMap.Add(Name::UserInfoPlatform, *M_PlatformConfigMap.Find(Key::UserIp));
+	M_PlatformIpMap.Add(Name::PluginPlatform,*M_PlatformConfigMap.Find(Key::Protocol)+"://"+*M_PlatformConfigMap.Find(Key::ServerIp)+":"+*M_PlatformConfigMap.Find(Key::ServerPort));
+
+	for (auto i : M_PlatformIpMap)
+	{
+		UE_LOG(LogTemp, Log, TEXT("初始化平台地址 : %s == %s"), *i.Key , *i.Value);
 	}
 	return true;
 }

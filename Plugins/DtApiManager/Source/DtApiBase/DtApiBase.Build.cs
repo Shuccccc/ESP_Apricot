@@ -19,7 +19,7 @@ public class DtApiBase : ModuleRules
                 "CoreUObject",
                 "Engine",
                 "Slate",
-                "SlateCore"
+                "SlateCore",
             }
         );
     }

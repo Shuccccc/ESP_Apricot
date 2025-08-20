@@ -39,4 +39,9 @@ namespace PlatformConfigKeys
 		};
 	}
 };
-	
+namespace PlatformNames
+{
+	inline const FString IndustryPlatform = TEXT("工业互联网平台");
+	inline const FString UserInfoPlatform = TEXT("用户信息平台");
+	inline const FString PluginPlatform = TEXT("插件平台");
+}

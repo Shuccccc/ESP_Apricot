@@ -137,10 +137,8 @@ void ADtCameraPawn::OnZoomTriggered(const FInputActionValue& Value)
 	bIsZooming = true;
 	// 计算新的目标臂长
 	float NewTargetArmLength = M_TargetSpringArmLength + Value.Get<float>()*I_ZoomScale;
-	NewTargetArmLength = FMath::Clamp(NewTargetArmLength, C_MinSpringArmLength, C_MaxSpringArmLength);
+	M_TargetSpringArmLength = FMath::Clamp(NewTargetArmLength, C_MinSpringArmLength, C_MaxSpringArmLength);
 	
-	// 设置目标臂长
-	M_TargetSpringArmLength = NewTargetArmLength;
 	bIsZooming = true;
 	
 	M_NormalizedArmLength = FMath::Clamp((PC_SpringArm->TargetArmLength ) / (C_MaxSpringArmLength - C_MinSpringArmLength), 0.0f, 1.0f);

@@ -19,7 +19,7 @@ public class DtModuleBase : ModuleRules
                 "CoreUObject",
                 "Engine",
                 "Slate",
-                "SlateCore"
+                "SlateCore",
             }
         );
     }

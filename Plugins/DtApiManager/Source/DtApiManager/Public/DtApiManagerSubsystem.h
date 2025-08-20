@@ -30,7 +30,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "DtApiManager")
 	void InitApiManager(UDataTable *ApiConfigTable,UDataTable *ServerIpTable);
 	
-
+	// 初始化配置文件和平台地址
+	UFUNCTION(BlueprintCallable, Category = "DtApiManager", meta=(DisplayName="初始化平台地址"))
+	bool InitDefaultPlatform();
 
 private:
 	UPROPERTY()
@@ -39,7 +41,8 @@ private:
 	UDataTable* M_ApiConfigDataTable ;
 	UPROPERTY()
 	UDataTable* M_ServerIpDataTable ;
-
+	UPROPERTY()
+	TMap<FString, FString> M_PlatformIpMap;
 	
-	bool InitDefaultPlatform();
+
 };
