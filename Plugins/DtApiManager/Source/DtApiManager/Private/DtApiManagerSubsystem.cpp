@@ -6,6 +6,8 @@
 #include "DtApiManagerDefault.h"
 #include "Http.h"
 
+#define TEST 1
+
 bool UDtApiManagerSubsystem::ShouldCreateSubsystem(UObject* Outer) const
 {
 	return Super::ShouldCreateSubsystem(Outer);
@@ -23,7 +25,8 @@ void UDtApiManagerSubsystem::Deinitialize()
 	Super::Deinitialize();
 }
 
-void UDtApiManagerSubsystem::InitApiManager(UDataTable* ApiDataTable,UDataTable *ServerIpTable)
+
+void UDtApiManagerSubsystem::InitApiDataTable(UDataTable* ApiDataTable,UDataTable *ServerIpTable)
 {
 
 	//初始化数据表
@@ -41,22 +44,25 @@ void UDtApiManagerSubsystem::InitApiManager(UDataTable* ApiDataTable,UDataTable 
 	
 	M_ApiConfigDataTable = ApiDataTable;
 	M_ServerIpDataTable = ServerIpTable; 
+}
 
+void UDtApiManagerSubsystem::InitPlatformIp(UDataTable* ApiConfigTable, UDataTable* ServerIpTable)
+{
 	//初始化平台地址
-	// @TODO 优化栈顶冒火 注释赎罪券+1
+	// @TODO 优化栈顶冒火
 	
 	namespace Key =  PlatformConfigKeys;
 	
-	FString TempString = *M_PlatformConfigMap.Find(Key::ConfigRoute);
+	FString TempString = *M_PlatformConfigINI.Find(Key::ConfigRoute);
 	FString PrivatePlatformUrl;
 
-	if (*M_PlatformConfigMap.Find(Key::CServerIp) != FString{TEXT("")})
+	if (*M_PlatformConfigINI.Find(Key::CServerIp) != FString{TEXT("")})
 	{
-		PrivatePlatformUrl = *M_PlatformConfigMap.Find(Key::CServerIp) +"/app-api" + TempString;
+		PrivatePlatformUrl = *M_PlatformConfigINI.Find(Key::CServerIp) +"/app-api" + TempString;
 	}
 	else
 	{
-		PrivatePlatformUrl = *M_PlatformConfigMap.Find(Key::Protocol) + "://" + *M_PlatformConfigMap.Find(Key::ServerIp) + ":" + *M_PlatformConfigMap.Find(Key::ServerPort) + TempString;
+		PrivatePlatformUrl = *M_PlatformConfigINI.Find(Key::Protocol) + "://" + *M_PlatformConfigINI.Find(Key::ServerIp) + ":" + *M_PlatformConfigINI.Find(Key::ServerPort) + TempString;
 	}
 	//处理ServerIpDataTable
 	TArray<FIpDataTable*> RowMap;
@@ -66,6 +72,7 @@ void UDtApiManagerSubsystem::InitApiManager(UDataTable* ApiDataTable,UDataTable 
 	{
 		PrivatePlatformUrl.Append(i->PrivateKey+",");
 	}
+	// @TODO 妈的怎么这么多东西
 	//请求地址
 	FHttpRequestRef Request = FHttpModule::Get().CreateRequest();
 }
@@ -76,41 +83,67 @@ bool UDtApiManagerSubsystem::InitDefaultPlatform()
 	if ( ! FPaths::FileExists(DtApiManagerConfig::GetApiConfigIni()))
 	{
 		UE_LOG(LogTemp, Error, TEXT("Error: InitDefaultPlatform :: DefaultPlatform.ini is not valid"));
+		
 		return false;
 	}
 	tDefaultPlatform.Read(DtApiManagerConfig::GetApiConfigIni());
 
 	//初始化PlatformMap
-	
 	namespace Name =  PlatformNames;
 	namespace Key =  PlatformConfigKeys;
 	
-	M_PlatformConfigMap.Empty();
+	M_PlatformConfigINI.Empty();
 	FString temString;
 	
 	TArray<FString> ConfigKeys = Key::GetAllPlatformConfigKeys();
-	for ( FString& Key : ConfigKeys)
+	
+	for ( FString& i : ConfigKeys)
 	{
-		if (tDefaultPlatform.GetString(TEXT("PlatformConfig"), *Key, temString))
-		{
-			M_PlatformConfigMap.Add(Key,temString.Replace(TEXT(":/"), TEXT("://")));
+		tDefaultPlatform.GetString(TEXT("PlatformConfig"), *i, temString);
 
-			UE_LOG(LogTemp, Log, TEXT("初始化配置列表: %s = %s"),*Key, *temString.Replace(TEXT(":/"), TEXT("://")) )
-		}
-		else
-		{
-			UE_LOG(LogTemp, Log, TEXT("初始化配置列表失败: %s"), *Key)
-		}
+		M_PlatformConfigINI.Add(i,temString.Replace(TEXT(":/"), TEXT("://")));
+
+		UE_LOG(LogTemp, Log, TEXT("初始化配置列表: %s = %s"),*i, *temString.Replace(TEXT(":/"), TEXT("://")) )
 	}
 
 	//初始化平台地址
-	M_PlatformIpMap.Add(Name::IndustryPlatform, *M_PlatformConfigMap.Find(Key::CServerIp));
-	M_PlatformIpMap.Add(Name::UserInfoPlatform, *M_PlatformConfigMap.Find(Key::UserIp));
-	M_PlatformIpMap.Add(Name::PluginPlatform,*M_PlatformConfigMap.Find(Key::Protocol)+"://"+*M_PlatformConfigMap.Find(Key::ServerIp)+":"+*M_PlatformConfigMap.Find(Key::ServerPort));
+	M_PlatformIpMap.Add(Name::IndustryPlatform, *M_PlatformConfigINI.Find(Key::CServerIp));
+	M_PlatformIpMap.Add(Name::UserInfoPlatform, *M_PlatformConfigINI.Find(Key::UserIp));
+	M_PlatformIpMap.Add(Name::PluginPlatform,*M_PlatformConfigINI.Find(Key::Protocol)+"://"+*M_PlatformConfigINI.Find(Key::ServerIp)+":"+*M_PlatformConfigINI.Find(Key::ServerPort));
 
+#if TEST
 	for (auto i : M_PlatformIpMap)
 	{
 		UE_LOG(LogTemp, Log, TEXT("初始化平台地址 : %s == %s"), *i.Key , *i.Value);
 	}
+#endif
+	
 	return true;
+}
+
+TMap<FString, FString> UDtApiManagerSubsystem::GetIndustryAbility()
+{
+	TMap<FString, FString> HeaderParameter;
+
+	//FromLocalConfig
+	FString AppIdValue = *M_PlatformConfigINI.Find(PlatformConfigKeys::AppId);
+	FString SecretKeyValue = *M_PlatformConfigINI.Find(PlatformConfigKeys::AppSecret);
+	//FromGenerated
+	FString NonceString = FGuid::NewGuid().ToString();
+	FString TimeString = FDateTime::Now().ToString(TEXT("%Y%m%d%H%M%S"));
+	//FromDefault
+	FString OrganIdString;
+	
+	HeaderParameter.Add(PlatformHeaders::AppIdHeaderName , AppIdValue);
+	HeaderParameter.Add(PlatformHeaders::SecretKeyName , SecretKeyValue);
+	
+	HeaderParameter.Add(PlatformHeaders::NonceName , NonceString);
+	HeaderParameter.Add(PlatformHeaders::TimeStampName , TimeString);
+
+
+
+
+
+	return HeaderParameter;
+	
 }

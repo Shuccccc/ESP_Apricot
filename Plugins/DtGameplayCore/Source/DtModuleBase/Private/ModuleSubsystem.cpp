@@ -46,7 +46,14 @@ void UModuleSubsystem::ForceLoadBlueprints()
 
 TArray<AModuleBaseActor*> UModuleSubsystem::InitModuleSubsystem()
 {
-	
+	if (ModuleActors.Num() > 0)
+	{
+		for (auto i : ModuleActors)
+		{
+			i->Destroy();
+		}
+		ModuleActors.Empty();
+	}
 	ForceLoadBlueprints();
 	//获取所有派生类
 	TArray<UClass*> ModuleBaseClassArray;

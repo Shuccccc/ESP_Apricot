@@ -45,3 +45,17 @@ namespace PlatformNames
 	inline const FString UserInfoPlatform = TEXT("用户信息平台");
 	inline const FString PluginPlatform = TEXT("插件平台");
 }
+
+namespace PlatformHeaders
+{
+	inline const FString AppIdName = TEXT("appid");
+	inline const FString SecretKeyName = TEXT("secretkey");
+	inline const FString AppIdHeaderName = TEXT("APPID");
+	inline const FString NonceName = TEXT("NONCE");
+	inline const FString TimeStampName = TEXT("TIMESTAMP");
+	inline const FString NodeCodeName = TEXT("NODECODE");
+	inline const FString OrganIdName = TEXT("ORGANID");
+	inline const FString SignName = TEXT("SIGN");
+	inline const FString NodeCodeDefault = TEXT("");
+	inline const FString OrganIdDefault = TEXT("1");
+}

@@ -58,24 +58,45 @@ public:
 	FString PrivateKey;
 };
 
+UENUM(BlueprintType)
+enum class EDtAuthorization : uint8
+{
+	None UMETA(DisplayName = "无验签(None)"),
+	
+	Industry UMETA(DisplayName = "工业互联网总接口(Industry)"),
+	
+	IndustryAbility UMETA(DisplayName = "工业互联网能力系统(IndustryAbility)"),
+	
+	Business UMETA(DisplayName = "业务系统(IndustryAbility)"),
+	
+	Plugins UMETA(DisplayName = "插件平台(IndustryAbility)"),
+	
+	BasicAuth UMETA(DisplayName = "BasicAuth"),
+	
+	BearerToken UMETA(DisplayName = "BearerToken"),
+};
+
 USTRUCT(BlueprintType)
 struct FApiDataTable : public FTableRowBase
 {
 	GENERATED_BODY()
 	
-	UPROPERTY(EditDefaultsOnly,meta = (Display = "Api"), BlueprintReadWrite, Category = "Table")
+	UPROPERTY(EditDefaultsOnly,meta = (DisplayName = "Api"), BlueprintReadWrite, Category = "Table")
 	FString Value;
 
-	UPROPERTY(EditDefaultsOnly, meta = (Display = "请求类型"), BlueprintReadWrite, Category = "Table")
+	UPROPERTY(EditDefaultsOnly, meta = (DisplayName = "请求类型"), BlueprintReadWrite, Category = "Table")
 	EDtHttpMethod Verb = EDtHttpMethod::GET;
 
-	UPROPERTY(EditDefaultsOnly, meta = (Display = "平台"), BlueprintReadWrite, Category = "Table")
-	FName PlatForm;
+	UPROPERTY(EditDefaultsOnly, meta = (DisplayName = "平台"), BlueprintReadWrite, Category = "Table")
+	FString PlatForm;
 	
-	UPROPERTY(EditDefaultsOnly, meta = (Display = "请求数据类型"), BlueprintReadWrite, Category = "Table")
+	UPROPERTY(EditDefaultsOnly, meta = (DisplayName = "请求数据类型"), BlueprintReadWrite, Category = "Table")
 	FDtRequestBody ContentType = FDtRequestBody::JSON;
+
+	UPROPERTY(EditDefaultsOnly, meta = (DisplayName = "验签"), BlueprintReadWrite, Category = "Table")
+	EDtAuthorization Authorization = EDtAuthorization::None;
 	
-	UPROPERTY(EditDefaultsOnly, meta = (Display = "备注"), BlueprintReadWrite, Category = "Table")
+	UPROPERTY(EditDefaultsOnly, meta = (DisplayName = "备注"), BlueprintReadWrite, Category = "Table")
 	FString Marks;
 	
 };
