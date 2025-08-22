@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Interfaces/IHttpRequest.h"
 #include "Subsystems/GameInstanceSubsystem.h"
 #include "DtApiManagerSubsystem.generated.h"
 
@@ -32,11 +33,11 @@ public:
 	void InitApiDataTable(UDataTable *ApiConfigTable,UDataTable *ServerIpTable);
 
 	// 从服务平台获取平台地址
-	UFUNCTION(BlueprintCallable, Category = "DtApiManager")
-	void InitPlatformIp(UDataTable *ApiConfigTable,UDataTable *ServerIpTable);
+	UFUNCTION(BlueprintCallable, Category = "DtApiManager",meta=(DisplayName="请求平台地址"))
+	void InitPlatformIp();
 	
 	// 初始化配置文件和本地平台地址
-	UFUNCTION(BlueprintCallable, Category = "DtApiManager", meta=(DisplayName="初始化平台地址"))
+	UFUNCTION(BlueprintCallable, Category = "DtApiManager", meta=(DisplayName="初始化本地平台地址"))
 	bool InitDefaultPlatform();
 
 private:
@@ -55,4 +56,6 @@ private:
 
 	//
 	TMap<FString, FString> GetIndustryAbility();
+	void OnHttpResponse(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
+	
 };

@@ -43,21 +43,6 @@ struct FHttpRequestParams
 	TMap<FString, FString> Body;
 };
 
-USTRUCT(BlueprintType)
-struct FIpDataTable : public FTableRowBase
-{
-	GENERATED_BODY()
-public:
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Table")
-	FString Value;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Table")
-	FString Marks;
-
-	UPROPERTY(EditDefaultsOnly, meta = (Display = "私有化部署键值"), BlueprintReadWrite, Category = "Table")
-	FString PrivateKey;
-};
-
 UENUM(BlueprintType)
 enum class EDtAuthorization : uint8
 {
@@ -99,6 +84,21 @@ struct FApiDataTable : public FTableRowBase
 	UPROPERTY(EditDefaultsOnly, meta = (DisplayName = "备注"), BlueprintReadWrite, Category = "Table")
 	FString Marks;
 	
+};
+
+USTRUCT(BlueprintType)
+struct FIpDataTable : public FTableRowBase
+{
+	GENERATED_BODY()
+public:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Table", meta = (DisplayName = "Value"))
+	FString Value;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Table", meta = (DisplayName = "PrivateKey"))
+	FString PrivateKey;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Table", meta = (DisplayName = "Marks"))
+	FString Marks;
 };
 
 USTRUCT()

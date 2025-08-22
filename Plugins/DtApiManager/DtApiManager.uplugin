@@ -29,6 +29,11 @@
 			"Name": "DtBpAsyncRequest",
 			"Type": "Runtime",
 			"LoadingPhase": "Default"
+		},
+		{
+			"Name": "DtApiRequestBase",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
 		}
 	]
 }

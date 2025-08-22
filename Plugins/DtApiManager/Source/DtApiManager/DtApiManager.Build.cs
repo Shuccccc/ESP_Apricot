@@ -25,7 +25,7 @@ public class DtApiManager : ModuleRules
 		PublicDependencyModuleNames.AddRange(
 			new string[]
 			{
-				"Core", "HTTP",
+				"Core", "HTTP"
 				// ... add other public dependencies that you statically link with here ...
 			}
 			);
@@ -38,7 +38,10 @@ public class DtApiManager : ModuleRules
 				"Engine",
 				"Slate",
 				"SlateCore", 
-				"DtApiBase",
+				"DtApiBase", 
+				"VaRest", 
+				"PlatformCryptoOpenSSL",
+				"Json"
 				// ... add private dependencies that you statically link with here ...	
 			}
 			);

@@ -1,15 +1,15 @@
 ﻿using UnrealBuildTool;
 
-public class DtApiBase : ModuleRules
+public class DtApiRequestBase : ModuleRules
 {
-    public DtApiBase(ReadOnlyTargetRules Target) : base(Target)
+    public DtApiRequestBase(ReadOnlyTargetRules Target) : base(Target)
     {
         PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
 
         PublicDependencyModuleNames.AddRange(
             new string[]
             {
-                "Core"
+                "Core",
             }
         );
 

@@ -59,3 +59,16 @@ namespace PlatformHeaders
 	inline const FString NodeCodeDefault = TEXT("");
 	inline const FString OrganIdDefault = TEXT("1");
 }
+namespace HttpContentType
+{
+	// JSON数据
+	inline const FString Json = TEXT("application/json");
+	// 表单数据
+	inline const FString FormUrlencoded = TEXT("application/x-www-form-urlencoded");
+	// 多部分表单数据
+	inline const FString FormData = TEXT("multipart/form-data");
+	// 纯文本
+	inline const FString Text = TEXT("text/plain");
+	// 二进制数据
+	inline const FString Binary = TEXT("application/octet-stream");
+}
