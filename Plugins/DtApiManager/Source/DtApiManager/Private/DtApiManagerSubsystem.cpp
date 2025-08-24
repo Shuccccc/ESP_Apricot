@@ -116,12 +116,17 @@ void UDtApiManagerSubsystem::InitPlatformIp()
 	{
 		PrivatePlatformUrl.Append(i->PrivateKey+",");
 	}
+	PrivatePlatformUrl.Append(PlatformHeaders::UserAppId+",");
+	PrivatePlatformUrl.Append(PlatformHeaders::UserAppSecret);
+	
 	auto HeaderParameter = GetIndustryAbility();
 	//请求
 	FHttpRequestRef Request = FHttpModule::Get().CreateRequest();
 	Request->SetURL(PrivatePlatformUrl);
 	Request->SetVerb(TEXT("GET"));
 	Request->SetHeader(TEXT("Content-Type"),HttpContentType::Json);
+	
+//-------------------------PrintLog
 	FString temLogStr = TEXT("Request Header : {");
 	for (auto i : HeaderParameter)
 	{
@@ -134,7 +139,19 @@ void UDtApiManagerSubsystem::InitPlatformIp()
 	UE_LOG(LogTemp, Log, TEXT("远端平台地址Request URL : %s "), *PrivatePlatformUrl);
 	UE_LOG(LogTemp, Log, TEXT("远端平台地址Request Verb : GET"));
 	UE_LOG(LogTemp, Log, TEXT("远端平台地址Request Header : %s "), *temLogStr);
+//-------------------------PrintLog
+	
 	Request->ProcessRequest();
+}
+
+void UDtApiManagerSubsystem::AddCacheData(FString Key, FString Value)
+{
+	if (CacheDataMap.Contains(Key))
+	{
+		CacheDataMap.Remove(Key);
+	}
+	
+	CacheDataMap.Add(Key,Value);
 }
 
 
@@ -150,14 +167,15 @@ TMap<FString, FString> UDtApiManagerSubsystem::GetIndustryAbility()
 	FString TimeString = FDateTime::Now().ToString(TEXT("%Y%m%d%H%M%S"));
 	//FromDefault
 	//FromBackend
-	M_PlatformIpMap.Add(PlatformHeaders::OrganIdName,TEXT("1483809126285927348"));
-	FString OrganIdString = *M_PlatformIpMap.Find(PlatformHeaders::OrganIdName);
+	
+	//M_PlatformIpMap.Add(PlatformHeaders::OrganIdName,TEXT("1483809126285927348"));
+	
+	FString OrganIdString = *CacheDataMap.Find(PlatformHeaders::OrganIdName);
 	//FromGenerated
 	FString DataToSign = AppIdValue + NonceString + TimeString + OrganIdString + SecretKeyValue;
-	/*FSHA256Signature Signature;
-	FGenericPlatformMisc::GetSHA256Signature(&DataToSign,DataToSign.GetAllocatedSize(),Signature);*/
+
+//-------------------------GetSHA256Signature
 	FString SignString ; 
-	
 	FEncryptionContextOpenSSL CryptoContext;
 	FTCHARToUTF8 ConvertedString(*DataToSign);
 	TArrayView<const uint8> DataView(reinterpret_cast<const uint8*>(ConvertedString.Get()), ConvertedString.Length());
@@ -167,7 +185,7 @@ TMap<FString, FString> UDtApiManagerSubsystem::GetIndustryAbility()
 	{
 		SignString += FString::Printf(TEXT("%02x"), Byte);
 	}
-	 
+//-------------------------GetSHA256Signature
 	
 	HeaderParameter.Add(PlatformHeaders::AppIdHeaderName , AppIdValue);
 	HeaderParameter.Add(PlatformHeaders::SecretKeyName , SecretKeyValue);
@@ -210,13 +228,47 @@ void UDtApiManagerSubsystem::OnHttpResponse(FHttpRequestPtr Request, FHttpRespon
 		M_PlatformIpMap.Add(TemRowName, TemRowPrivateKey);
 		UE_LOG(LogTemp, Log, TEXT("从远端初始化平台地址 : %s == %s"), *TemRowName, *TemRowPrivateKey);
 	}
-	/*
-	int index = 0;
-	for (auto * i : RowNameArray)
+	//初始化密钥
+	if (JsonData->HasField(PlatformHeaders::UserAppId) && JsonData->HasField(PlatformHeaders::UserAppSecret))
 	{
-		M_PlatformIpMap.Add(RowNames[index].ToString() ,  JsonData->GetStringField(i->PrivateKey));
-		UE_LOG(LogTemp, Log, TEXT("测试顺序能不能对上之 Key = %s  Val= %s"), *RowNames[index].ToString(), *JsonData->GetStringField(i->PrivateKey));
-		index++;
+		CacheDataMap.Add(JsonData->GetStringField(PlatformHeaders::UserAppId),JsonData->GetStringField(PlatformHeaders::UserAppSecret));
 	}
-	*/
+
+}
+
+FString UDtApiManagerSubsystem::GetPlatformKey(FName RowKey)
+{
+	FApiDataTable *temRow = M_ApiConfigDataTable->FindRow<FApiDataTable>(RowKey,RowKey.ToString(),true);
+	return *M_PlatformIpMap.Find(temRow->PlatForm);
+}
+
+FString UDtApiManagerSubsystem::GetApiUrlForKey(RequestDataObject& object, bool& bSucces ) 
+{
+	
+	FApiDataTable *temRow = M_ApiConfigDataTable->FindRow<FApiDataTable>(FName{object.RowKey},object.RowKey,true);
+	
+	FString ApiUrl = *M_PlatformIpMap.Find(temRow->PlatForm);
+	
+	ApiUrl.Append(temRow->Value);
+	
+	for (auto& Kvp : object.UrlParams)
+	{
+		if (Kvp.Key.IsEmpty())
+		{
+			continue;
+		}
+		if (!ApiUrl.Contains("?"))
+		{
+			ApiUrl.Append("?");
+		}
+		else
+		{
+			ApiUrl.Append("&");
+		}
+		ApiUrl.Append(*Kvp.Key);
+		ApiUrl.Append("=");
+		ApiUrl.Append(*Kvp.Value);
+	}
+	bSucces = true;
+	return ApiUrl;
 }

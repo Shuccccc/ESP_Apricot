@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "DtStructHttpBase.h"
 #include "Interfaces/IHttpRequest.h"
 #include "Subsystems/GameInstanceSubsystem.h"
 #include "DtApiManagerSubsystem.generated.h"
@@ -31,25 +32,33 @@ public:
 	// 初始化数据表
 	UFUNCTION(BlueprintCallable, Category = "DtApiManager")
 	void InitApiDataTable(UDataTable *ApiConfigTable,UDataTable *ServerIpTable);
-
-	// 从服务平台获取平台地址
-	UFUNCTION(BlueprintCallable, Category = "DtApiManager",meta=(DisplayName="请求平台地址"))
-	void InitPlatformIp();
 	
 	// 初始化配置文件和本地平台地址
 	UFUNCTION(BlueprintCallable, Category = "DtApiManager", meta=(DisplayName="初始化本地平台地址"))
 	bool InitDefaultPlatform();
 
+	// 从服务平台获取平台地址
+	UFUNCTION(BlueprintCallable, Category = "DtApiManager",meta=(DisplayName="请求平台地址"))
+	void InitPlatformIp();
+
+	//添加头
+	UFUNCTION(BlueprintCallable, Category = "DtApiManager")
+	void AddCacheData(FString Key,FString Value);
+	
+
 private:
-	UPROPERTY()
-	TMap<FString,FString> M_PlatformConfigINI;
+
 	UPROPERTY()
 	UDataTable* M_ApiConfigDataTable ;
 	UPROPERTY()
 	UDataTable* M_ServerIpDataTable ;
+
+	UPROPERTY()
+	TMap<FString,FString> M_PlatformConfigINI;
+	
 	UPROPERTY()
 	TMap<FString,FString> M_PlatformIpMap;
-
+	
 	//登陆后需要初始化的 里面有 loginToken 密钥等
 	UPROPERTY()
 	TMap<FString,FString> CacheDataMap;
@@ -57,5 +66,12 @@ private:
 	//
 	TMap<FString, FString> GetIndustryAbility();
 	void OnHttpResponse(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful);
+
+	FString GetPlatformKey(FName RowKey);
+
+public:
+//处理配置
+	
+	FString GetApiUrlForKey(RequestDataObject& object, bool& bSucces);
 	
 };

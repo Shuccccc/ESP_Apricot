@@ -14,11 +14,11 @@ struct FApiDataInfo
 	UPROPERTY()
 	FString ApiUrl;
 	UPROPERTY()
-	EDtHttpMethod ApiMethod;
+	EDtHttpMethod ApiMethod = EDtHttpMethod::GET;
 	UPROPERTY()//
 	FString ServerIP;
 	UPROPERTY()
-	FDtRequestBody ApiParamType;
+	FDtRequestBody ApiParamType = FDtRequestBody::JSON;
 	
 };
 
@@ -69,19 +69,19 @@ struct FApiDataTable : public FTableRowBase
 	UPROPERTY(EditDefaultsOnly,meta = (DisplayName = "Api"), BlueprintReadWrite, Category = "Table")
 	FString Value;
 
-	UPROPERTY(EditDefaultsOnly, meta = (DisplayName = "请求类型"), BlueprintReadWrite, Category = "Table")
+	UPROPERTY(EditDefaultsOnly, meta = (DisplayName = "请求类型(Verb)"), BlueprintReadWrite, Category = "Table")
 	EDtHttpMethod Verb = EDtHttpMethod::GET;
 
-	UPROPERTY(EditDefaultsOnly, meta = (DisplayName = "平台"), BlueprintReadWrite, Category = "Table")
+	UPROPERTY(EditDefaultsOnly, meta = (DisplayName = "平台(PlatForm)"), BlueprintReadWrite, Category = "Table")
 	FString PlatForm;
 	
-	UPROPERTY(EditDefaultsOnly, meta = (DisplayName = "请求数据类型"), BlueprintReadWrite, Category = "Table")
+	UPROPERTY(EditDefaultsOnly, meta = (DisplayName = "请求数据类型(ContentType)"), BlueprintReadWrite, Category = "Table")
 	FDtRequestBody ContentType = FDtRequestBody::JSON;
 
-	UPROPERTY(EditDefaultsOnly, meta = (DisplayName = "验签"), BlueprintReadWrite, Category = "Table")
+	UPROPERTY(EditDefaultsOnly, meta = (DisplayName = "验签(Authorization)"), BlueprintReadWrite, Category = "Table")
 	EDtAuthorization Authorization = EDtAuthorization::None;
 	
-	UPROPERTY(EditDefaultsOnly, meta = (DisplayName = "备注"), BlueprintReadWrite, Category = "Table")
+	UPROPERTY(EditDefaultsOnly, meta = (DisplayName = "备注(Marks)"), BlueprintReadWrite, Category = "Table")
 	FString Marks;
 	
 };

@@ -25,7 +25,7 @@ public class DtApiManager : ModuleRules
 		PublicDependencyModuleNames.AddRange(
 			new string[]
 			{
-				"Core", "HTTP"
+				"Core", "HTTP", "DtApiBase"
 				// ... add other public dependencies that you statically link with here ...
 			}
 			);

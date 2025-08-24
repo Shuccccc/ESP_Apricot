@@ -58,6 +58,8 @@ namespace PlatformHeaders
 	inline const FString SignName = TEXT("SIGN");
 	inline const FString NodeCodeDefault = TEXT("");
 	inline const FString OrganIdDefault = TEXT("1");
+	inline const FString UserAppId = TEXT("user.appid");//暂时意义不明 先加上
+	inline const FString UserAppSecret = TEXT("user.appsecret");//暂时意义不明 先加上
 }
 namespace HttpContentType
 {

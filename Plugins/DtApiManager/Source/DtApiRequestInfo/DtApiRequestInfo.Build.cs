@@ -1,15 +1,15 @@
 ﻿using UnrealBuildTool;
 
-public class DtApiRequestBase : ModuleRules
+public class DtApiRequestInfo : ModuleRules
 {
-    public DtApiRequestBase(ReadOnlyTargetRules Target) : base(Target)
+    public DtApiRequestInfo(ReadOnlyTargetRules Target) : base(Target)
     {
         PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
 
         PublicDependencyModuleNames.AddRange(
             new string[]
             {
-                "Core",
+                "Core", "DtApiBase", 
             }
         );
 
@@ -19,7 +19,7 @@ public class DtApiRequestBase : ModuleRules
                 "CoreUObject",
                 "Engine",
                 "Slate",
-                "SlateCore"
+                "SlateCore", "DtApiManager"
             }
         );
     }

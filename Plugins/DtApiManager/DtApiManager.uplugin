@@ -31,7 +31,7 @@
 			"LoadingPhase": "Default"
 		},
 		{
-			"Name": "DtApiRequestBase",
+			"Name": "DtApiRequestInfo",
 			"Type": "Runtime",
 			"LoadingPhase": "Default"
 		}

@@ -1,5 +1,4 @@
 ﻿#include "DtApiBase.h"
-#include "DtApiPluginConfig.h"
 //#include "Developer/Settings/Public/ISettingsModule.h"
 	
 #define LOCTEXT_NAMESPACE "FDtApiBaseModule"

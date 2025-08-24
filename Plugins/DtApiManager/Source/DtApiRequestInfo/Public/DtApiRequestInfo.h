@@ -3,7 +3,7 @@
 #include "CoreMinimal.h"
 #include "Modules/ModuleManager.h"
 
-class FDtApiRequestBaseModule : public IModuleInterface
+class FDtApiRequestInfoModule : public IModuleInterface
 {
 public:
     virtual void StartupModule() override;

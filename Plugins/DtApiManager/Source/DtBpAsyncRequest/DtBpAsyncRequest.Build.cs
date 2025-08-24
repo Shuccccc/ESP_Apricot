@@ -9,7 +9,7 @@ public class DtBpAsyncRequest : ModuleRules
         PublicDependencyModuleNames.AddRange(
             new string[]
             {
-                "Core", "HTTP",
+                "Core", "HTTP", "VaRest"
             }
         );
 
@@ -19,7 +19,8 @@ public class DtBpAsyncRequest : ModuleRules
                 "CoreUObject",
                 "Engine",
                 "Slate",
-                "SlateCore"
+                "SlateCore",
+                "DtApiRequestInfo",
             }
         );
     }
