@@ -3,7 +3,6 @@
 
 #include "DtApiManagerSubsystem.h"
 #include "DtStructDataTable.h"
-#include "DtApiManagerDefault.h"
 #include "Http.h"
 #include "EncryptionContextOpenSSL.h"
 #include "Json.h"
@@ -144,8 +143,21 @@ void UDtApiManagerSubsystem::InitPlatformIp()
 	Request->ProcessRequest();
 }
 
-void UDtApiManagerSubsystem::AddCacheData(FString Key, FString Value)
+void UDtApiManagerSubsystem::AddCacheData(EApiDataCacheType Type, FString Value)
 {
+	FString Key;
+	switch (Type) {
+	case EApiDataCacheType::OrganId:
+	{
+		Key = PlatformHeaders::OrganIdName;
+	}
+		break;
+	case EApiDataCacheType::Token:
+	{
+		Key = PlatformHeaders::TokenName ;
+		break;
+	}
+	}
 	if (CacheDataMap.Contains(Key))
 	{
 		CacheDataMap.Remove(Key);
@@ -159,6 +171,7 @@ TMap<FString, FString> UDtApiManagerSubsystem::GetIndustryAbility()
 {
 	TMap<FString, FString> HeaderParameter;
 
+	//FromLocalConfig
 	//FromLocalConfig
 	FString AppIdValue = *M_PlatformConfigINI.Find(PlatformConfigKeys::AppId);
 	FString SecretKeyValue = *M_PlatformConfigINI.Find(PlatformConfigKeys::AppSecret);
@@ -242,6 +255,21 @@ FString UDtApiManagerSubsystem::GetPlatformKey(FName RowKey)
 	return *M_PlatformIpMap.Find(temRow->PlatForm);
 }
 
+FString UDtApiManagerSubsystem::GetSHA256Signature(FString String)
+{
+	FString SignString ; 
+	FEncryptionContextOpenSSL CryptoContext;
+	FTCHARToUTF8 ConvertedString(*String);
+	TArrayView<const uint8> DataView(reinterpret_cast<const uint8*>(ConvertedString.Get()), ConvertedString.Length());
+	TArray<uint8> Hash;
+	CryptoContext.CalcSHA256(DataView , Hash);
+	for (uint8 Byte : Hash)
+	{
+		SignString += FString::Printf(TEXT("%02x"), Byte);
+	}
+	return SignString;
+}
+
 FString UDtApiManagerSubsystem::GetApiUrlForKey(RequestDataObject& object, bool& bSucces ) 
 {
 	
@@ -271,4 +299,92 @@ FString UDtApiManagerSubsystem::GetApiUrlForKey(RequestDataObject& object, bool&
 	}
 	bSucces = true;
 	return ApiUrl;
+}
+
+TMap<FString,FString> UDtApiManagerSubsystem::GetHeaderForKey(RequestDataObject& object, bool& bSucces)
+{
+	TMap<FString,FString> HeaderParameter;
+	//GetInitData(FName(PlatformConfigKeys::AppId), bSuccess)
+	
+	FString AppIdValue = *M_PlatformConfigINI.Find(PlatformConfigKeys::AppId);
+	FString NonceString = FGuid::NewGuid().ToString();
+	FString TimeString = FDateTime::Now().ToString(TEXT("%Y%m%d%H%M%S"));
+
+	HeaderParameter.Add(PlatformHeaders::AppIdHeaderName, AppIdValue);
+	HeaderParameter.Add(PlatformHeaders::NonceName, NonceString);
+	HeaderParameter.Add(PlatformHeaders::TimeStampName, TimeString);
+
+	FString SecretKeyValue = *M_PlatformConfigINI.Find(PlatformConfigKeys::AppSecret);
+	
+	FApiDataTable *temRow = M_ApiConfigDataTable->FindRow<FApiDataTable>(FName{object.RowKey},object.RowKey,true);
+	
+	EDtAuthorization Authorization = temRow->Authorization;
+
+	switch (Authorization)
+	{
+	case EDtAuthorization::None:
+	{
+		break;
+	}
+	case EDtAuthorization::Industry:
+	{
+		FString OrganIdString = PlatformHeaders::OrganIdDefault;
+		HeaderParameter.Add(PlatformHeaders::OrganIdName, OrganIdString);
+		FString SignString = GetSHA256Signature(AppIdValue + NonceString + TimeString + OrganIdString + SecretKeyValue);
+		HeaderParameter.Add(PlatformHeaders::SignName, SignString);
+		
+		break;
+	}
+	case EDtAuthorization::IndustryAbility:
+	{
+		FString OrganIdString;
+
+		if (!HeaderParameter.Contains(PlatformHeaders::OrganIdName))
+		{
+			if (CacheDataMap.Contains(PlatformHeaders::OrganIdName))
+			{
+				FString OrganId = *CacheDataMap[PlatformHeaders::OrganIdName];
+			}
+		}
+		else
+		{
+			OrganIdString = HeaderParameter[PlatformHeaders::OrganIdName];
+		}
+		HeaderParameter.Add(PlatformHeaders::OrganIdName, OrganIdString);
+		FString SignString =  GetSHA256Signature(AppIdValue + NonceString + TimeString+ OrganIdString + SecretKeyValue);
+		HeaderParameter.Add(PlatformHeaders::SignName, SignString);
+		break;
+	}
+
+	case EDtAuthorization::Business:
+	{
+		FString SignString =GetSHA256Signature(AppIdValue + NonceString + TimeString + SecretKeyValue);
+		HeaderParameter.Add(PlatformHeaders::SignName, SignString);
+		break;
+	}
+
+	case EDtAuthorization::Plugins:
+	{
+		FString SignString = GetSHA256Signature(AppIdValue + NonceString + TimeString + SecretKeyValue);
+		HeaderParameter.Add(PlatformHeaders::AuthorizationName, SignString);
+		break;
+	}
+
+	case EDtAuthorization::BasicAuth:
+		break;
+	case EDtAuthorization::BearerToken:
+	{
+		FString tokenObjecl;
+		if (CacheDataMap.Contains(PlatformHeaders::TokenName))
+		{
+			tokenObjecl = *CacheDataMap[PlatformHeaders::TokenName];
+		}
+		FString tokenObject =TEXT("");
+		//HeaderParameter.Add(AuthorizationName,  tokenObject.StringValue);
+		HeaderParameter.Add(PlatformHeaders::AuthorizationName, "Bearer " + tokenObject);
+		break;
+	}
+	}
+
+	return HeaderParameter;
 }

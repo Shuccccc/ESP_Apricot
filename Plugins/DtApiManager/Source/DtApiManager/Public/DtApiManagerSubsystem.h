@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "DtApiManagerDefault.h"
 #include "DtStructHttpBase.h"
 #include "Interfaces/IHttpRequest.h"
 #include "Subsystems/GameInstanceSubsystem.h"
@@ -43,7 +44,7 @@ public:
 
 	//添加头
 	UFUNCTION(BlueprintCallable, Category = "DtApiManager")
-	void AddCacheData(FString Key,FString Value);
+	void AddCacheData(EApiDataCacheType Type,FString Value);
 	
 
 private:
@@ -69,9 +70,13 @@ private:
 
 	FString GetPlatformKey(FName RowKey);
 
+	static FString GetSHA256Signature(FString  String) ;
+
 public:
 //处理配置
 	
 	FString GetApiUrlForKey(RequestDataObject& object, bool& bSucces);
+
+	TMap<FString,FString> GetHeaderForKey(RequestDataObject& object, bool& bSucces);
 	
 };

@@ -52,12 +52,14 @@ namespace PlatformHeaders
 	inline const FString SecretKeyName = TEXT("secretkey");
 	inline const FString AppIdHeaderName = TEXT("APPID");
 	inline const FString NonceName = TEXT("NONCE");
+	inline const FString TokenName = TEXT("TOKEN");
 	inline const FString TimeStampName = TEXT("TIMESTAMP");
 	inline const FString NodeCodeName = TEXT("NODECODE");
 	inline const FString OrganIdName = TEXT("ORGANID");
 	inline const FString SignName = TEXT("SIGN");
 	inline const FString NodeCodeDefault = TEXT("");
 	inline const FString OrganIdDefault = TEXT("1");
+	inline const FString AuthorizationName = TEXT("Authorization");
 	inline const FString UserAppId = TEXT("user.appid");//暂时意义不明 先加上
 	inline const FString UserAppSecret = TEXT("user.appsecret");//暂时意义不明 先加上
 }
@@ -74,3 +76,9 @@ namespace HttpContentType
 	// 二进制数据
 	inline const FString Binary = TEXT("application/octet-stream");
 }
+UENUM()
+enum class EApiDataCacheType : uint8
+{
+	OrganId,
+	Token
+};

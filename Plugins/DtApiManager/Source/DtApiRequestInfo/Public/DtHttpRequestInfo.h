@@ -14,7 +14,7 @@ UCLASS()
 class DTAPIREQUESTINFO_API UDtHttpRequestInfo : public UObject
 {
 	GENERATED_BODY()
-
+public:
 
 	void SenHttpRequest(RequestDataObject& RequestDataObject);
 	

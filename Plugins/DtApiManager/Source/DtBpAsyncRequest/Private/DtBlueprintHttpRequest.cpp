@@ -2,7 +2,7 @@
 
 
 #include "DtBlueprintHttpRequest.h"
-#include "Http.h"
+#include "DtHttpRequestInfo.h"
 
 UDtBlueprintHttpRequest* UDtBlueprintHttpRequest::CreateAsyncRequest(UObject* WorldContextObject, FString RowName,TMap<FString, FString> UrlParams, TMap<FString, FString> Headers, TMap<FString, FString> Body)
 {
@@ -24,8 +24,8 @@ void UDtBlueprintHttpRequest::Activate()
 {
 	Super::Activate();
 
-	
-	
+	auto Request  = NewObject<UDtHttpRequestInfo>();
+	Request->SenHttpRequest(M_RequestData);
 }
 
 void UDtBlueprintHttpRequest::OnHttpRequestCompleted(FHttpRequestPtr Request, FHttpResponsePtr Response,bool bWasSuccessful)
