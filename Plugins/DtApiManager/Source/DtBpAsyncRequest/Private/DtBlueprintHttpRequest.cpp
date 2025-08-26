@@ -3,8 +3,10 @@
 
 #include "DtBlueprintHttpRequest.h"
 #include "DtHttpRequestInfo.h"
+#include "Interfaces/IHttpResponse.h"
 
-UDtBlueprintHttpRequest* UDtBlueprintHttpRequest::CreateAsyncRequest(UObject* WorldContextObject, FString RowName,TMap<FString, FString> UrlParams, TMap<FString, FString> Headers, TMap<FString, FString> Body)
+
+UDtBlueprintHttpRequest* UDtBlueprintHttpRequest::CreateAsyncRequest(UObject* WorldContextObject, FString RowName,TMap<FString, FString> Headers ,TMap<FString, FString> UrlParams, TMap<FString, FString> Body)
 {
 	UDtBlueprintHttpRequest* AsyncAction = NewObject<UDtBlueprintHttpRequest>();
 	AsyncAction->M_WorldContextObject = WorldContextObject;
@@ -24,13 +26,17 @@ void UDtBlueprintHttpRequest::Activate()
 {
 	Super::Activate();
 
-	auto Request  = NewObject<UDtHttpRequestInfo>();
-	Request->SenHttpRequest(M_RequestData);
+	M_HttpRequestInfo = NewObject<UDtHttpRequestInfo>(M_WorldContextObject);
+	
+	M_HttpRequestInfo->SenHttpRequest(M_RequestData);
 }
 
 void UDtBlueprintHttpRequest::OnHttpRequestCompleted(FHttpRequestPtr Request, FHttpResponsePtr Response,bool bWasSuccessful)
 {
-//	OnCompleted.Broadcast()
+	UVaRestJsonObject* tempJson = NewObject<UVaRestJsonObject>();
+	UE_LOG(LogTemp, Log, TEXT("这是第二个OnHttpRequestCompleted = %s"),*Response->GetContentAsString())
+	tempJson->DecodeJson(Response->GetContentAsString(), true);
+	OnCompleted.Broadcast(tempJson,Response->GetResponseCode(),bWasSuccessful);
 	SetReadyToDestroy();
 }
 

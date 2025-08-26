@@ -19,7 +19,10 @@ public class DtApiRequestInfo : ModuleRules
                 "CoreUObject",
                 "Engine",
                 "Slate",
-                "SlateCore", "DtApiManager"
+                "SlateCore", 
+                "DtApiManager",
+                "HTTP",
+                
             }
         );
     }

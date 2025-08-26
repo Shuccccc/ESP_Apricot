@@ -68,8 +68,7 @@ void ADtCameraPawn::BeginPlay()
 
 	
 	GetController()->SetControlRotation(M_TargetRotation);
-
-	OnZoomTriggered(FInputActionValue{});
+	
 	//M_NormalizedArmLength = FMath::Clamp((PC_SpringArm->TargetArmLength ) / (C_MaxSpringArmLength - C_MinSpringArmLength), 0.0f, 1.0f);
 
 }

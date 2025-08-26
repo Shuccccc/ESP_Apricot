@@ -65,6 +65,7 @@ namespace PlatformHeaders
 }
 namespace HttpContentType
 {
+	inline const FString TypeName = TEXT("Content-Type");
 	// JSON数据
 	inline const FString Json = TEXT("application/json");
 	// 表单数据

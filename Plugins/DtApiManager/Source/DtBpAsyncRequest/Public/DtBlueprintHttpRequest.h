@@ -13,7 +13,9 @@
  * 
  */
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FHttpDynamicDelegate,  UVaRestJsonObject* , data , int32, StatusCode ,bool,IsSuccess);
+class UDtHttpRequestInfo;
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FHttpDynamicDelegate, UVaRestJsonObject*, data, int32, StatusCode, bool,
+                                               IsSuccess);
 
 
 UCLASS()
@@ -37,6 +39,9 @@ private:
 	UDtBlueprintHttpRequest();
 	UPROPERTY()
 	UObject* M_WorldContextObject;
+
+	UPROPERTY()
+	UDtHttpRequestInfo* M_HttpRequestInfo;
 	
 public:
 	

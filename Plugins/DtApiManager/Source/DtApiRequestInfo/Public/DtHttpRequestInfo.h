@@ -17,5 +17,10 @@ class DTAPIREQUESTINFO_API UDtHttpRequestInfo : public UObject
 public:
 
 	void SenHttpRequest(RequestDataObject& RequestDataObject);
-	
+
+
+	void OnHttpRequestCompleted(FHttpRequestPtr Request, FHttpResponsePtr Response,bool bWasSuccessful);
+
+
+	RequestDataObject M_RequestDataObject;
 };

@@ -77,6 +77,13 @@ public:
 	
 	FString GetApiUrlForKey(RequestDataObject& object, bool& bSucces);
 
-	TMap<FString,FString> GetHeaderForKey(RequestDataObject& object, bool& bSucces);
+	bool GetHeaderForKey(RequestDataObject& object, bool& bSucces);
+	
+	FString GetVerbForKey(RequestDataObject& object);
+
+	TMap<FString, FString> AppendContentType(RequestDataObject& object) ;
+	
+
+	FString GetContent(RequestDataObject& object);
 	
 };

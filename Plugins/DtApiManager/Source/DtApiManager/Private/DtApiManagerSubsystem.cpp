@@ -6,6 +6,7 @@
 #include "Http.h"
 #include "EncryptionContextOpenSSL.h"
 #include "Json.h"
+#include "VaRestJsonObject.h"
 #define TEST 1
 
 bool UDtApiManagerSubsystem::ShouldCreateSubsystem(UObject* Outer) const
@@ -301,18 +302,17 @@ FString UDtApiManagerSubsystem::GetApiUrlForKey(RequestDataObject& object, bool&
 	return ApiUrl;
 }
 
-TMap<FString,FString> UDtApiManagerSubsystem::GetHeaderForKey(RequestDataObject& object, bool& bSucces)
+bool UDtApiManagerSubsystem::GetHeaderForKey(RequestDataObject& object, bool& bSucces)
 {
-	TMap<FString,FString> HeaderParameter;
 	//GetInitData(FName(PlatformConfigKeys::AppId), bSuccess)
 	
 	FString AppIdValue = *M_PlatformConfigINI.Find(PlatformConfigKeys::AppId);
 	FString NonceString = FGuid::NewGuid().ToString();
 	FString TimeString = FDateTime::Now().ToString(TEXT("%Y%m%d%H%M%S"));
 
-	HeaderParameter.Add(PlatformHeaders::AppIdHeaderName, AppIdValue);
-	HeaderParameter.Add(PlatformHeaders::NonceName, NonceString);
-	HeaderParameter.Add(PlatformHeaders::TimeStampName, TimeString);
+	object.HeaderParams.Add(PlatformHeaders::AppIdHeaderName, AppIdValue);
+	object.HeaderParams.Add(PlatformHeaders::NonceName, NonceString);
+	object.HeaderParams.Add(PlatformHeaders::TimeStampName, TimeString);
 
 	FString SecretKeyValue = *M_PlatformConfigINI.Find(PlatformConfigKeys::AppSecret);
 	
@@ -329,9 +329,9 @@ TMap<FString,FString> UDtApiManagerSubsystem::GetHeaderForKey(RequestDataObject&
 	case EDtAuthorization::Industry:
 	{
 		FString OrganIdString = PlatformHeaders::OrganIdDefault;
-		HeaderParameter.Add(PlatformHeaders::OrganIdName, OrganIdString);
+		object.HeaderParams.Add(PlatformHeaders::OrganIdName, OrganIdString);
 		FString SignString = GetSHA256Signature(AppIdValue + NonceString + TimeString + OrganIdString + SecretKeyValue);
-		HeaderParameter.Add(PlatformHeaders::SignName, SignString);
+		object.HeaderParams.Add(PlatformHeaders::SignName, SignString);
 		
 		break;
 	}
@@ -339,7 +339,7 @@ TMap<FString,FString> UDtApiManagerSubsystem::GetHeaderForKey(RequestDataObject&
 	{
 		FString OrganIdString;
 
-		if (!HeaderParameter.Contains(PlatformHeaders::OrganIdName))
+		if (!object.HeaderParams.Contains(PlatformHeaders::OrganIdName))
 		{
 			if (CacheDataMap.Contains(PlatformHeaders::OrganIdName))
 			{
@@ -348,25 +348,25 @@ TMap<FString,FString> UDtApiManagerSubsystem::GetHeaderForKey(RequestDataObject&
 		}
 		else
 		{
-			OrganIdString = HeaderParameter[PlatformHeaders::OrganIdName];
+			OrganIdString = object.HeaderParams[PlatformHeaders::OrganIdName];
 		}
-		HeaderParameter.Add(PlatformHeaders::OrganIdName, OrganIdString);
+		object.HeaderParams.Add(PlatformHeaders::OrganIdName, OrganIdString);
 		FString SignString =  GetSHA256Signature(AppIdValue + NonceString + TimeString+ OrganIdString + SecretKeyValue);
-		HeaderParameter.Add(PlatformHeaders::SignName, SignString);
+		object.HeaderParams.Add(PlatformHeaders::SignName, SignString);
 		break;
 	}
 
 	case EDtAuthorization::Business:
 	{
 		FString SignString =GetSHA256Signature(AppIdValue + NonceString + TimeString + SecretKeyValue);
-		HeaderParameter.Add(PlatformHeaders::SignName, SignString);
+		object.HeaderParams.Add(PlatformHeaders::SignName, SignString);
 		break;
 	}
 
 	case EDtAuthorization::Plugins:
 	{
 		FString SignString = GetSHA256Signature(AppIdValue + NonceString + TimeString + SecretKeyValue);
-		HeaderParameter.Add(PlatformHeaders::AuthorizationName, SignString);
+		object.HeaderParams.Add(PlatformHeaders::AuthorizationName, SignString);
 		break;
 	}
 
@@ -381,10 +381,60 @@ TMap<FString,FString> UDtApiManagerSubsystem::GetHeaderForKey(RequestDataObject&
 		}
 		FString tokenObject =TEXT("");
 		//HeaderParameter.Add(AuthorizationName,  tokenObject.StringValue);
-		HeaderParameter.Add(PlatformHeaders::AuthorizationName, "Bearer " + tokenObject);
+		object.HeaderParams.Add(PlatformHeaders::AuthorizationName, "Bearer " + tokenObject);
 		break;
 	}
 	}
 
-	return HeaderParameter;
+	return true;
+}
+
+FString UDtApiManagerSubsystem::GetVerbForKey(RequestDataObject& object)
+{
+	FApiDataTable *temRow = M_ApiConfigDataTable->FindRow<FApiDataTable>(FName{object.RowKey},object.RowKey,true);
+
+	switch (temRow->Verb) {
+	case EDtHttpMethod::GET:
+		return TEXT("GET");
+	case EDtHttpMethod::POST:
+		return TEXT("POST");
+	case EDtHttpMethod::PUT:
+		return TEXT("PUT");
+	case EDtHttpMethod::DELETE:
+		return TEXT("DELETE");
+	}
+	
+	return TEXT("GET");;
+}
+
+TMap<FString, FString> UDtApiManagerSubsystem::AppendContentType(RequestDataObject& object)
+{
+	TMap<FString, FString> ContentType;
+	FApiDataTable *temRow = M_ApiConfigDataTable->FindRow<FApiDataTable>(FName{object.RowKey},object.RowKey,true);
+
+	switch (temRow->ContentType) {
+	case FDtRequestBody::JSON:
+		
+		object.HeaderParams.Add(HttpContentType::TypeName,HttpContentType::Json);
+		return ContentType;
+	case FDtRequestBody::FORMDATA:
+		object.HeaderParams.Add(HttpContentType::TypeName,HttpContentType::FormData);
+		return ContentType;
+	case FDtRequestBody::FORMURLENCODED:
+		object.HeaderParams.Add(HttpContentType::TypeName,HttpContentType::FormUrlencoded);
+		return ContentType;
+	default:
+		object.HeaderParams.Add(HttpContentType::TypeName,HttpContentType::Json);
+		return object.HeaderParams;
+	}
+
+}
+
+FString UDtApiManagerSubsystem::GetContent(RequestDataObject& object)
+{
+	if ( object.BodyParams.Num() > 0)
+	{
+	 object.BodyJsonObject->SetMapFields_string(object.BodyParams);
+	}
+	return object.BodyJsonObject->EncodeJsonToSingleString();
 }
