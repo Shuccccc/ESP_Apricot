@@ -14,6 +14,8 @@
  */
 
 
+enum class EApiDataCacheType : uint8;
+
 UCLASS()
 class DTAPIMANAGER_API UDtApiManagerSubsystem : public UGameInstanceSubsystem
 {

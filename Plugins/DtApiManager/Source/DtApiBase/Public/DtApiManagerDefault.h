@@ -77,9 +77,3 @@ namespace HttpContentType
 	// 二进制数据
 	inline const FString Binary = TEXT("application/octet-stream");
 }
-UENUM()
-enum class EApiDataCacheType : uint8
-{
-	OrganId,
-	Token
-};

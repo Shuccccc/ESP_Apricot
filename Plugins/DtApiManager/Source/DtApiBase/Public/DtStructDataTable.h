@@ -61,6 +61,18 @@ enum class EDtAuthorization : uint8
 	BearerToken UMETA(DisplayName = "BearerToken"),
 };
 
+UENUM(BlueprintType)
+enum class EApiDataCacheType : uint8
+{
+	OrganId,
+	Token,
+	ComId,
+	UID,
+	UserId,
+	AppId,
+};
+
+
 USTRUCT(BlueprintType)
 struct FApiDataTable : public FTableRowBase
 {
@@ -80,6 +92,12 @@ struct FApiDataTable : public FTableRowBase
 
 	UPROPERTY(EditDefaultsOnly, meta = (DisplayName = "验签(Authorization)"), BlueprintReadWrite, Category = "Table")
 	EDtAuthorization Authorization = EDtAuthorization::None;
+
+	UPROPERTY(EditDefaultsOnly, meta = (Display = "从缓存查找Url传参" , DisplayName = "Url传参缓存"), BlueprintReadWrite, Category = "Table")
+	TArray<EApiDataCacheType> CacheUrlParams;
+
+	UPROPERTY(EditDefaultsOnly, meta = (Display = "从缓存查找Body传参"),DisplayName = "Body传参缓存", BlueprintReadWrite, Category = "Table")
+	TArray<EApiDataCacheType> CacheBodyParams;
 	
 	UPROPERTY(EditDefaultsOnly, meta = (DisplayName = "备注(Marks)"), BlueprintReadWrite, Category = "Table")
 	FString Marks;

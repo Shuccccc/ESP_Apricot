@@ -158,6 +158,14 @@ void UDtApiManagerSubsystem::AddCacheData(EApiDataCacheType Type, FString Value)
 		Key = PlatformHeaders::TokenName ;
 		break;
 	}
+	case EApiDataCacheType::ComId:
+		break;
+	case EApiDataCacheType::UID:
+		break;
+	case EApiDataCacheType::UserId:
+		break;
+	case EApiDataCacheType::AppId:
+		break;
 	}
 	if (CacheDataMap.Contains(Key))
 	{
@@ -215,6 +223,17 @@ TMap<FString, FString> UDtApiManagerSubsystem::GetIndustryAbility()
 
 void UDtApiManagerSubsystem::OnHttpResponse(FHttpRequestPtr Request, FHttpResponsePtr FHttpRequestPtr, bool bWasSuccessful)
 {
+	if (!bWasSuccessful)
+	{
+		FString ErrorString = TEXT("nullptr");
+		if (FHttpRequestPtr)
+		{
+			ErrorString = FHttpRequestPtr->GetContentAsString();
+		}
+		UE_LOG(LogTemp, Log, TEXT("ERROR 初始化平台地址 :: 获取远端服务地址失败 HttpRequestPtr = %s"),*ErrorString);
+		return;
+	}
+	
 	FString RequestStr = FHttpRequestPtr->GetContentAsString();
 	
 	UE_LOG(LogTemp, Log, TEXT("远端平台地址Response : %s "), *RequestStr);
