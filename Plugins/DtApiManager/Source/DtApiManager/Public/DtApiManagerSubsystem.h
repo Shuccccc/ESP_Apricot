@@ -37,7 +37,7 @@ public:
 	void InitApiDataTable(UDataTable *ApiConfigTable,UDataTable *ServerIpTable);
 	
 	// 初始化配置文件和本地平台地址
-	UFUNCTION(BlueprintCallable, Category = "DtApiManager", meta=(DisplayName="初始化本地平台地址"))
+	//UFUNCTION(BlueprintCallable, Category = "DtApiManager", meta=(DisplayName="初始化本地平台地址"))
 	bool InitDefaultPlatform();
 
 	// 从服务平台获取平台地址
@@ -48,6 +48,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "DtApiManager")
 	void AddCacheData(EApiDataCacheType Type,FString Value);
 	
+	UFUNCTION(BlueprintCallable, Category = "DtApiManager",meta=(DisplayName="获取平台地址"))
+	FString GetPlatform(FString PlatformName);
+
 
 private:
 

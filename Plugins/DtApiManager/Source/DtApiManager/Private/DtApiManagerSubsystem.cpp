@@ -73,6 +73,7 @@ bool UDtApiManagerSubsystem::InitDefaultPlatform()
 void UDtApiManagerSubsystem::InitApiDataTable(UDataTable* ApiDataTable,UDataTable *ServerIpTable)
 {
 
+	InitDefaultPlatform();
 	//初始化数据表
 	if ( !ApiDataTable && !ServerIpTable)
 	{
@@ -87,7 +88,10 @@ void UDtApiManagerSubsystem::InitApiDataTable(UDataTable* ApiDataTable,UDataTabl
 	}
 	
 	M_ApiConfigDataTable = ApiDataTable;
-	M_ServerIpDataTable = ServerIpTable; 
+	M_ServerIpDataTable = ServerIpTable;
+
+
+
 }
 
 void UDtApiManagerSubsystem::InitPlatformIp()
@@ -173,6 +177,15 @@ void UDtApiManagerSubsystem::AddCacheData(EApiDataCacheType Type, FString Value)
 	}
 	
 	CacheDataMap.Add(Key,Value);
+}
+
+FString UDtApiManagerSubsystem::GetPlatform(FString PlatformName)
+{
+	if (FString *temstr = M_PlatformIpMap.Find(PlatformName))
+	{
+		return *temstr;
+	}
+	return PlatformName+TEXT(" not found");
 }
 
 

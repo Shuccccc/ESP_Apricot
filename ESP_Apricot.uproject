@@ -28,10 +28,6 @@
 		{
 			"Name": "SteamSockets",
 			"Enabled": true
-		},
-		{
-			"Name": "WebBrowserWidget",
-			"Enabled": true
 		}
 	]
 }
