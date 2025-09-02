@@ -34,9 +34,20 @@ void UDtBlueprintHttpRequest::Activate()
 void UDtBlueprintHttpRequest::OnHttpRequestCompleted(FHttpRequestPtr Request, FHttpResponsePtr Response,bool bWasSuccessful)
 {
 	UVaRestJsonObject* tempJson = NewObject<UVaRestJsonObject>();
-	UE_LOG(LogTemp, Log, TEXT("这是第二个OnHttpRequestCompleted = %s"),*Response->GetContentAsString())
-	tempJson->DecodeJson(Response->GetContentAsString(), true);
-	OnCompleted.Broadcast(tempJson,Response->GetResponseCode(),bWasSuccessful);
+	FString TemStr	= TEXT("nullptr");
+	int temCode	= -1;
+
+	if (bWasSuccessful)
+	{
+		TemStr	= Response->GetContentAsString();
+
+		temCode	= Response->GetResponseCode();
+	}
+
+	UE_LOG(LogTemp, Log, TEXT("这是第二个OnHttpRequestCompleted = %s"),*TemStr)
+
+	tempJson->DecodeJson(TemStr, true);
+	OnCompleted.Broadcast(tempJson,temCode,bWasSuccessful);
 	SetReadyToDestroy();
 }
 

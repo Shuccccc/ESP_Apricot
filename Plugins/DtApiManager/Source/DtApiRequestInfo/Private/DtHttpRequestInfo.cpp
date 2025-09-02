@@ -68,8 +68,4 @@ void UDtHttpRequestInfo::SenHttpRequest(RequestDataObject& RequestDataObject)
 void UDtHttpRequestInfo::OnHttpRequestCompleted(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
 {
 	M_RequestDataObject.CallBack.ExecuteIfBound(Request, Response, bWasSuccessful);
-	FPlatformTypeLayoutParameters LayoutParameters;
-	FMemoryToStringContext ToStringContext;
-	Request->GetAllHeaders().ToString(LayoutParameters,ToStringContext);
-	UE_LOG(LogTemp, Log, TEXT("这是第一个OnHttpRequestCompleted = %p"),ToStringContext.String)
 }
