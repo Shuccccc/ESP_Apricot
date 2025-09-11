@@ -10,8 +10,12 @@
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=7020124F_002D9FFC_002D4AC3_002D8F3D_002DAAB8E0240759_002Ff_003AWebBrowser_002EBuild_002Ecs_002Fl_003APlugins_003FDtWebBrowserModule_003FSource_003FWebBrowser_003FWebBrowser_002EBuild_002Ecs_002Fz_003A2_002D1/@EntryIndexedValue">ForceIncluded</s:String>
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=7020124F_002D9FFC_002D4AC3_002D8F3D_002DAAB8E0240759_002Ff_003AWebBrowser_002EBuild_002Ecs_002Fl_003APlugins_003FDtWebBrowser_003FSource_003FWebBrowser_003FWebBrowser_002EBuild_002Ecs/@EntryIndexedValue">ForceIncluded</s:String>
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=7020124F_002D9FFC_002D4AC3_002D8F3D_002DAAB8E0240759_002Ff_003AWexypuv_002Easm_002Fl_003AC_0021_003FUsers_003FRoot_003FAppData_003FLocal_003FTemp_003FSandboxFiles_003FWegevyf_003FWexypuv_002Easm/@EntryIndexedValue">ForceIncluded</s:String>
-	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=7020124F_002D9FFC_002D4AC3_002D8F3D_002DAAB8E0240759_002Ff_003AZupavit_002Easm_002Fl_003AC_0021_003FUsers_003F15792_003FAppData_003FLocal_003FTemp_003FSandboxFiles_003FPybixej_003FZupavit_002Easm/@EntryIndexedValue">ForceIncluded</s:String>
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=7365A672_002D1899_002D0AFC_002DF740_002D350475132CC6_002Fd_003APublic_002Fd_003AContainers_002Ff_003AUnrealString_002Eh_002Einl/@EntryIndexedValue">ForceIncluded</s:String>
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=7365A672_002D1899_002D0AFC_002DF740_002D350475132CC6_002Fd_003APublic_002Fd_003AGenericPlatform_002Ff_003AGenericPlatformStricmp_002Eh/@EntryIndexedValue">ForceIncluded</s:String>
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=77C83D05_002DD03A_002DDDE3_002D346A_002DF5576B17FB20_002Fd_003APublic_002Ff_003AISettingsModule_002Eh/@EntryIndexedValue">ForceIncluded</s:String>
-</wpf:ResourceDictionary>
+<<<<<<< HEAD
+	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=A36456C1_002D2574_002DA4A5_002DA65A_002DCD146E32833A_002Fd_003APublic_002Fd_003AUObject_002Ff_003AObject_002Eh/@EntryIndexedValue">ForceIncluded</s:String></wpf:ResourceDictionary>
+=======
+	
+	</wpf:ResourceDictionary>
+>>>>>>> a4869a6c3e5b8edd2f532c0f3eb16aee7240928d
