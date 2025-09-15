@@ -32,6 +32,14 @@
 		{
 			"Name": "DtWebBrowserWidget",
 			"Enabled": true
+		},
+		{
+			"Name": "GameFeatures",
+			"Enabled": true
+		},
+		{
+			"Name": "ModularGameplay",
+			"Enabled": true
 		}
 	]
 }

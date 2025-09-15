@@ -1,0 +1,34 @@
+{
+	"FileVersion": 3,
+	"Version": 1,
+	"VersionName": "1.0",
+	"FriendlyName": "DtUIFramework",
+	"Description": "",
+	"Category": "Other",
+	"CreatedBy": "abing",
+	"CreatedByURL": "",
+	"DocsURL": "",
+	"MarketplaceURL": "",
+	"SupportURL": "",
+	"CanContainContent": true,
+	"IsBetaVersion": false,
+	"IsExperimentalVersion": false,
+	"Installed": false,
+	"Modules": [
+		{
+			"Name": "DtUIFramework",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		},
+        {
+          "Name": "UIWidget",
+          "Type": "Runtime",
+          "LoadingPhase": "Default"
+        },
+        {
+          "Name": "UILayout",
+          "Type": "Runtime",
+          "LoadingPhase": "Default"
+        }
+	]
+}
