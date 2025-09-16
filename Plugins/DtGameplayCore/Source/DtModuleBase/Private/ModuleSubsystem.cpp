@@ -2,7 +2,7 @@
 
 
 #include "ModuleSubsystem.h"
-
+#include "Engine/AssetManager.h"
 #include "AssetRegistry/AssetRegistryModule.h"
 
 bool UModuleSubsystem::ShouldCreateSubsystem(UObject* Outer) const
@@ -21,7 +21,10 @@ void UModuleSubsystem::Deinitialize()
 }
 void UModuleSubsystem::ForceLoadBlueprints()
 {
-//#if WITH_EDITOR
+	if (false)
+	{
+		
+	
 	FAssetRegistryModule& AssetRegistryModule = FModuleManager::LoadModuleChecked<FAssetRegistryModule>("AssetRegistry");
 	IAssetRegistry& AssetRegistry = AssetRegistryModule.Get();
 
@@ -41,7 +44,19 @@ void UModuleSubsystem::ForceLoadBlueprints()
 			Asset.GetAsset();
 		}
 	}
-//#endif
+	}
+
+	FStreamableManager& StreamableManager = UAssetManager::GetStreamableManager();
+	
+	// 创建资源路径列表
+	TArray<FString> AssetPaths;
+	AssetPaths.Add(TEXT("/Game/ESafetyPlatform_Content/Module"));
+
+	// 异步加载整个目录的资源
+	TSharedPtr<FStreamableHandle> Handle = StreamableManager.RequestAsyncLoad(AssetPaths, FStreamableDelegate::CreateLambda([]() {
+		// 加载完成后的回调，这里可以执行一些后续操作
+		UE_LOG(LogTemp, Log, TEXT("Module blueprints async loaded"));
+	}), 0, false);
 }
 
 TArray<AModuleBaseActor*> UModuleSubsystem::InitModuleSubsystem()
