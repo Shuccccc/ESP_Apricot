@@ -1,15 +1,15 @@
 ﻿using UnrealBuildTool;
 
-public class UILayout : ModuleRules
+public class UILayer : ModuleRules
 {
-    public UILayout(ReadOnlyTargetRules Target) : base(Target)
+    public UILayer(ReadOnlyTargetRules Target) : base(Target)
     {
         PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
 
         PublicDependencyModuleNames.AddRange(
             new string[]
             {
-                "Core"
+                "Core",
             }
         );
 
@@ -21,7 +21,6 @@ public class UILayout : ModuleRules
                 "Slate",
                 "SlateCore",
                 "UMG"
-
             }
         );
     }

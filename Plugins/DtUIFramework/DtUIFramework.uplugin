@@ -20,15 +20,15 @@
 			"Type": "Runtime",
 			"LoadingPhase": "Default"
 		},
-        {
-          "Name": "UIWidget",
-          "Type": "Runtime",
-          "LoadingPhase": "Default"
-        },
-        {
-          "Name": "UILayout",
-          "Type": "Runtime",
-          "LoadingPhase": "Default"
-        }
+		{
+			"Name": "UIWidget",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		},
+		{
+			"Name": "UILayer",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		}
 	]
 }

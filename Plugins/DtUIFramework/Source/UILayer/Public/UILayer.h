@@ -3,7 +3,7 @@
 #include "CoreMinimal.h"
 #include "Modules/ModuleManager.h"
 
-class FUILayoutModule : public IModuleInterface
+class FUILayerModule : public IModuleInterface
 {
 public:
     virtual void StartupModule() override;
