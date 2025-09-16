@@ -5,6 +5,11 @@
 #include "Blueprint/WidgetTree.h"
 #include "UILayerBase.h"
 #include "Components/CanvasPanel.h"
+#include "Components/CanvasPanelSlot.h"
+//Test
+#include "Components/Button.h"
+
+
 
 bool UDtRootViewport::Initialize()
 {
@@ -48,7 +53,14 @@ bool UDtRootViewport::Initialize()
 		M_SystemLayer = Layers[5];
 		M_TopLayer = Layers[6];
 	}
+		
+	UButton* NewButton = WidgetTree->ConstructWidget<UButton>();
+	NewButton->SetBackgroundColor(FLinearColor::Red);
+    
+	UCanvasPanelSlot* ButtonSlot = M_StaticLayer->M_RootViewport->AddChildToCanvas(NewButton);
+	ButtonSlot->SetPosition(FVector2D(100, 200));
+	ButtonSlot->SetSize(FVector2D(150, 50));
+	
 	
 	return bResult;
 }
-
