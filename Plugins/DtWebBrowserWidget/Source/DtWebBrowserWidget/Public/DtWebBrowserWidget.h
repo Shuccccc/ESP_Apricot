@@ -21,7 +21,7 @@ public:
 	 */
 	static inline IDtWebBrowserWidgetModule& Get()
 	{
-		return FModuleManager::LoadModuleChecked<IDtWebBrowserWidgetModule>( "WebBrowserWidget" );
+		return FModuleManager::LoadModuleChecked<IDtWebBrowserWidgetModule>( "DtWebBrowserWidget" );
 	}
 
 	/**
@@ -31,7 +31,7 @@ public:
 	 */
 	static inline bool IsAvailable()
 	{
-		return FModuleManager::Get().IsModuleLoaded( "WebBrowserWidget" );
+		return FModuleManager::Get().IsModuleLoaded( "DtWebBrowserWidget" );
 	}
 };
 

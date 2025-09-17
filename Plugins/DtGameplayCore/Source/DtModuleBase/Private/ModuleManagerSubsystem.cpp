@@ -1,27 +1,19 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "ModuleSubsystem.h"
+#include "ModuleManagerSubsystem.h"
 #include "Engine/AssetManager.h"
 #include "AssetRegistry/AssetRegistryModule.h"
 
-bool UModuleSubsystem::ShouldCreateSubsystem(UObject* Outer) const
-{
-	return Super::ShouldCreateSubsystem(Outer);
-}
-
-void UModuleSubsystem::Initialize(FSubsystemCollectionBase& Collection)
+void UModuleManagerSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);
 }
 
-void UModuleSubsystem::Deinitialize()
+void UModuleManagerSubsystem::ForceLoadBlueprints()
 {
-	Super::Deinitialize();
-}
-void UModuleSubsystem::ForceLoadBlueprints()
-{
-	if (false)
+	bool babala = true;
+	if (babala)
 	{
 		
 	
@@ -46,20 +38,24 @@ void UModuleSubsystem::ForceLoadBlueprints()
 	}
 	}
 
-	FStreamableManager& StreamableManager = UAssetManager::GetStreamableManager();
+	if (!babala)
+	{
+		FStreamableManager& StreamableManager = UAssetManager::GetStreamableManager();
 	
-	// 创建资源路径列表
-	TArray<FString> AssetPaths;
-	AssetPaths.Add(TEXT("/Game/ESafetyPlatform_Content/Module"));
+		// 创建资源路径列表
+		TArray<FString> AssetPaths;
+		AssetPaths.Add(TEXT("/Game/ESafetyPlatform_Content/Module"));
 
-	// 异步加载整个目录的资源
-	TSharedPtr<FStreamableHandle> Handle = StreamableManager.RequestAsyncLoad(AssetPaths, FStreamableDelegate::CreateLambda([]() {
-		// 加载完成后的回调，这里可以执行一些后续操作
-		UE_LOG(LogTemp, Log, TEXT("Module blueprints async loaded"));
-	}), 0, false);
+		// 异步加载整个目录的资源
+		TSharedPtr<FStreamableHandle> Handle = StreamableManager.RequestAsyncLoad(AssetPaths, FStreamableDelegate::CreateLambda([]() {
+			// 加载完成后的回调，这里可以执行一些后续操作
+			UE_LOG(LogTemp, Log, TEXT("Module blueprints async loaded"));
+		}), 0, false);
+	}
+
 }
 
-TArray<AModuleBaseActor*> UModuleSubsystem::InitModuleSubsystem()
+TArray<AModuleBaseActor*> UModuleManagerSubsystem::InitModuleSubsystem()
 {
 	if (ModuleActors.Num() > 0)
 	{
@@ -97,7 +93,7 @@ TArray<AModuleBaseActor*> UModuleSubsystem::InitModuleSubsystem()
 	
 }
 
-AModuleBaseActor* UModuleSubsystem::GetModule(TSubclassOf<AModuleBaseActor> ModuleClass) 
+AModuleBaseActor* UModuleManagerSubsystem::GetModule(TSubclassOf<AModuleBaseActor> ModuleClass) 
 {
 	for (auto i : ModuleActors)  
 	{
@@ -108,3 +104,4 @@ AModuleBaseActor* UModuleSubsystem::GetModule(TSubclassOf<AModuleBaseActor> Modu
 	}
 	return nullptr;
 }
+

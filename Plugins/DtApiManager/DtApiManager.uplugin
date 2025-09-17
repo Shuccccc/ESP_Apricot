@@ -35,5 +35,15 @@
 			"Type": "Runtime",
 			"LoadingPhase": "Default"
 		}
-	]
+	],
+    "Plugins": [
+        {
+            "Name": "VaRestX",
+            "Enabled": true
+        },
+        {
+            "Name": "PlatformCrypto",
+            "Enabled": true
+        }
+    ]
 }

@@ -1,6 +1,6 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
-#include "DtWebBrowserWidgetModule.h"
+#include "DtWebBrowserWidget.h"
 #include "DtWebBrowserAssetManager.h"
 #include "WebBrowserModule.h"
 #include "IWebBrowserSingleton.h"
@@ -42,4 +42,4 @@ private:
 
 //////////////////////////////////////////////////////////////////////////
 
-IMPLEMENT_MODULE(FDtWebBrowserWidgetModule, WebBrowserWidget);
+IMPLEMENT_MODULE(FDtWebBrowserWidgetModule, DtWebBrowserWidget);

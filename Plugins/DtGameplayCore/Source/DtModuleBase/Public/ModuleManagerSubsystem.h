@@ -5,23 +5,19 @@
 #include "CoreMinimal.h"
 #include "Subsystems/GameInstanceSubsystem.h"
 #include "ModuleBaseActor.h"
-#include "ModuleSubsystem.generated.h"
+#include "ModuleManagerSubsystem.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class DTMODULEBASE_API UModuleSubsystem : public UGameInstanceSubsystem
+class DTMODULEBASE_API UModuleManagerSubsystem : public UGameInstanceSubsystem
 {
 	GENERATED_BODY()
 
 public:
-	
-	virtual bool ShouldCreateSubsystem(UObject* Outer) const override;
  
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
-	
-	virtual void Deinitialize() override;
 
 	UFUNCTION(BlueprintCallable)
 	TArray<AModuleBaseActor*> InitModuleSubsystem();
