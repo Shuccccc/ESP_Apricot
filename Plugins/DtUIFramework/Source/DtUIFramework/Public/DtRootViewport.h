@@ -28,6 +28,9 @@ public:
 	
 	UPROPERTY()
 	TObjectPtr<UUILayerBase> M_StaticLayer;
+
+	UPROPERTY()
+	TObjectPtr<UUILayerBase> M_FloatingLayer;
 	
 	UPROPERTY()
 	TObjectPtr<UUILayerBase> M_WindowLayer;

@@ -26,6 +26,7 @@ bool UDtRootViewport::Initialize()
 	
 	TArray<FName> LayerNames = {
 		FName(TEXT("StaticLayer")),
+		FName(TEXT("FloatingLayer")),
 		FName(TEXT("WindowLayer")),
 		FName(TEXT("NotificationLayer")),
 		FName(TEXT("PopupLayer")),
@@ -46,12 +47,13 @@ bool UDtRootViewport::Initialize()
 	if (Layers.Num() >= 7)
 	{
 		M_StaticLayer = Layers[0];
-		M_WindowLayer = Layers[1];
-		M_NotificationLayer = Layers[2];
-		M_PopupLayer = Layers[3];
-		M_ProgressLayer = Layers[4];
-		M_SystemLayer = Layers[5];
-		M_TopLayer = Layers[6];
+		M_FloatingLayer = Layers[1];
+		M_WindowLayer = Layers[2];
+		M_NotificationLayer = Layers[3];
+		M_PopupLayer = Layers[4];
+		M_ProgressLayer = Layers[5];
+		M_SystemLayer = Layers[6];
+		M_TopLayer = Layers[7];
 	}
 		
 	UButton* NewButton = WidgetTree->ConstructWidget<UButton>();
@@ -60,7 +62,6 @@ bool UDtRootViewport::Initialize()
 	UCanvasPanelSlot* ButtonSlot = M_StaticLayer->M_RootViewport->AddChildToCanvas(NewButton);
 	ButtonSlot->SetPosition(FVector2D(100, 200));
 	ButtonSlot->SetSize(FVector2D(150, 50));
-	
 	
 	return bResult;
 }

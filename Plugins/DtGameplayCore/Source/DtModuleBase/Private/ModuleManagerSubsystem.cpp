@@ -4,6 +4,7 @@
 #include "ModuleManagerSubsystem.h"
 #include "Engine/AssetManager.h"
 #include "AssetRegistry/AssetRegistryModule.h"
+#include "Engine/StreamableManager.h"
 
 void UModuleManagerSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
