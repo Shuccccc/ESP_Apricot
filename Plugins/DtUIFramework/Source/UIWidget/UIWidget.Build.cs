@@ -19,7 +19,8 @@ public class UIWidget : ModuleRules
                 "CoreUObject",
                 "Engine",
                 "Slate",
-                "SlateCore"
+                "SlateCore" ,
+                "UMG",
             }
         );
     }
