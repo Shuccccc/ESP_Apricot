@@ -3,6 +3,8 @@
 
 #include "TestWidgetcomponent.h"
 #include "SlateAssetConfig.hpp"
+#include "Components/InvalidationBox.h"
+#include "Widgets/SInvalidationPanel.h"
 #include "Widgets/SOverlay.h"
 #include "Widgets/Images/SImage.h"
 

@@ -9,7 +9,7 @@ public class UIWidget : ModuleRules
         PublicDependencyModuleNames.AddRange(
             new string[]
             {
-                "Core",
+                "Core", "DtUIFramework",
             }
         );
 
