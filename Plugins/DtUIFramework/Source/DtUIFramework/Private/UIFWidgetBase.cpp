@@ -9,19 +9,19 @@ void UUIFWidgetBase::NativeConstruct()
 {
 	Super::NativeConstruct();
 
-//	auto UIManager = GetWorld()->GetSubsystem<UUIManagerSubsystem>();
+	auto UIManager = GetWorld()->GetSubsystem<UUIManagerSubsystem>();
 
 	FString LogTem = this->GetDisplayNameBase().ToString();
 	UKismetSystemLibrary::PrintString(this, LogTem+TEXT("  已注册"), true,true, FColor::Red, 8.0f);
 
-//	UIManager->RegisterUI(this);
+	UIManager->RegisterUI(this);
 }
 
 void UUIFWidgetBase::NativeDestruct()
 {
-//	auto UIManager = GetWorld()->GetSubsystem<UUIManagerSubsystem>();
+	auto UIManager = GetWorld()->GetSubsystem<UUIManagerSubsystem>();
 
-//	UIManager->UnRegisterUI(this);
+	UIManager->UnRegisterUI(this);
 	
 	FString LogTem = this->GetDisplayNameBase().ToString();
 	UKismetSystemLibrary::PrintString(this, LogTem+TEXT("  已注销"), true,true, FColor::Red, 8.0f);

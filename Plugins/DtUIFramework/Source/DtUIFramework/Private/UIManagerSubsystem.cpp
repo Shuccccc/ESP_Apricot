@@ -16,10 +16,10 @@ void UUIManagerSubsystem::OnWorldBeginPlay(UWorld& InWorld)
 void UUIManagerSubsystem::RegisterUI(TWeakObjectPtr<UUIFWidgetBase> InWidget)
 {
 	M_UIList.Add(InWidget);
-	/*if (InWidget.IsValid())
+	if (InWidget.IsValid())
 	{
 		InWidget->TestPrint(TEXT("友元多态调用 :: "));
-	}*/
+	}
 }
 
 void UUIManagerSubsystem::UnRegisterUI(TWeakObjectPtr<UUIFWidgetBase> InWidget)

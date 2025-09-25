@@ -40,7 +40,6 @@ public class DtUIFramework : ModuleRules
 				"SlateCore",
 				"UMG", 
 				"UILayer", 
-				"UIWidget",
 			}
 			);
 		

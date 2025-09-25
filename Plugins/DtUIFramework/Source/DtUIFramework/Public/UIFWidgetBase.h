@@ -11,7 +11,7 @@
  * 
  */
 UCLASS(Abstract)
-class UIWIDGET_API UUIFWidgetBase : public UUserWidget
+class DTUIFRAMEWORK_API UUIFWidgetBase : public UUserWidget
 {
 	GENERATED_BODY()
 	

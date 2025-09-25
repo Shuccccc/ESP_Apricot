@@ -9,7 +9,7 @@ public class UIWidget : ModuleRules
         PublicDependencyModuleNames.AddRange(
             new string[]
             {
-                "Core", 
+                "Core", "DtUIFramework", 
                 // Removed "DtUIFramework" to avoid circular dependency
             }
         );
@@ -21,8 +21,8 @@ public class UIWidget : ModuleRules
                 "Engine",
                 "Slate",
                 "SlateCore" ,
-                "UMG",
-                "DtUIFramework", // Added here instead
+                "UMG", 
+                // Added here instead
             }
         );
     }
