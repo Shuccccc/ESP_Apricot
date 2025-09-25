@@ -22,8 +22,4 @@ struct FDtUIStyle
 	FLinearColor TertiaryColor = FColor::FromHex(TEXT("F9F9F9FF")); 	// 第三颜色
 	UPROPERTY(BlueprintReadWrite)
 	FLinearColor AccentColor = FColor::FromHex(TEXT("F95757FF"));	// 强调色
-	UPROPERTY(BlueprintReadWrite)
-	FLinearColor ComponentColor = FColor::FromHex(TEXT("F95757FF"));	// 组件颜色
-	UPROPERTY(BlueprintReadWrite)
-	FLinearColor ComponentSecondaryColor = FColor::FromHex(TEXT("F9F9F9FF")); // 组件次要颜色
 };

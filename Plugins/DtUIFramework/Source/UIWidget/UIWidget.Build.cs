@@ -1,4 +1,4 @@
-﻿using UnrealBuildTool;
+using UnrealBuildTool;
 
 public class UIWidget : ModuleRules
 {
@@ -9,7 +9,8 @@ public class UIWidget : ModuleRules
         PublicDependencyModuleNames.AddRange(
             new string[]
             {
-                "Core", "DtUIFramework",
+                "Core", 
+                // Removed "DtUIFramework" to avoid circular dependency
             }
         );
 
@@ -21,6 +22,7 @@ public class UIWidget : ModuleRules
                 "Slate",
                 "SlateCore" ,
                 "UMG",
+                "DtUIFramework", // Added here instead
             }
         );
     }

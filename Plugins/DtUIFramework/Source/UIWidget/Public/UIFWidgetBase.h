@@ -10,33 +10,44 @@
 /**
  * 
  */
-UCLASS()
+UCLASS(Abstract)
 class UIWIDGET_API UUIFWidgetBase : public UUserWidget
 {
 	GENERATED_BODY()
 	
+	friend class UUIManagerSubsystem;
+	
 public:
+	
+	void NativeConstruct() override;
 
-//	void Initialize() override;
+	void NativeDestruct() override;
+	
 	UFUNCTION(BlueprintCallable, BlueprintPure, meta=(CompactNodeTitle = "UIStyle"))
 	FDtUIStyle GetUIStyle();
+
+	UFUNCTION(BlueprintCallable, BlueprintPure, meta=(CompactNodeTitle = "UIStyle"))
+	bool GetStylized();
 	
 	UFUNCTION(BlueprintCallable)
-	void SetUIStyle(FDtUIStyle NewStyle);
-	
+	void SetStylized(bool IsStylized);
 		
 	//用于初始化以及刷新样式
 	UFUNCTION(BlueprintImplementableEvent)
 	void UpdateStyle();
 
 private:
-
-	UPROPERTY(BlueprintGetter="GetUIStyle", BlueprintSetter="SetUIStyle")
+	
+	void SetUIStyle(FDtUIStyle NewStyle);
+	
+	UPROPERTY(BlueprintGetter="GetUIStyle" )//BlueprintSetter="SetUIStyle"
 	FDtUIStyle M_UIStyle;
 
-	friend class UUIManagerSubsystem;
-	
+	UPROPERTY(BlueprintGetter="GetStylized", BlueprintSetter="SetStylized")
+	bool M_IsStylized;
 
+	void TestPrint ( FString Tem);
+	
 	void LerpColor();
 
 	FTimerHandle M_TimerHandle;
@@ -44,6 +55,5 @@ private:
 	float M_LerpAlpha;
 	
 	FDtUIStyle M_NewColor;
-	
 
 };
