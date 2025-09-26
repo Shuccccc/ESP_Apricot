@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "DtUIFStruct.h"
 #include "Subsystems/WorldSubsystem.h"
 #include "UIManagerSubsystem.generated.h"
 
@@ -24,8 +25,11 @@ public:
 	void RegisterUI(TWeakObjectPtr<UUIFWidgetBase> InWidget);
 
 	void UnRegisterUI(TWeakObjectPtr<UUIFWidgetBase> InWidget);
-	
 
+
+public:
+	UFUNCTION(BlueprintCallable ,Category="UI|System")
+	void SetTheme(FDtUIStyle Style);
 	
 	UPROPERTY()
 	TObjectPtr<UDtRootViewport> M_RootViewport;

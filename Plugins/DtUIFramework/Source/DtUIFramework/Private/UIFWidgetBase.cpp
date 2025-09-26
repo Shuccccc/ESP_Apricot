@@ -34,7 +34,7 @@ FDtUIStyle UUIFWidgetBase::GetUIStyle()
 	return M_UIStyle;
 }
 
-void UUIFWidgetBase::SetUIStyle(FDtUIStyle NewStyle)
+void UUIFWidgetBase::SetTheme(FDtUIStyle NewStyle)
 {
 	M_NewColor = NewStyle;
 
@@ -49,6 +49,14 @@ void UUIFWidgetBase::SetUIStyle(FDtUIStyle NewStyle)
 bool UUIFWidgetBase::GetStylized()
 {
 	return M_IsStylized;
+}
+
+void UUIFWidgetBase::SetUIColor(FDtUIStyle Color)
+{
+	if (!M_IsStylized)
+	{
+		SetTheme(Color);
+	}
 }
 
 void UUIFWidgetBase::SetStylized(bool IsStylized)

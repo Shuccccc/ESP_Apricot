@@ -27,4 +27,17 @@ void UUIManagerSubsystem::UnRegisterUI(TWeakObjectPtr<UUIFWidgetBase> InWidget)
 	M_UIList.Remove(InWidget) ;
 }
 
+void UUIManagerSubsystem::SetTheme(FDtUIStyle Style)
+{
+	for (auto i : M_UIList)
+	{
+		if (i.IsValid())
+		{
+			i->SetTheme(Style);	
+		}
+	}
+}
+
+
+
 

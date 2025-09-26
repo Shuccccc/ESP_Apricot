@@ -19,15 +19,18 @@ class DTUIFRAMEWORK_API UUIFWidgetBase : public UUserWidget
 	
 public:
 	
-	void NativeConstruct() override;
+	virtual void NativeConstruct() override;
 
-	void NativeDestruct() override;
+	virtual void NativeDestruct() override;
 	
 	UFUNCTION(BlueprintCallable, BlueprintPure, meta=(CompactNodeTitle = "UIStyle"))
 	FDtUIStyle GetUIStyle();
 
 	UFUNCTION(BlueprintCallable, BlueprintPure, meta=(CompactNodeTitle = "UIStyle"))
 	bool GetStylized();
+
+	UFUNCTION(BlueprintCallable)
+	void SetUIColor(FDtUIStyle Color);
 	
 	UFUNCTION(BlueprintCallable)
 	void SetStylized(bool IsStylized);
@@ -38,7 +41,7 @@ public:
 
 private:
 	
-	void SetUIStyle(FDtUIStyle NewStyle);
+	void SetTheme(FDtUIStyle NewStyle);
 	
 	UPROPERTY(BlueprintGetter="GetUIStyle" )//BlueprintSetter="SetUIStyle"
 	FDtUIStyle M_UIStyle;
