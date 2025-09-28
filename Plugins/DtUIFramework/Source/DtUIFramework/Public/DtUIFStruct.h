@@ -10,16 +10,16 @@
  * 
  */
 USTRUCT(BlueprintType)
-struct FDtUIStyle
+struct FDtUIStyle : public FTableRowBase
 {
 	GENERATED_BODY()
 	
-	UPROPERTY(BlueprintReadWrite)
+	UPROPERTY(BlueprintReadWrite,EditDefaultsOnly)
 	FLinearColor PrimaryColor = FColor::FromHex(TEXT("222222FF"));	// 主要颜色
-	UPROPERTY(BlueprintReadWrite)
+	UPROPERTY(BlueprintReadWrite,EditDefaultsOnly)
 	FLinearColor SecondaryColor = FColor::FromHex(TEXT("3489F9FF"));	// 次要颜色
-	UPROPERTY(BlueprintReadWrite)
+	UPROPERTY(BlueprintReadWrite,EditDefaultsOnly)
 	FLinearColor TertiaryColor = FColor::FromHex(TEXT("F9F9F9FF")); 	// 第三颜色
-	UPROPERTY(BlueprintReadWrite)
+	UPROPERTY(BlueprintReadWrite,EditDefaultsOnly)
 	FLinearColor AccentColor = FColor::FromHex(TEXT("F95757FF"));	// 强调色
 };

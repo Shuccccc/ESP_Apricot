@@ -37,9 +37,8 @@ FDtUIStyle UUIFWidgetBase::GetUIStyle()
 
 void UUIFWidgetBase::ResetUIStyle()
 {
-	M_IsStylized = true;
 	auto UIManager = GetWorld()->GetSubsystem<UUIManagerSubsystem>();
-	
+	SetTheme(UIManager->GetDefaultStyle(),true);
 }
 
 void UUIFWidgetBase::SetTheme(FDtUIStyle NewStyle , bool IsStylized)

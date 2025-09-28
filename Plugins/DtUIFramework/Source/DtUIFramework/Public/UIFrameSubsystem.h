@@ -1,11 +1,12 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Subsystems/WorldSubsystem.h"
 #include "DtUIFStruct.h"
-#include "UIManagerSubsystem.generated.h"
+#include "Subsystems/WorldSubsystem.h"
+#include "UIFrameSubsystem.generated.h"
+
 
 class UDtRootViewport;
 class UUIFWidgetBase;
@@ -14,10 +15,9 @@ class UUIFWidgetBase;
  * 
  */
 UCLASS()
-class DTUIFRAMEWORK_API UUIManagerSubsystem : public UWorldSubsystem
+class DTUIFRAMEWORK_API UUIFrameSubsystem : public UWorldSubsystem
 {
 	GENERATED_BODY()
-	
 public:
 	virtual void OnWorldBeginPlay(UWorld& InWorld) override;
 

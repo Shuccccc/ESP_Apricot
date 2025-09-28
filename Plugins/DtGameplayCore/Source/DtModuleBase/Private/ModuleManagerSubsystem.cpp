@@ -43,14 +43,12 @@ void UModuleManagerSubsystem::ForceLoadBlueprints()
 	{
 		FStreamableManager& StreamableManager = UAssetManager::GetStreamableManager();
 	
-		// 创建资源路径列表
 		TArray<FString> AssetPaths;
 		AssetPaths.Add(TEXT("/Game/ESafetyPlatform_Content/Module"));
 
 		// 异步加载整个目录的资源
-		TSharedPtr<FStreamableHandle> Handle = StreamableManager.RequestAsyncLoad(AssetPaths, FStreamableDelegate::CreateLambda([]() {
-			// 加载完成后的回调，这里可以执行一些后续操作
-			UE_LOG(LogTemp, Log, TEXT("Module blueprints async loaded"));
+		TSharedPtr<FStreamableHandle> Handle = StreamableManager.RequestAsyncLoad(AssetPaths, FStreamableDelegate::CreateLambda([this]() {
+			// 资源加载完成
 		}), 0, false);
 	}
 

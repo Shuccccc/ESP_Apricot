@@ -25,7 +25,7 @@ UDtBlueprintHttpRequest* UDtBlueprintHttpRequest::CreateAsyncRequest(UObject* Wo
 void UDtBlueprintHttpRequest::Activate()
 {
 	Super::Activate();
-
+	// 这里不能睡 阻塞主线程
 	M_HttpRequestInfo = NewObject<UDtHttpRequestInfo>(M_WorldContextObject);
 	
 	M_HttpRequestInfo->SenHttpRequest(M_RequestData);
