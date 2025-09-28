@@ -36,4 +36,8 @@ public:
 
 private: 
 	TArray<TWeakObjectPtr<UUIFWidgetBase>> M_UIList;
+	
+	FDtUIStyle GetDefaultStyle();
+	
+	FDtUIStyle M_DefaultStyle;
 };

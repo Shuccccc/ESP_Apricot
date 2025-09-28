@@ -15,6 +15,7 @@ void UUIFWidgetBase::NativeConstruct()
 	UKismetSystemLibrary::PrintString(this, LogTem+TEXT("  已注册"), true,true, FColor::Red, 8.0f);
 
 	UIManager->RegisterUI(this);
+
 }
 
 void UUIFWidgetBase::NativeDestruct()
@@ -34,34 +35,23 @@ FDtUIStyle UUIFWidgetBase::GetUIStyle()
 	return M_UIStyle;
 }
 
-void UUIFWidgetBase::SetTheme(FDtUIStyle NewStyle)
+void UUIFWidgetBase::ResetUIStyle()
+{
+	M_IsStylized = true;
+	auto UIManager = GetWorld()->GetSubsystem<UUIManagerSubsystem>();
+	
+}
+
+void UUIFWidgetBase::SetTheme(FDtUIStyle NewStyle , bool IsStylized)
 {
 	M_NewColor = NewStyle;
-
+	M_IsStylized = IsStylized;
 	// 启动插值定时器
 	if (!GetWorld()->GetTimerManager().IsTimerActive(M_TimerHandle))
 	{
 		M_LerpAlpha = 0.f;
 		GetWorld()->GetTimerManager().SetTimer(M_TimerHandle, this, &UUIFWidgetBase::LerpColor, 0.0333f, true);
 	}
-}
-
-bool UUIFWidgetBase::GetStylized()
-{
-	return M_IsStylized;
-}
-
-void UUIFWidgetBase::SetUIColor(FDtUIStyle Color)
-{
-	if (!M_IsStylized)
-	{
-		SetTheme(Color);
-	}
-}
-
-void UUIFWidgetBase::SetStylized(bool IsStylized)
-{
-	M_IsStylized = IsStylized;
 }
 
 
@@ -84,10 +74,20 @@ void UUIFWidgetBase::LerpColor()
 		GetWorld()->GetTimerManager().ClearTimer(M_TimerHandle);
 		return;
 	}
+	
 	M_UIStyle.AccentColor = FLinearColor::LerpUsingHSV(M_UIStyle.AccentColor,M_NewColor.AccentColor,M_LerpAlpha);
 	M_UIStyle.PrimaryColor = FLinearColor::LerpUsingHSV(M_UIStyle.PrimaryColor,M_NewColor.PrimaryColor,M_LerpAlpha);
-	M_UIStyle.SecondaryColor = FLinearColor::LerpUsingHSV(M_UIStyle.SecondaryColor,M_NewColor.SecondaryColor,M_LerpAlpha);
 	M_UIStyle.TertiaryColor = FLinearColor::LerpUsingHSV(M_UIStyle.TertiaryColor,M_NewColor.TertiaryColor,M_LerpAlpha);
+	M_UIStyle.SecondaryColor = FLinearColor::LerpUsingHSV(M_UIStyle.SecondaryColor,M_NewColor.SecondaryColor,M_LerpAlpha);
 	
 	UpdateStyle();
 }
+
+/*bool UUIFWidgetBase::GetStylized()
+{
+	return M_IsStylized;
+}
+void UUIFWidgetBase::SetStylized(bool IsStylized)
+{
+	M_IsStylized = IsStylized;
+}*/

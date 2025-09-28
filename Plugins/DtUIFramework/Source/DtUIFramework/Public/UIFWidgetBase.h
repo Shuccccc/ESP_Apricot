@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "DtUIFStruct.h"
+#include "UIManagerSubsystem.h"
 #include "UIFWidgetBase.generated.h"
 
 /**
@@ -26,27 +27,29 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintPure, meta=(CompactNodeTitle = "UIStyle"))
 	FDtUIStyle GetUIStyle();
 
-	UFUNCTION(BlueprintCallable, BlueprintPure, meta=(CompactNodeTitle = "UIStyle"))
+	UFUNCTION(BlueprintCallable , meta=(CompactNodeTitle = "UIStyle"))
+	void ResetUIStyle();
+
+	/*UFUNCTION(BlueprintCallable, BlueprintPure, meta=(CompactNodeTitle = "UIStyle"))
 	bool GetStylized();
 
 	UFUNCTION(BlueprintCallable)
-	void SetUIColor(FDtUIStyle Color);
-	
-	UFUNCTION(BlueprintCallable)
-	void SetStylized(bool IsStylized);
-		
+	void SetStylized(bool IsStylized);*/
+
 	//用于初始化以及刷新样式
 	UFUNCTION(BlueprintImplementableEvent)
 	void UpdateStyle();
 
+protected:
+	
+	UFUNCTION(BlueprintCallable,Category="Default")
+	void SetTheme(FDtUIStyle NewStyle , bool IsStylized = false);
+	
 private:
 	
-	void SetTheme(FDtUIStyle NewStyle);
-	
-	UPROPERTY(BlueprintGetter="GetUIStyle" )//BlueprintSetter="SetUIStyle"
+	UPROPERTY(Blueprintable,BlueprintGetter="GetUIStyle")//BlueprintSetter="SetUIStyle"
 	FDtUIStyle M_UIStyle;
 
-	UPROPERTY(BlueprintGetter="GetStylized", BlueprintSetter="SetStylized")
 	bool M_IsStylized;
 
 	void TestPrint ( FString Tem);
@@ -59,4 +62,5 @@ private:
 	
 	FDtUIStyle M_NewColor;
 
+//	friend FDtUIStyle UUIManagerSubsystem::GetDefaultStyle();
 };

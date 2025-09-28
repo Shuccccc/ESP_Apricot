@@ -27,4 +27,5 @@
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=83846D19_002D86E6_002DE208_002D7333_002DA0BD63F925DE_002Fd_003APrivate_002Ff_003ASWebBrowser_002Ecpp/@EntryIndexedValue">ForceIncluded</s:String>
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=83846D19_002D86E6_002DE208_002D7333_002DA0BD63F925DE_002Fd_003APublic_002Ff_003ASWebBrowser_002Eh/@EntryIndexedValue">ForceIncluded</s:String>
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=83846D19_002D86E6_002DE208_002D7333_002DA0BD63F925DE_002Fd_003APublic_002Ff_003ASWebBrowserView_002Eh/@EntryIndexedValue">ForceIncluded</s:String>
+	
 </wpf:ResourceDictionary>

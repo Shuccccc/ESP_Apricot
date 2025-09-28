@@ -29,15 +29,20 @@ void UUIManagerSubsystem::UnRegisterUI(TWeakObjectPtr<UUIFWidgetBase> InWidget)
 
 void UUIManagerSubsystem::SetTheme(FDtUIStyle Style)
 {
+	M_DefaultStyle = Style;
 	for (auto i : M_UIList)
 	{
-		if (i.IsValid())
+		if (i.IsValid() && i->M_IsStylized)
 		{
 			i->SetTheme(Style);	
 		}
 	}
 }
 
+FDtUIStyle UUIManagerSubsystem::GetDefaultStyle()
+{
+	return M_DefaultStyle;
+}
 
 
 
