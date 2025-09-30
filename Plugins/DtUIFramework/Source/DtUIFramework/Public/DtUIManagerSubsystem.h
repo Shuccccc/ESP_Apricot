@@ -3,9 +3,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Subsystems/WorldSubsystem.h"
+#include "Subsystems/GameInstanceSubsystem.h"
 #include "DtUIFStruct.h"
-#include "UIManagerSubsystem.generated.h"
+#include "Engine/Engine.h" 
+#include "UIManager.generated.h"
 
 class UDtRootViewport;
 class UUIFWidgetBase;
@@ -13,13 +14,17 @@ class UUIFWidgetBase;
 /**
  * 
  */
+
+//DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam()
 UCLASS()
-class DTUIFRAMEWORK_API UUIManagerSubsystem : public UWorldSubsystem
+class DTUIFRAMEWORK_API UUIManager : public UGameInstanceSubsystem
 {
 	GENERATED_BODY()
-	
+
 public:
-	virtual void OnWorldBeginPlay(UWorld& InWorld) override;
+	// UGameInstanceSubsystem的生命周期函数
+	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
+	virtual void Deinitialize() override;
 
 	//注册UI
 	void RegisterUI(TWeakObjectPtr<UUIFWidgetBase> InWidget);
@@ -35,8 +40,16 @@ public:
 	TObjectPtr<UDtRootViewport> M_RootViewport;
 
 private:
+	
 	UPROPERTY()
 	TArray<TWeakObjectPtr<UUIFWidgetBase>> M_UIList;
 	UPROPERTY()
 	FDtUIStyle M_DefaultStyle;
+
+	
+	void OnWorldLoaded(UWorld* NewWorld);
+
+protected:
+	
+	FDelegateHandle OnWorldLoadedDelegateHandle;
 };
