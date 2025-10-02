@@ -2,15 +2,19 @@
 
 
 #include "ModuleManagerSubsystem.h"
+
+//#include "AssetRegistry/AssetRegistryModule.h"
 #include "Engine/AssetManager.h"
-#include "AssetRegistry/AssetRegistryModule.h"
-#include "Engine/StreamableManager.h"
+//#include "Engine/StreamableManager.h"
+#include "Engine/Engine.h"
 
 void UModuleManagerSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);
-}
 
+	OnPostLoadMapHandle = FCoreUObjectDelegates::PostLoadMapWithWorld.AddUObject(this, &UModuleManagerSubsystem::OnPostLoadMap);
+}
+//弃置
 void UModuleManagerSubsystem::ForceLoadBlueprints()
 {
 	bool babala = true;
@@ -54,6 +58,77 @@ void UModuleManagerSubsystem::ForceLoadBlueprints()
 
 }
 
+void UModuleManagerSubsystem::OnPostLoadMap(UWorld* World)
+{
+	RequestAsyncModuleLoad(World);
+	
+}
+
+void UModuleManagerSubsystem::RequestAsyncModuleLoad(UWorld* WorldContext)
+{
+    // 同步发现所有模块资产（此过程很快，因为它读取的是缓存）
+    FAssetRegistryModule& AssetRegistryModule = FModuleManager::LoadModuleChecked<FAssetRegistryModule>("AssetRegistry");
+    FARFilter Filter;
+    Filter.PackagePaths.Add(TEXT("/Game/ESafetyPlatform_Content/Module"));
+    Filter.bRecursivePaths = true;
+	Filter.ClassPaths.Add(AModuleBaseActor::StaticClass()->GetClassPathName());
+    TArray<FAssetData> Assets;
+    AssetRegistryModule.Get().GetAssets(Filter, Assets);
+
+    if (Assets.IsEmpty())
+    {
+        UE_LOG(LogTemp, Warning, TEXT("ModuleManager: No module assets found to load."));
+        return;
+    }
+
+    // 收集需要异步加载的资产路径
+    TArray<FSoftObjectPath> PathsToLoad;
+    for (const FAssetData& Asset : Assets)
+    {
+        PathsToLoad.Add(Asset.ToSoftObjectPath());
+    }
+
+    UE_LOG(LogTemp, Log, TEXT("ModuleManager: Requesting async load of %d modules."), PathsToLoad.Num());
+    
+    //使用StreamableManager提交异步加载请求
+    FStreamableManager& StreamableManager = UAssetManager::Get().GetStreamableManager();
+    TWeakObjectPtr<UWorld> WeakWorldContext = WorldContext;
+
+    StreamableManager.RequestAsyncLoad(PathsToLoad, FStreamableDelegate::CreateUObject(this,&UModuleManagerSubsystem::AsyncLoadModuleAsset, WeakWorldContext, PathsToLoad));
+}
+
+void UModuleManagerSubsystem::AsyncLoadModuleAsset(TWeakObjectPtr<UWorld> WeakWorldContext,TArray<FSoftObjectPath> PathsToLoad)
+{
+	if (!WeakWorldContext.IsValid())
+	{
+		UE_LOG(LogTemp, Error, TEXT("ModuleManager: Module load completed, but World is no longer valid."));
+		return;
+	}
+	UWorld* World = WeakWorldContext.Get();
+        
+	UE_LOG(LogTemp, Log, TEXT("ModuleManager: Module assets loaded. Spawning actors..."));
+
+	//遍历已加载的资源，生成Actor实例
+	for (const FSoftObjectPath& Path : PathsToLoad)
+	{
+		UClass* LoadedClass = Cast<UClass>(Path.ResolveObject());
+		if (!LoadedClass) continue;
+            
+		// 过滤掉骨架蓝图和未实现InitModule的蓝图
+		const FString ClassName = LoadedClass->GetName();
+		if (ClassName.StartsWith(TEXT("SKEL_")) || ClassName.StartsWith(TEXT("REINST_"))) continue;
+		if (!LoadedClass->IsFunctionImplementedInScript(GET_FUNCTION_NAME_CHECKED(AModuleBaseActor, InitModule))) continue;
+            
+		if (AModuleBaseActor* SpawnedModule = World->SpawnActor<AModuleBaseActor>(LoadedClass))
+		{
+			ModuleMap.Emplace(LoadedClass, SpawnedModule);
+			SpawnedModule->InitModule();
+			UE_LOG(LogTemp, Log, TEXT("ModuleManager: Spawned and initialized module: %s"), *SpawnedModule->GetName());
+		}
+	}
+}
+
+//弃置
 TArray<AModuleBaseActor*> UModuleManagerSubsystem::InitModuleSubsystem()
 {
 	if (ModuleActors.Num() > 0)
@@ -94,13 +169,15 @@ TArray<AModuleBaseActor*> UModuleManagerSubsystem::InitModuleSubsystem()
 
 AModuleBaseActor* UModuleManagerSubsystem::GetModule(TSubclassOf<AModuleBaseActor> ModuleClass) 
 {
-	for (auto i : ModuleActors)  
+
+	return ModuleMap.FindRef(ModuleClass);
+	/*for (auto i : ModuleActors)  
 	{
 		if (ModuleClass.Get() == i->GetClass())
 		{
 			return i;  
 		}
 	}
-	return nullptr;
+	return nullptr;*/
 }
 

@@ -29,4 +29,14 @@ private:
 	TArray<AModuleBaseActor*> ModuleActors;
 
 	void ForceLoadBlueprints();
+
+	FDelegateHandle OnPostLoadMapHandle;
+	void OnPostLoadMap(UWorld* World);
+
+	void RequestAsyncModuleLoad(UWorld* WorldContext);
+
+	void AsyncLoadModuleAsset(TWeakObjectPtr<UWorld> WeakWorldContext  , TArray<FSoftObjectPath> PathsToLoad);
+	
+	UPROPERTY()
+	TMap<TSubclassOf<AModuleBaseActor>, TObjectPtr<AModuleBaseActor>> ModuleMap;
 };

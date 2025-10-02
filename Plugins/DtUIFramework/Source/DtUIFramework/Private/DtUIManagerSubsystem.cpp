@@ -1,39 +1,43 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "UIManager.h"
+#include "DtUIManagerSubsystem.h"
 #include "DtRootViewport.h"
 #include "UIFWidgetBase.h"
 
-void UUIManager::Initialize(FSubsystemCollectionBase& Collection)
+void UDtUIManagerSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);
-	OnWorldLoadedDelegateHandle = FCoreUObjectDelegates::PostLoadMapWithWorld.AddUObject(this, &UUIManager::OnWorldLoaded);
+	OnWorldLoadedDelegateHandle = FCoreUObjectDelegates::PostLoadMapWithWorld.AddUObject(this, &UDtUIManagerSubsystem::OnWorldLoaded);
 }
 
-void UUIManager::Deinitialize()
+void UDtUIManagerSubsystem::Deinitialize()
 {
 	FCoreUObjectDelegates::PostLoadMapWithWorld.Remove(OnWorldLoadedDelegateHandle);
 	Super::Deinitialize();
 }
 
-void UUIManager::RegisterUI(TWeakObjectPtr<UUIFWidgetBase> InWidget)
+void UDtUIManagerSubsystem::RegisterUI(TWeakObjectPtr<UUIFWidgetBase> InWidget)
 {
-	M_UIList.Add(InWidget);
 	if (InWidget.IsValid())
 	{
-		InWidget->TestPrint(TEXT("友元多态调用 :: "));
+		M_UIList.Add(InWidget);
+	//	InWidget->TestPrint(TEXT("友元多态调用 :: "));
 	}
 }
 
-void UUIManager::UnRegisterUI(TWeakObjectPtr<UUIFWidgetBase> InWidget)
+void UDtUIManagerSubsystem::UnRegisterUI(TWeakObjectPtr<UUIFWidgetBase> InWidget)
 {
 	M_UIList.Remove(InWidget) ;
 }
 
-void UUIManager::SetTheme(FDtUIStyle Style)
+void UDtUIManagerSubsystem::SetTheme(FDtUIStyle Style)
 {
 	M_DefaultStyle = Style;
+	
+	auto temCDO = Cast<UUIFWidgetBase>(UUIFWidgetBase::StaticClass()->GetDefaultObject());
+	temCDO->M_UIStyle=Style;
+	
 	for (auto i : M_UIList)
 	{
 		if (i.IsValid() && ! i->M_IsStylized)
@@ -43,7 +47,12 @@ void UUIManager::SetTheme(FDtUIStyle Style)
 	}
 }
 
-void UUIManager::OnWorldLoaded(UWorld* NewWorld)
+FDtUIStyle UDtUIManagerSubsystem::GetUIStyle()
+{
+	return M_DefaultStyle;
+}
+
+void UDtUIManagerSubsystem::OnWorldLoaded(UWorld* NewWorld)
 {
 	if (NewWorld && NewWorld->IsGameWorld())
 	{
@@ -56,7 +65,7 @@ void UUIManager::OnWorldLoaded(UWorld* NewWorld)
 	}
 }
 
-FDtUIStyle UUIManager::GetDefaultStyle()
+FDtUIStyle UDtUIManagerSubsystem::GetDefaultStyle()
 {
 	return M_DefaultStyle;
 }

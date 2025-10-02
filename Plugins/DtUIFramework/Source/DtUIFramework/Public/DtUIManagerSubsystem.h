@@ -6,7 +6,7 @@
 #include "Subsystems/GameInstanceSubsystem.h"
 #include "DtUIFStruct.h"
 #include "Engine/Engine.h" 
-#include "UIManager.generated.h"
+#include "DtUIManagerSubsystem.generated.h"
 
 class UDtRootViewport;
 class UUIFWidgetBase;
@@ -17,7 +17,7 @@ class UUIFWidgetBase;
 
 //DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam()
 UCLASS()
-class DTUIFRAMEWORK_API UUIManager : public UGameInstanceSubsystem
+class DTUIFRAMEWORK_API UDtUIManagerSubsystem : public UGameInstanceSubsystem
 {
 	GENERATED_BODY()
 
@@ -35,6 +35,8 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void SetTheme(FDtUIStyle Style);
+	UFUNCTION(BlueprintCallable,BlueprintPure)
+	FDtUIStyle GetUIStyle();
 	
 	UPROPERTY()
 	TObjectPtr<UDtRootViewport> M_RootViewport;
@@ -47,7 +49,7 @@ private:
 	FDtUIStyle M_DefaultStyle;
 
 	
-	void OnWorldLoaded(UWorld* NewWorld);
+	void OnWorldLoaded(UWorld* NewWorld);								
 
 protected:
 	

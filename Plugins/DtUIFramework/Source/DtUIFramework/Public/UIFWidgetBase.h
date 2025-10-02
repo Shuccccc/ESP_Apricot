@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include <Programs/UnrealBuildAccelerator/Core/Public/UbaBase.h>
+
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "DtUIFStruct.h"
@@ -16,19 +18,20 @@ class DTUIFRAMEWORK_API UUIFWidgetBase : public UUserWidget
 {
 	GENERATED_BODY()
 	
-	friend class UUIManagerSubsystem;
+	friend class UDtUIManagerSubsystem;
 
 	friend class UUIFrameSubsystem;
 	
 public:
-	
+
+	void SetUIStyle (FDtUIStyle NewStyle);
 	virtual void NativeConstruct() override;
 
 	virtual void NativeDestruct() override;
 	
 	UFUNCTION(BlueprintCallable, BlueprintPure, meta=(CompactNodeTitle = "UIStyle"))
 	FDtUIStyle GetUIStyle();
-
+	
 	UFUNCTION(BlueprintCallable , meta=(CompactNodeTitle = "UIStyle"))
 	void ResetUIStyle();
 
@@ -36,6 +39,9 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void UpdateStyle();
 
+	UPROPERTY(BlueprintReadOnly)
+	FGuid Guid ;
+	
 protected:
 
 	/**
@@ -44,10 +50,13 @@ protected:
 	 */
 	UFUNCTION(BlueprintCallable,Category="Default")
 	void SetTheme(FDtUIStyle NewStyle , bool IsStylized = false);
+
+	UPROPERTY(BlueprintReadOnly)
+	float AnimationSpeed = 1.f;
 	
 private:
 	
-	UPROPERTY(Blueprintable,BlueprintGetter="GetUIStyle")//BlueprintSetter="SetUIStyle"
+	UPROPERTY(Blueprintable,BlueprintGetter="GetUIStyle",Setter="SetUIStyle")
 	FDtUIStyle M_UIStyle;
 
 	bool M_IsStylized =  false;

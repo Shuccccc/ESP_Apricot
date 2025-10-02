@@ -2,30 +2,35 @@
 
 
 #include "UIFWidgetBase.h"
-#include "UIManagerSubsystem.h"
+#include "DtUIManagerSubsystem.h"
 #include "Kismet/KismetSystemLibrary.h"
+
+void UUIFWidgetBase::SetUIStyle(FDtUIStyle NewStyle)
+{
+	M_UIStyle = NewStyle;
+}
 
 void UUIFWidgetBase::NativeConstruct()
 {
 	Super::NativeConstruct();
-
-	auto UIManager = GetWorld()->GetSubsystem<UUIManagerSubsystem>();
-
-	FString LogTem = this->GetDisplayNameBase().ToString();
-	UKismetSystemLibrary::PrintString(this, LogTem+TEXT("  已注册"), true,true, FColor::Red, 8.0f);
+	
+	Guid = FGuid::NewGuid();
+	
+	auto UIManager = GetGameInstance()->GetSubsystem<UDtUIManagerSubsystem>();
+	//M_UIStyle = UIManager->GetDefaultStyle();
 
 	UIManager->RegisterUI(this);
-
+	
 }
 
 void UUIFWidgetBase::NativeDestruct()
 {
-	auto UIManager = GetWorld()->GetSubsystem<UUIManagerSubsystem>();
+	auto UIManager = GetGameInstance()->GetSubsystem<UDtUIManagerSubsystem>();
 
 	UIManager->UnRegisterUI(this);
 	
-	FString LogTem = this->GetDisplayNameBase().ToString();
-	UKismetSystemLibrary::PrintString(this, LogTem+TEXT("  已注销"), true,true, FColor::Red, 8.0f);
+//	FString LogTem = this->GetDisplayNameBase().ToString();
+//	UKismetSystemLibrary::PrintString(this, LogTem+TEXT("  已注销"), true,true, FColor::Red, 8.0f);
 
 	Super::NativeDestruct();
 }
@@ -34,10 +39,9 @@ FDtUIStyle UUIFWidgetBase::GetUIStyle()
 {
 	return M_UIStyle;
 }
-
 void UUIFWidgetBase::ResetUIStyle()
 {
-	auto UIManager = GetWorld()->GetSubsystem<UUIManagerSubsystem>();
+	auto UIManager = GetGameInstance()->GetSubsystem<UDtUIManagerSubsystem>();
 	SetTheme(UIManager->GetDefaultStyle(),true);
 }
 
