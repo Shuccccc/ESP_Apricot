@@ -5,11 +5,11 @@
 #include "CoreMinimal.h"
 #include "Subsystems/GameInstanceSubsystem.h"
 #include "DtUIFStruct.h"
-#include "Engine/Engine.h" 
 #include "DtUIManagerSubsystem.generated.h"
 
 class UDtRootViewport;
 class UUIFWidgetBase;
+class UDtUIFrameworkConfig;
 
 /**
  * 
@@ -20,26 +20,32 @@ UCLASS()
 class DTUIFRAMEWORK_API UDtUIManagerSubsystem : public UGameInstanceSubsystem
 {
 	GENERATED_BODY()
-
 public:
-	// UGameInstanceSubsystem的生命周期函数
+//Blueprint
+
+	UFUNCTION( BlueprintCallable , Category = "Blueprint | Window")
+	UUIFWidgetBase* GetWindow(FString ID);
+
+	
+	UFUNCTION(BlueprintCallable)
+	void SetTheme(FDtUIStyle Style);
+	
+	UFUNCTION(BlueprintCallable,BlueprintPure)
+	FDtUIStyle GetUIStyle();
+//Function
+	
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 	virtual void Deinitialize() override;
 
-	//注册UI
 	void RegisterUI(TWeakObjectPtr<UUIFWidgetBase> InWidget);
-
 	void UnRegisterUI(TWeakObjectPtr<UUIFWidgetBase> InWidget);
 
 	FDtUIStyle GetDefaultStyle();
-
-	UFUNCTION(BlueprintCallable)
-	void SetTheme(FDtUIStyle Style);
-	UFUNCTION(BlueprintCallable,BlueprintPure)
-	FDtUIStyle GetUIStyle();
 	
 	UPROPERTY()
 	TObjectPtr<UDtRootViewport> M_RootViewport;
+
+	void OnWorldLoaded(UWorld* NewWorld);
 
 private:
 	
@@ -47,10 +53,21 @@ private:
 	TArray<TWeakObjectPtr<UUIFWidgetBase>> M_UIList;
 	UPROPERTY()
 	FDtUIStyle M_DefaultStyle;
+	
+	
+	UPROPERTY()
+	UWorld*	M_World;
+	
+	//Blueprint类缓存
+	
+	void InitBlueprintCache();
+	void OnBlueprintClassesLoaded();
+	
+	UPROPERTY()
+	TSubclassOf<UUIFWidgetBase> M_UMG_Window;
+
 
 	
-	void OnWorldLoaded(UWorld* NewWorld);								
-
 protected:
 	
 	FDelegateHandle OnWorldLoadedDelegateHandle;

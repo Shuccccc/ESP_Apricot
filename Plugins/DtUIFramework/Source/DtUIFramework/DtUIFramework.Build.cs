@@ -1,4 +1,4 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
+// Fill out your copyright notice in the Description page of Project Settings.
 
 using UnrealBuildTool;
 
@@ -25,7 +25,7 @@ public class DtUIFramework : ModuleRules
 		PublicDependencyModuleNames.AddRange(
 			new string[]
 			{
-				"Core", "UMG",
+				"Core",
 				// ... add other public dependencies that you statically link with here ...
 			}
 			);
@@ -38,8 +38,10 @@ public class DtUIFramework : ModuleRules
 				"Engine",
 				"Slate",
 				"SlateCore",
-				"UMG", 
-				"UILayer", 
+				"UMG",
+				"DeveloperSettings", 
+				"UILayer",
+				// ... add private dependencies that you statically link with here ...	
 			}
 			);
 		

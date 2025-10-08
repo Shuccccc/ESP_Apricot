@@ -61,7 +61,7 @@ void UUIFWidgetBase::SetTheme(FDtUIStyle NewStyle , bool IsStylized)
 void UUIFWidgetBase::TestPrint(FString Tem)
 {
 
-	FString LogTem = Tem + this->GetDisplayNameBase().ToString();
+	FString LogTem = Tem ;
 
 	UKismetSystemLibrary::PrintString(this, LogTem, true,true, FColor::Red, 8.0f);
 	

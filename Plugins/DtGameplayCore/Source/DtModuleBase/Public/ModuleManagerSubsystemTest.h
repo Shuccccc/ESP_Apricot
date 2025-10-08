@@ -17,7 +17,7 @@ class DTMODULEBASE_API UModuleManagerSubsystemTest : public UWorldSubsystem
 
 
 public:
-	virtual bool ShouldCreateSubsystem(UObject* Outer)  { return false; } 
+	//virtual bool ShouldCreateSubsystem(UObject* Outer)  { return false; } 
 
 	//virtual void OnWorldBeginPlay(UWorld& InWorld) override;
 

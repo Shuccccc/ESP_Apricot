@@ -29,6 +29,11 @@
 			"Name": "UILayer",
 			"Type": "Runtime",
 			"LoadingPhase": "Default"
+		},
+		{
+			"Name": "DtUIFrameWorkEditor",
+			"Type": "Editor",
+			"LoadingPhase": "Default"
 		}
 	]
 }

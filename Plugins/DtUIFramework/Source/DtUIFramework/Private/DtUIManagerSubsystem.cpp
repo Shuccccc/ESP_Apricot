@@ -1,14 +1,19 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "DtUIManagerSubsystem.h"
 #include "DtRootViewport.h"
 #include "UIFWidgetBase.h"
+#include "DtRuntimeUIConfig.h"
+#include "Engine/AssetManager.h"
+#include "Engine/Engine.h"
 
 void UDtUIManagerSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);
+	
 	OnWorldLoadedDelegateHandle = FCoreUObjectDelegates::PostLoadMapWithWorld.AddUObject(this, &UDtUIManagerSubsystem::OnWorldLoaded);
+
+	InitBlueprintCache();
 }
 
 void UDtUIManagerSubsystem::Deinitialize()
@@ -29,6 +34,19 @@ void UDtUIManagerSubsystem::RegisterUI(TWeakObjectPtr<UUIFWidgetBase> InWidget)
 void UDtUIManagerSubsystem::UnRegisterUI(TWeakObjectPtr<UUIFWidgetBase> InWidget)
 {
 	M_UIList.Remove(InWidget) ;
+}
+
+FDtUIStyle UDtUIManagerSubsystem::GetDefaultStyle()
+{
+	return M_DefaultStyle;
+}
+
+UUIFWidgetBase* UDtUIManagerSubsystem::GetWindow(FString ID)
+{
+
+	UUIFWidgetBase* CreatedWidget = CreateWidget<UUIFWidgetBase>(GetWorld(), M_UMG_Window);
+    
+	return CreatedWidget;
 }
 
 void UDtUIManagerSubsystem::SetTheme(FDtUIStyle Style)
@@ -56,16 +74,44 @@ void UDtUIManagerSubsystem::OnWorldLoaded(UWorld* NewWorld)
 {
 	if (NewWorld && NewWorld->IsGameWorld())
 	{
+		M_World = NewWorld;
+		
 		if (M_RootViewport)
 		{
 			M_RootViewport->AddToViewport(8);
+			return;
 		}
 		M_RootViewport = CreateWidget<UDtRootViewport>(NewWorld, UDtRootViewport::StaticClass());
 		M_RootViewport->AddToViewport(8);
 	}
 }
 
-FDtUIStyle UDtUIManagerSubsystem::GetDefaultStyle()
+void UDtUIManagerSubsystem::InitBlueprintCache()
 {
-	return M_DefaultStyle;
+	const auto Setting = GetDefault<UDtRuntimeUIConfig>();
+
+	if (!Setting)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Failed to get settings!"));
+		return ;
+	}
+	TArray<FSoftObjectPath> AssetsToLoad;
+
+	//加载窗口类
+	if (!Setting->UMG_Window.IsNull())
+	{
+		AssetsToLoad.Add(Setting->UMG_Window.ToSoftObjectPath());
+	}
+	
+	UAssetManager::Get().GetStreamableManager().RequestAsyncLoad(AssetsToLoad,FStreamableDelegate::CreateUObject(this, &UDtUIManagerSubsystem::OnBlueprintClassesLoaded));
+}
+
+void UDtUIManagerSubsystem::OnBlueprintClassesLoaded()
+{
+	const UDtRuntimeUIConfig* Setting = GetDefault<UDtRuntimeUIConfig>();
+	if (!Setting)
+	{
+		return;
+	}
+	M_UMG_Window = Setting->UMG_Window.Get();
 }
