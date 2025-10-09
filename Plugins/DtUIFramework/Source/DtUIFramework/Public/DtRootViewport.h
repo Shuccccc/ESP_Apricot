@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "DtUIFStruct.h"
 #include "DtRootViewport.generated.h"
 
 /**
@@ -21,7 +22,7 @@ public:
 	virtual bool Initialize() override;
 	
 
-	
+	void AddToView (EDtUILayer Layer , UUserWidget* Widget) ;
 
 	UPROPERTY()//根面板
 	TObjectPtr<UCanvasPanel> M_RootViewport;

@@ -23,3 +23,16 @@ struct FDtUIStyle : public FTableRowBase
 	UPROPERTY(BlueprintReadWrite,EditDefaultsOnly)
 	FLinearColor AccentColor = FColor::FromHex(TEXT("F95757FF"));	// 强调色
 };
+
+UENUM()
+enum class EDtUILayer : uint8
+{
+	Static,
+	Floating,
+	Window,
+	Notification,
+	Popup,
+	Progress,
+	System,
+	Top
+};

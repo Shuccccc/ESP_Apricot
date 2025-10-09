@@ -40,7 +40,6 @@ public class DtUIFramework : ModuleRules
 				"SlateCore",
 				"UMG",
 				"DeveloperSettings", 
-				"UILayer",
 				// ... add private dependencies that you statically link with here ...	
 			}
 			);

@@ -11,12 +11,14 @@ class UCanvasPanel;
  * 
  */
 UCLASS(NotBlueprintable)
-class UILAYER_API UUILayerBase : public UUserWidget
+class DTUIFRAMEWORK_API UUILayerBase : public UUserWidget
 {
 	GENERATED_BODY()
 
 public:
 
+	void AddWidgetToCanvas(UUserWidget* Widget) const;
+	
 	virtual bool Initialize() override;
 
 	UPROPERTY()

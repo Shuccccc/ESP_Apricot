@@ -19,12 +19,11 @@ class DTUIFRAMEWORK_API UUIFWidgetBase : public UUserWidget
 	GENERATED_BODY()
 	
 	friend class UDtUIManagerSubsystem;
-
-	friend class UUIFrameSubsystem;
 	
 public:
 
 	void SetUIStyle (FDtUIStyle NewStyle);
+	
 	virtual void NativeConstruct() override;
 
 	virtual void NativeDestruct() override;
@@ -55,6 +54,9 @@ protected:
 	float AnimationSpeed = 1.f;
 	
 private:
+
+	UFUNCTION()
+	void HandleThemeChanged(FDtUIStyle NewStyle);
 	
 	UPROPERTY(Blueprintable,BlueprintGetter="GetUIStyle",Setter="SetUIStyle")
 	FDtUIStyle M_UIStyle;

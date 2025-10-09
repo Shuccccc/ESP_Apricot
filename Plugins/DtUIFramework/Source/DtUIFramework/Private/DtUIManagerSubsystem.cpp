@@ -2,7 +2,7 @@
 
 #include "DtUIManagerSubsystem.h"
 #include "DtRootViewport.h"
-#include "UIFWidgetBase.h"
+#include "Widget/UIFWidgetBase.h"
 #include "DtRuntimeUIConfig.h"
 #include "Engine/AssetManager.h"
 #include "Engine/Engine.h"
@@ -83,7 +83,17 @@ void UDtUIManagerSubsystem::OnWorldLoaded(UWorld* NewWorld)
 		}
 		M_RootViewport = CreateWidget<UDtRootViewport>(NewWorld, UDtRootViewport::StaticClass());
 		M_RootViewport->AddToViewport(8);
+		initRootPort();
 	}
+}
+
+void UDtUIManagerSubsystem::initRootPort()
+{
+	M_World = GetWorld();
+	
+	UUIFWidgetBase* WindowBar = CreateWidget<UUIFWidgetBase>(M_World, M_UMG_WindowBar);
+	
+	M_RootViewport->AddToView(EDtUILayer::Window,WindowBar);
 }
 
 void UDtUIManagerSubsystem::InitBlueprintCache()
@@ -114,4 +124,5 @@ void UDtUIManagerSubsystem::OnBlueprintClassesLoaded()
 		return;
 	}
 	M_UMG_Window = Setting->UMG_Window.Get();
+	M_UMG_WindowBar = Setting->UMG_WindowBar.Get();
 }

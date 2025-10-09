@@ -1,10 +1,15 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "UILayerBase.h"
+#include "Layer/UILayerBase.h"
 #include "Blueprint/WidgetTree.h"
 #include "Components/CanvasPanel.h"
 #include "Components/CanvasPanelSlot.h"
+
+void UUILayerBase::AddWidgetToCanvas(UUserWidget* Widget) const
+{
+	M_RootViewport->AddChild(Widget);
+}
 
 bool UUILayerBase::Initialize()
 {

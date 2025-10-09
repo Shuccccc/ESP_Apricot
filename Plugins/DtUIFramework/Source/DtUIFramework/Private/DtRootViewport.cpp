@@ -3,12 +3,12 @@
 
 #include "DtRootViewport.h"
 #include "Blueprint/WidgetTree.h"
-#include "UILayerBase.h"
+#include "Layer/UILayerBase.h"
 #include "Components/CanvasPanel.h"
 #include "Components/CanvasPanelSlot.h"
 //Test
 #include "Components/Button.h"
-
+#include "Layer/UIWindowLayer.h"
 
 
 bool UDtRootViewport::Initialize()
@@ -44,6 +44,8 @@ bool UDtRootViewport::Initialize()
 		Layers.Add(Layer);
 	}
 	
+	Layers[3] = CreateWidget<UUIWindowLayer>(this, UUIWindowLayer::StaticClass(), LayerNames[2]);
+	
 	if (Layers.Num() >= 7)
 	{
 		M_StaticLayer = Layers[0];
@@ -64,4 +66,41 @@ bool UDtRootViewport::Initialize()
 	ButtonSlot->SetSize(FVector2D(150, 50));
 	
 	return bResult;
+}
+
+void UDtRootViewport::AddToView(EDtUILayer Layer , UUserWidget* Widget )
+{
+	switch (Layer)
+	{
+	case EDtUILayer::Static:
+		M_StaticLayer->AddWidgetToCanvas(Widget);
+		break;
+		
+	case EDtUILayer::Floating:
+		M_FloatingLayer->AddWidgetToCanvas(Widget);
+		break;
+
+	case EDtUILayer::Window:
+		M_WindowLayer->AddWidgetToCanvas(Widget);
+		break;
+		
+	case EDtUILayer::Notification:
+		M_NotificationLayer->AddWidgetToCanvas(Widget);
+		break;
+		
+	case EDtUILayer::Popup:
+		M_PopupLayer->AddWidgetToCanvas(Widget);
+		break;
+		
+	case EDtUILayer::Progress:
+		M_ProgressLayer->AddWidgetToCanvas(Widget);
+		break;
+		
+	case EDtUILayer::System:
+		M_SystemLayer->AddWidgetToCanvas(Widget);
+		break;
+	case EDtUILayer::Top:
+		M_TopLayer->AddWidgetToCanvas(Widget);
+		break;
+	}
 }

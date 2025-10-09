@@ -1,7 +1,9 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "UIFWidgetBase.h"
+#include "Widget/UIFWidgetBase.h"
+
+#include "DtUIEventBroker.h"
 #include "DtUIManagerSubsystem.h"
 #include "Kismet/KismetSystemLibrary.h"
 
@@ -16,11 +18,13 @@ void UUIFWidgetBase::NativeConstruct()
 	
 	Guid = FGuid::NewGuid();
 	
+	// 不再向UIM注册 用事件分发解耦
 	auto UIManager = GetGameInstance()->GetSubsystem<UDtUIManagerSubsystem>();
-	//M_UIStyle = UIManager->GetDefaultStyle();
-
 	UIManager->RegisterUI(this);
-	
+
+	//未实现
+	auto EventBroker = GetGameInstance()->GetSubsystem<UDtUIEventBroker>();
+	EventBroker->OnThemeChanged.AddDynamic(this,&UUIFWidgetBase::HandleThemeChanged);
 }
 
 void UUIFWidgetBase::NativeDestruct()
@@ -44,6 +48,13 @@ void UUIFWidgetBase::ResetUIStyle()
 	auto UIManager = GetGameInstance()->GetSubsystem<UDtUIManagerSubsystem>();
 	SetTheme(UIManager->GetDefaultStyle(),true);
 }
+
+
+void UUIFWidgetBase::HandleThemeChanged(FDtUIStyle NewStyle)
+{
+	
+}
+
 
 void UUIFWidgetBase::SetTheme(FDtUIStyle NewStyle , bool IsStylized)
 {

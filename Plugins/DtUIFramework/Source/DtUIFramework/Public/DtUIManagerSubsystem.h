@@ -47,6 +47,8 @@ public:
 
 	void OnWorldLoaded(UWorld* NewWorld);
 
+	void initRootPort();
+
 private:
 	
 	UPROPERTY()
@@ -63,9 +65,12 @@ private:
 	void InitBlueprintCache();
 	void OnBlueprintClassesLoaded();
 	
+public:
+	
 	UPROPERTY()
 	TSubclassOf<UUIFWidgetBase> M_UMG_Window;
-
+	UPROPERTY()
+	TSubclassOf<UUIFWidgetBase> M_UMG_WindowBar;
 
 	
 protected:
