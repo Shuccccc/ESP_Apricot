@@ -27,9 +27,21 @@ public:
 
 	void AddWindowToCanvas(UUIFWidgetBase* Widget) const;
 
-private:
+	void CreateWindow ();
 
+private:
+	
+	UPROPERTY()
+	UUIFWidgetBase* M_WindowBar;
+
+	UPROPERTY()
+	TMap<FString,UUIFWidgetBase*> Windows;
+	
 	TSubclassOf<UUIFWidgetBase> M_WindowClass;
+
+	TSubclassOf<UUIFWidgetBase> M_WindowBarClass;
+
+	
 	UPROPERTY()
 	UDtUIManagerSubsystem* M_UIManager;
 };

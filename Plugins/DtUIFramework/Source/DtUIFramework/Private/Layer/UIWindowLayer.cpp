@@ -11,9 +11,21 @@ void UUIWindowLayer::NativeConstruct()
 {
 	Super::NativeConstruct();
 	
+	/*
 	M_UIManager = GetGameInstance()->GetSubsystem<UDtUIManagerSubsystem>();
 
 	M_WindowClass = M_UIManager->M_UMG_Window->StaticClass();
+	M_WindowBarClass = M_UIManager->M_UMG_WindowBar->StaticClass();
+
+	M_WindowBar = CreateWidget<UUIFWidgetBase>(this, M_WindowBarClass);
+	
+	M_RootViewport->AddChild(M_WindowBar);
+
+	auto temPanel = Cast<UCanvasPanelSlot>(M_WindowBar->Slot);
+	temPanel->SetZOrder(50);
+	temPanel->SetPosition(FVector2D(24,128));
+	temPanel->SetSize(FVector2D(22,40));
+	*/
 	
 }
 
@@ -91,5 +103,11 @@ void UUIWindowLayer::AddWindowToCanvas(UUIFWidgetBase* Widget) const
 {
 	M_RootViewport->AddChild(Widget);
 	Cast<UCanvasPanelSlot>(Widget->Slot)->SetZOrder(M_RootViewport->GetChildrenCount());
+}
+
+void UUIWindowLayer::CreateWindow()
+{
+	
+	
 }
 

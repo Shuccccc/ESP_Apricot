@@ -83,7 +83,7 @@ void UDtUIManagerSubsystem::OnWorldLoaded(UWorld* NewWorld)
 		}
 		M_RootViewport = CreateWidget<UDtRootViewport>(NewWorld, UDtRootViewport::StaticClass());
 		M_RootViewport->AddToViewport(8);
-		initRootPort();
+//		initRootPort();
 	}
 }
 
@@ -91,9 +91,9 @@ void UDtUIManagerSubsystem::initRootPort()
 {
 	M_World = GetWorld();
 	
-	UUIFWidgetBase* WindowBar = CreateWidget<UUIFWidgetBase>(M_World, M_UMG_WindowBar);
+	/*UUIFWidgetBase* WindowBar = CreateWidget<UUIFWidgetBase>(M_World, M_UMG_WindowBar);
 	
-	M_RootViewport->AddToView(EDtUILayer::Window,WindowBar);
+	M_RootViewport->AddToView(EDtUILayer::Window,WindowBar);*/
 }
 
 void UDtUIManagerSubsystem::InitBlueprintCache()

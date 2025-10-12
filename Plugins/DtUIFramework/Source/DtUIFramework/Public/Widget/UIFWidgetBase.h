@@ -44,6 +44,8 @@ public:
 protected:
 
 	/**
+	 *
+	 *
 	 * @param	NewStyle	新主题
 	 * @param	IsStylized	是否作为独立样式 true: 主题更新时将忽略该控件 false: 在下一次主题更新时会新主题被覆盖
 	 */

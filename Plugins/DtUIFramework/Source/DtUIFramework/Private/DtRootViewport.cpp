@@ -34,17 +34,52 @@ bool UDtRootViewport::Initialize()
 		FName(TEXT("SystemLayer")),
 		FName(TEXT("TopLayer"))
 	};
+	TMap<FName, UUILayerBase*> LayerMap;
+	for (const FName& LayerName : LayerNames)
+	{
+		UUILayerBase* NewLayer = nullptr;
+		if (LayerName == TEXT("WindowLayer"))
+		{
+			NewLayer = CreateWidget<UUIWindowLayer>(this, UUIWindowLayer::StaticClass(), LayerName);
+		}
+		else
+		{
+			NewLayer = CreateWidget<UUILayerBase>(this, UUILayerBase::StaticClass(), LayerName);
+		}
+		if (NewLayer)
+		{
+			M_RootViewport->AddChildToCanvas(NewLayer);
+			NewLayer->SetAnchorPoint(); 
+			LayerMap.Add(LayerName, NewLayer); 
+		}
+	}
+
+	M_StaticLayer = LayerMap.FindRef(TEXT("StaticLayer"));
+	M_FloatingLayer = LayerMap.FindRef(TEXT("FloatingLayer"));
 	
+	M_WindowLayer = Cast<UUIWindowLayer>(LayerMap.FindRef(TEXT("WindowLayer"))); 
+    
+	M_NotificationLayer = LayerMap.FindRef(TEXT("NotificationLayer"));
+	M_PopupLayer = LayerMap.FindRef(TEXT("PopupLayer"));
+	M_ProgressLayer = LayerMap.FindRef(TEXT("ProgressLayer"));
+	M_SystemLayer = LayerMap.FindRef(TEXT("SystemLayer"));
+	M_TopLayer = LayerMap.FindRef(TEXT("TopLayer"));
+	
+	
+	/*
 	TArray<UUILayerBase*> Layers;
 	for (const FName& LayerName : LayerNames)
 	{
+		if (LayerName == FName(TEXT("WindowLayer")))
+		{
+			Layers[3] = CreateWidget<UUIWindowLayer>(this, UUIWindowLayer::StaticClass(), LayerNames[2]);
+		}
 		UUILayerBase* Layer = CreateWidget<UUILayerBase>(this, UUILayerBase::StaticClass(), LayerName);
 		M_RootViewport->AddChildToCanvas(Layer);
 		Layer->SetAnchorPoint();
 		Layers.Add(Layer);
 	}
 	
-	Layers[3] = CreateWidget<UUIWindowLayer>(this, UUIWindowLayer::StaticClass(), LayerNames[2]);
 	
 	if (Layers.Num() >= 7)
 	{
@@ -57,6 +92,7 @@ bool UDtRootViewport::Initialize()
 		M_SystemLayer = Layers[6];
 		M_TopLayer = Layers[7];
 	}
+	*/
 		
 	UButton* NewButton = WidgetTree->ConstructWidget<UButton>();
 	NewButton->SetBackgroundColor(FLinearColor::Red);
