@@ -22,6 +22,6 @@ class DTUIFRAMEWORK_API UDtRuntimeUIConfig : public UObject
 	TSoftClassPtr<UUIFWidgetBase> UMG_Window;
 
 	UPROPERTY(config, EditAnywhere, Category = "Core Blueprint Widgets", meta = (DisplayName = "Window"))
-	TSubclassOf<UUIFWidgetBase> UMG_WindowBar;
+	TSoftClassPtr<UUIFWidgetBase> UMG_WindowBar;
 
 };

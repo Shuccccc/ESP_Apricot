@@ -15,15 +15,17 @@ bool UDtRootViewport::Initialize()
 {
 	auto bResult = Super::Initialize();
 
+//婉拒CDO
 	if(HasAnyFlags(RF_ClassDefaultObject))
 	{
 		return bResult;
 	}
-	
-	M_RootViewport = WidgetTree->ConstructWidget<UCanvasPanel>(UCanvasPanel::StaticClass(), FName(TEXT("M_RootViewport")));
 
+	//初始化控件树
+	M_RootViewport = WidgetTree->ConstructWidget<UCanvasPanel>(UCanvasPanel::StaticClass(), FName(TEXT("M_RootViewport")));
 	WidgetTree->RootWidget = M_RootViewport;
-	
+
+	//TODO 狼狈 待修改  
 	TArray<FName> LayerNames = {
 		FName(TEXT("StaticLayer")),
 		FName(TEXT("FloatingLayer")),
@@ -48,8 +50,8 @@ bool UDtRootViewport::Initialize()
 		}
 		if (NewLayer)
 		{
-			M_RootViewport->AddChildToCanvas(NewLayer);
 			NewLayer->SetAnchorPoint(); 
+			M_RootViewport->AddChildToCanvas(NewLayer);
 			LayerMap.Add(LayerName, NewLayer); 
 		}
 	}
@@ -65,41 +67,16 @@ bool UDtRootViewport::Initialize()
 	M_SystemLayer = LayerMap.FindRef(TEXT("SystemLayer"));
 	M_TopLayer = LayerMap.FindRef(TEXT("TopLayer"));
 	
-	
-	/*
-	TArray<UUILayerBase*> Layers;
-	for (const FName& LayerName : LayerNames)
+// 这里是添加一个测试按钮
+	if (GIsEditor)
 	{
-		if (LayerName == FName(TEXT("WindowLayer")))
-		{
-			Layers[3] = CreateWidget<UUIWindowLayer>(this, UUIWindowLayer::StaticClass(), LayerNames[2]);
-		}
-		UUILayerBase* Layer = CreateWidget<UUILayerBase>(this, UUILayerBase::StaticClass(), LayerName);
-		M_RootViewport->AddChildToCanvas(Layer);
-		Layer->SetAnchorPoint();
-		Layers.Add(Layer);
-	}
-	
-	
-	if (Layers.Num() >= 7)
-	{
-		M_StaticLayer = Layers[0];
-		M_FloatingLayer = Layers[1];
-		M_WindowLayer = Layers[2];
-		M_NotificationLayer = Layers[3];
-		M_PopupLayer = Layers[4];
-		M_ProgressLayer = Layers[5];
-		M_SystemLayer = Layers[6];
-		M_TopLayer = Layers[7];
-	}
-	*/
-		
-	UButton* NewButton = WidgetTree->ConstructWidget<UButton>();
-	NewButton->SetBackgroundColor(FLinearColor::Red);
+		UButton* NewButton = WidgetTree->ConstructWidget<UButton>();
+		NewButton->SetBackgroundColor(FLinearColor::Red);
     
-	UCanvasPanelSlot* ButtonSlot = M_StaticLayer->M_RootViewport->AddChildToCanvas(NewButton);
-	ButtonSlot->SetPosition(FVector2D(100, 200));
-	ButtonSlot->SetSize(FVector2D(150, 50));
+		UCanvasPanelSlot* ButtonSlot = M_StaticLayer->M_RootViewport->AddChildToCanvas(NewButton);
+		ButtonSlot->SetPosition(FVector2D(100, 200));
+		ButtonSlot->SetSize(FVector2D(150, 50));
+	}
 	
 	return bResult;
 }

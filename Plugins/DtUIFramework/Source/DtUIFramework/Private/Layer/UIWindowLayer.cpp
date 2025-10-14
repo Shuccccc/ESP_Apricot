@@ -7,26 +7,31 @@
 #include "Components/CanvasPanelSlot.h"
 #include "DtUIManagerSubsystem.h"
 
+bool UUIWindowLayer::Initialize()
+{
+	return Super::Initialize();
+}
+
 void UUIWindowLayer::NativeConstruct()
 {
 	Super::NativeConstruct();
 	
-	/*
 	M_UIManager = GetGameInstance()->GetSubsystem<UDtUIManagerSubsystem>();
 
-	M_WindowClass = M_UIManager->M_UMG_Window->StaticClass();
-	M_WindowBarClass = M_UIManager->M_UMG_WindowBar->StaticClass();
+	M_WindowClass = M_UIManager->M_UMG_Window;
+	M_WindowBarClass = M_UIManager->M_UMG_WindowBar;
 
 	M_WindowBar = CreateWidget<UUIFWidgetBase>(this, M_WindowBarClass);
-	
+
 	M_RootViewport->AddChild(M_WindowBar);
 
 	auto temPanel = Cast<UCanvasPanelSlot>(M_WindowBar->Slot);
-	temPanel->SetZOrder(50);
-	temPanel->SetPosition(FVector2D(24,128));
-	temPanel->SetSize(FVector2D(22,40));
-	*/
-	
+	if (temPanel)
+	{
+		temPanel->SetZOrder(50);
+		temPanel->SetPosition(FVector2D(24,128));
+		temPanel->SetSize(FVector2D(22,40));
+	}
 }
 
 int UUIWindowLayer::GetChildrenCount()

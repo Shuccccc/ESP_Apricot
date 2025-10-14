@@ -13,16 +13,10 @@ class UUIFWidgetBase;
 //---------------------------Cpp-------------------------------
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnThemeChanged, FDtUIStyle, NewStyle);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnBlueprintAssetLoaded, UUIFWidgetBase*, Asset);
 
 //---------------------------Window----------------------------
-UENUM(BlueprintType)
-enum class EDtWindowAction : uint8
-{
-	Restore,
-	Minimize,
-	Close,
-	Focus
-};
+
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnWindowCreated, UUIFWidgetBase*, CreatedWindow);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnWindowDestroyed, UUIFWidgetBase*, DestroyedWindow);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnWindowStateChanged, UUIFWidgetBase*, TargetWindow, EDtWindowAction, Action);

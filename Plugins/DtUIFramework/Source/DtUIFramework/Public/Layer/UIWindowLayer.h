@@ -17,6 +17,8 @@ class DTUIFRAMEWORK_API UUIWindowLayer : public UUILayerBase
 	GENERATED_BODY()
 
 public:
+
+	virtual bool Initialize() override;
 	virtual void NativeConstruct() override;
 	
 	int GetChildrenCount();

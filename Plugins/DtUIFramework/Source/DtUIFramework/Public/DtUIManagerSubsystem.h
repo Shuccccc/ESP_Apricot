@@ -37,8 +37,10 @@ public:
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 	virtual void Deinitialize() override;
 
+	/*
 	void RegisterUI(TWeakObjectPtr<UUIFWidgetBase> InWidget);
 	void UnRegisterUI(TWeakObjectPtr<UUIFWidgetBase> InWidget);
+	*/
 
 	FDtUIStyle GetDefaultStyle();
 	
@@ -47,8 +49,6 @@ public:
 
 	void OnWorldLoaded(UWorld* NewWorld);
 
-	void initRootPort();
-
 private:
 	
 	UPROPERTY()
@@ -56,6 +56,8 @@ private:
 	UPROPERTY()
 	FDtUIStyle M_DefaultStyle;
 	
+	UPROPERTY()
+	FDtUIStyle M_CurrentStyle;
 	
 	UPROPERTY()
 	UWorld*	M_World;
@@ -64,6 +66,9 @@ private:
 	
 	void InitBlueprintCache();
 	void OnBlueprintClassesLoaded();
+
+
+	bool bIsCoreUIInitialized = false;
 	
 public:
 	

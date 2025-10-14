@@ -36,3 +36,12 @@ enum class EDtUILayer : uint8
 	System,
 	Top
 };
+
+UENUM(BlueprintType)
+enum class EDtWindowAction : uint8
+{
+	Restore,
+	Minimize,
+	Close,
+	Focus
+};
