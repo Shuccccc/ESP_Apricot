@@ -40,10 +40,6 @@
 		{
 			"Name": "ModularGameplay",
 			"Enabled": true
-		},
-		{
-			"Name": "EspBeginPlay",
-			"Enabled": true
 		}
 	],
 	"TargetPlatforms": [

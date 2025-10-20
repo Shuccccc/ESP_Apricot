@@ -8,6 +8,7 @@
 
 class UDtUIManagerSubsystem;
 class UUIFWidgetBase;
+class UUIFWidgetWindowBase;
 /**
  * 
  */
@@ -16,6 +17,7 @@ class DTUIFRAMEWORK_API UUIWindowLayer : public UUILayerBase
 {
 	GENERATED_BODY()
 
+	friend class UUIFWidgetWindowBase ;
 public:
 
 	virtual bool Initialize() override;
@@ -29,20 +31,24 @@ public:
 
 	void AddWindowToCanvas(UUIFWidgetBase* Widget) const;
 
-	void CreateWindow ();
+	UUIFWidgetWindowBase* CreateWindow (FString ID );
+
 
 private:
+
+	void Internal_MoveWindowToFront();
+	
+	void RemoveWindow(FString ID);
 	
 	UPROPERTY()
-	UUIFWidgetBase* M_WindowBar;
+	TWeakObjectPtr<UUIFWidgetBase> M_WindowBar;
 
 	UPROPERTY()
-	TMap<FString,UUIFWidgetBase*> Windows;
+	TMap<FString,TWeakObjectPtr<UUIFWidgetWindowBase>> Windows;
 	
-	TSubclassOf<UUIFWidgetBase> M_WindowClass;
+	TSubclassOf<UUIFWidgetWindowBase> M_WindowClass;
 
 	TSubclassOf<UUIFWidgetBase> M_WindowBarClass;
-
 	
 	UPROPERTY()
 	UDtUIManagerSubsystem* M_UIManager;

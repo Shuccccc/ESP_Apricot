@@ -6,6 +6,7 @@
 #include "Layer/UILayerBase.h"
 #include "Components/CanvasPanel.h"
 #include "Components/CanvasPanelSlot.h"
+#include "Widget/UIFWidgetWindowBase.h"
 //Test
 #include "Components/Button.h"
 #include "Layer/UIWindowLayer.h"
@@ -73,12 +74,17 @@ bool UDtRootViewport::Initialize()
 		UButton* NewButton = WidgetTree->ConstructWidget<UButton>();
 		NewButton->SetBackgroundColor(FLinearColor::Red);
     
-		UCanvasPanelSlot* ButtonSlot = M_StaticLayer->M_RootViewport->AddChildToCanvas(NewButton);
+		UCanvasPanelSlot* ButtonSlot = M_StaticLayer->M_MainPanel->AddChildToCanvas(NewButton);
 		ButtonSlot->SetPosition(FVector2D(100, 200));
 		ButtonSlot->SetSize(FVector2D(150, 50));
 	}
 	
 	return bResult;
+}
+
+UUIFWidgetWindowBase* UDtRootViewport::GetWindow(FString ID)
+{
+	return M_WindowLayer->CreateWindow(ID);
 }
 
 void UDtRootViewport::AddToView(EDtUILayer Layer , UUserWidget* Widget )

@@ -8,7 +8,7 @@
 
 void UUILayerBase::AddWidgetToCanvas(UUserWidget* Widget) const
 {
-	M_RootViewport->AddChild(Widget);
+	M_MainPanel->AddChild(Widget);
 }
 
 bool UUILayerBase::Initialize()
@@ -19,9 +19,9 @@ bool UUILayerBase::Initialize()
 		return bResult;
 	}
 	
-	M_RootViewport = WidgetTree->ConstructWidget<UCanvasPanel>(UCanvasPanel::StaticClass(),FName(TEXT("RootViewport")));
+	M_MainPanel = WidgetTree->ConstructWidget<UCanvasPanel>(UCanvasPanel::StaticClass(),FName(TEXT("RootViewport")));
 
-	WidgetTree->RootWidget = M_RootViewport;
+	WidgetTree->RootWidget = M_MainPanel;
 	return bResult ;
 
 }

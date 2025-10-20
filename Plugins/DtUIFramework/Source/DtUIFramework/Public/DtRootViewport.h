@@ -13,6 +13,8 @@
 
 class UCanvasPanel; 
 class UUILayerBase;
+class UUIFWidgetWindowBase;
+class UUIWindowLayer ;
 
 UCLASS(NotBlueprintable)
 class DTUIFRAMEWORK_API UDtRootViewport : public UUserWidget
@@ -22,6 +24,11 @@ public:
 	virtual bool Initialize() override;
 	
 
+	UUIFWidgetWindowBase* GetWindow(FString ID );
+
+
+public:
+	
 	void AddToView (EDtUILayer Layer , UUserWidget* Widget) ;
 
 	UPROPERTY()//根面板
@@ -34,7 +41,7 @@ public:
 	TObjectPtr<UUILayerBase> M_FloatingLayer;
 	
 	UPROPERTY()
-	TObjectPtr<UUILayerBase> M_WindowLayer;
+	TObjectPtr<UUIWindowLayer> M_WindowLayer;
 	
 	UPROPERTY()
 	TObjectPtr<UUILayerBase>M_NotificationLayer;

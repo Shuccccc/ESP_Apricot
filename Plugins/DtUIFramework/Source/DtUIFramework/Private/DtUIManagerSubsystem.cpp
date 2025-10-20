@@ -11,7 +11,7 @@
 
 void UDtUIManagerSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
-	//	Collection.InitializeDependency<T>()
+	Collection.InitializeDependency<UDtUIEventBroker>();
 	
 	Super::Initialize(Collection);
 
@@ -117,11 +117,10 @@ FDtUIStyle UDtUIManagerSubsystem::GetDefaultStyle()
 	return M_DefaultStyle;
 }
 
-UUIFWidgetBase* UDtUIManagerSubsystem::GetWindow(FString ID)
+//这是一个非常长的调用链 最终指向 UUIWindowLayer::CreateWindow(FString ID)
+UUIFWidgetWindowBase* UDtUIManagerSubsystem::GetWindow(FString ID)
 {
-	auto tem = CreateWidget<UUIFWidgetBase>(GetWorld(), M_UMG_Window);
-	tem->AddToViewport(9);
-	return tem ;
+	return M_RootViewport->GetWindow(ID);
 }
 
 void UDtUIManagerSubsystem::SetTheme(FDtUIStyle Style)

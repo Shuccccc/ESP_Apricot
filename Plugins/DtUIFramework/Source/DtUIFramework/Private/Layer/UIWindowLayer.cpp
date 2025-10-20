@@ -3,7 +3,7 @@
 
 #include "Layer/UIWindowLayer.h"
 #include "Components/CanvasPanel.h"
-#include "Widget/UIFWidgetBase.h"
+#include "Widget/UIFWidgetWindowBase.h"
 #include "Components/CanvasPanelSlot.h"
 #include "DtUIManagerSubsystem.h"
 
@@ -23,7 +23,7 @@ void UUIWindowLayer::NativeConstruct()
 
 	M_WindowBar = CreateWidget<UUIFWidgetBase>(this, M_WindowBarClass);
 
-	M_RootViewport->AddChild(M_WindowBar);
+	M_MainPanel->AddChild(M_WindowBar.Get());
 
 	auto temPanel = Cast<UCanvasPanelSlot>(M_WindowBar->Slot);
 	if (temPanel)
@@ -31,31 +31,32 @@ void UUIWindowLayer::NativeConstruct()
 		temPanel->SetZOrder(50);
 		temPanel->SetPosition(FVector2D(24,128));
 		temPanel->SetSize(FVector2D(22,40));
+		temPanel->SetAutoSize(true);
 	}
 }
 
 int UUIWindowLayer::GetChildrenCount()
 {
-	return M_RootViewport->GetChildrenCount();
+	return M_MainPanel->GetChildrenCount();
 }
 
 void UUIWindowLayer::SetTopZOrder(UUIFWidgetBase* Widget)
 {
-	auto Children = M_RootViewport->GetAllChildren();
+	auto Children = M_MainPanel->GetAllChildren();
 
 	for (auto Child : Children)
 	{
 		//过滤掉窗口栏 并保持窗口栏置顶
 		if (Child->StaticClass() != M_WindowClass)
 		{
-			Cast<UCanvasPanelSlot>(Child->Slot)->SetZOrder( M_RootViewport->GetChildrenCount()+1);
+			Cast<UCanvasPanelSlot>(Child->Slot)->SetZOrder( M_MainPanel->GetChildrenCount()+1);
 			continue;
 		}
 		//先把在选中窗口之上的窗口ZOrder减一 腾出最高位 
 		if (Child != Widget)
 		{
 			auto TemSlot = Cast<UCanvasPanelSlot>(Child->Slot);
-			if (TemSlot->GetZOrder() >= M_RootViewport->GetChildrenCount())
+			if (TemSlot->GetZOrder() >= M_MainPanel->GetChildrenCount())
 			{
 				TemSlot->SetZOrder(TemSlot->GetZOrder()-1);
 			}
@@ -64,14 +65,14 @@ void UUIWindowLayer::SetTopZOrder(UUIFWidgetBase* Widget)
 		{
 			//最后把选中窗口置顶
 			auto TemSlot = Cast<UCanvasPanelSlot>(Child->Slot);
-			TemSlot->SetZOrder(M_RootViewport->GetChildrenCount());
+			TemSlot->SetZOrder(M_MainPanel->GetChildrenCount());
 		}
 	}
 }
 
 void UUIWindowLayer::SetTopZOrderFromAI(UUIFWidgetBase* WidgetToSetTop)
 {
-	const int32 NumWindows = M_RootViewport->GetChildrenCount() - 1;
+	const int32 NumWindows = M_MainPanel->GetChildrenCount() - 1;
 	const int32 TopZOrder = NumWindows - 1;
 
 	UCanvasPanelSlot* TargetSlot = Cast<UCanvasPanelSlot>(WidgetToSetTop->Slot);
@@ -84,7 +85,7 @@ void UUIWindowLayer::SetTopZOrderFromAI(UUIFWidgetBase* WidgetToSetTop)
 	}
 
 	// 遍历所有子控件，找到那些在当前窗口之上的窗口，把它们的ZOrder减一
-	for (UWidget* Child : M_RootViewport->GetAllChildren())
+	for (UWidget* Child : M_MainPanel->GetAllChildren())
 	{
 		// 跳过目标窗口本身和非窗口控件（窗口栏）
 		if (Child == WidgetToSetTop || !Child->IsA(M_WindowClass))
@@ -106,13 +107,47 @@ void UUIWindowLayer::SetTopZOrderFromAI(UUIFWidgetBase* WidgetToSetTop)
 
 void UUIWindowLayer::AddWindowToCanvas(UUIFWidgetBase* Widget) const
 {
-	M_RootViewport->AddChild(Widget);
-	Cast<UCanvasPanelSlot>(Widget->Slot)->SetZOrder(M_RootViewport->GetChildrenCount());
+	M_MainPanel->AddChild(Widget);
+	Cast<UCanvasPanelSlot>(Widget->Slot)->SetZOrder(M_MainPanel->GetChildrenCount());
 }
 
-void UUIWindowLayer::CreateWindow()
+UUIFWidgetWindowBase* UUIWindowLayer::CreateWindow(FString ID )
+{
+	UUIFWidgetWindowBase* temWindow;
+	
+	if (Windows.Contains(ID) )
+	{
+		if (Windows.FindRef(ID).IsValid())
+		{
+			temWindow = Windows.FindRef(ID).Get();
+			temWindow->WindowActionRequested(EDtWindowAction::Restore);
+			
+			return temWindow;
+		}
+		else
+		{
+			Windows.Remove(ID);
+		}
+	}
+	
+	temWindow = CreateWidget<UUIFWidgetWindowBase>(this , M_WindowClass);
+	temWindow->PrivateID = ID;
+	
+	Windows.Add(ID , temWindow);
+
+	M_MainPanel->AddChild(temWindow);
+
+	return temWindow;
+}
+
+void UUIWindowLayer::Internal_MoveWindowToFront()
 {
 	
 	
+}
+
+void UUIWindowLayer::RemoveWindow(FString ID)
+{
+	Windows.Remove(ID);
 }
 

@@ -22,7 +22,7 @@ public:
 	virtual bool Initialize() override;
 
 	UPROPERTY()
-	TObjectPtr<UCanvasPanel> M_RootViewport;
+	TObjectPtr<UCanvasPanel> M_MainPanel;
 	
 	virtual void SetAnchorPoint();
 };

@@ -10,7 +10,7 @@
 class UDtRootViewport;
 class UUIFWidgetBase;
 class UDtUIFrameworkConfig;
-
+class UUIFWidgetWindowBase ;
 /**
  * 
  */
@@ -24,7 +24,7 @@ public:
 //Blueprint
 
 	UFUNCTION( BlueprintCallable , Category = "Blueprint | Window")
-	UUIFWidgetBase* GetWindow(FString ID);
+	UUIFWidgetWindowBase* GetWindow(FString ID);
 
 	
 	UFUNCTION(BlueprintCallable)
