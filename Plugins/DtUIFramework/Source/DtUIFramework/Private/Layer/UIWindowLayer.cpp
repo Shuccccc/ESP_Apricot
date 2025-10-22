@@ -48,7 +48,7 @@ void UUIWindowLayer::SetTopZOrder(UUIFWidgetBase* Widget)
 	{
 		//过滤掉窗口栏 并保持窗口栏置顶
 		if (Child->StaticClass() != M_WindowClass)
-		{
+		{ 
 			Cast<UCanvasPanelSlot>(Child->Slot)->SetZOrder( M_MainPanel->GetChildrenCount()+1);
 			continue;
 		}
@@ -131,7 +131,9 @@ UUIFWidgetWindowBase* UUIWindowLayer::CreateWindow(FString ID )
 	}
 	
 	temWindow = CreateWidget<UUIFWidgetWindowBase>(this , M_WindowClass);
+	
 	temWindow->PrivateID = ID;
+	temWindow->OwningLayerPtr = this;
 	
 	Windows.Add(ID , temWindow);
 

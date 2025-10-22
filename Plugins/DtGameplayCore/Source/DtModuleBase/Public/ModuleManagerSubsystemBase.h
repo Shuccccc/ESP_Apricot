@@ -5,13 +5,13 @@
 #include "CoreMinimal.h"
 #include "Subsystems/GameInstanceSubsystem.h"
 #include "ModuleBaseActor.h"
-#include "ModuleManagerSubsystem.generated.h"
+#include "ModuleManagerSubsystemBase.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class DTMODULEBASE_API UModuleManagerSubsystem : public UGameInstanceSubsystem
+class DTMODULEBASE_API UModuleManagerSubsystemBase : public UGameInstanceSubsystem
 {
 	GENERATED_BODY()
 

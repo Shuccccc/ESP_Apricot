@@ -2,7 +2,7 @@
 	"FileVersion": 3,
 	"Version": 1,
 	"VersionName": "1.0",
-	"FriendlyName": "DtGameplayCore",
+	"FriendlyName": "DtModuleManager",
 	"Description": "",
 	"Category": "Other",
 	"CreatedBy": "abing",
@@ -16,20 +16,14 @@
 	"Installed": false,
 	"Modules": [
 		{
-			"Name": "DtGameplayCore",
-			"Type": "Runtime", 
+			"Name": "DtModuleManager",
+			"Type": "Runtime",
 			"LoadingPhase": "Default"
 		},
 		{
-			"Name": "DtGlobalSearch",
-			"Type": "Runtime",
+			"Name": "DtModuleManagerEditor",
+			"Type": "Editor",
 			"LoadingPhase": "Default"
-		}
-	],
-	"Plugins": [
-		{
-			"Name": "EnhancedInput",
-			"Enabled": true
 		}
 	]
 }

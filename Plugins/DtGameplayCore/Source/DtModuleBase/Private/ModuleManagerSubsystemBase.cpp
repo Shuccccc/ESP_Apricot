@@ -1,21 +1,21 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "ModuleManagerSubsystem.h"
+#include "ModuleManagerSubsystemBase.h"
 
 //#include "AssetRegistry/AssetRegistryModule.h"
 #include "Engine/AssetManager.h"
 //#include "Engine/StreamableManager.h"
 #include "Engine/Engine.h"
 
-void UModuleManagerSubsystem::Initialize(FSubsystemCollectionBase& Collection)
+void UModuleManagerSubsystemBase::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);
 
-	OnPostLoadMapHandle = FCoreUObjectDelegates::PostLoadMapWithWorld.AddUObject(this, &UModuleManagerSubsystem::OnPostLoadMap);
+	OnPostLoadMapHandle = FCoreUObjectDelegates::PostLoadMapWithWorld.AddUObject(this, &UModuleManagerSubsystemBase::OnPostLoadMap);
 }
 //弃置
-void UModuleManagerSubsystem::ForceLoadBlueprints()
+void UModuleManagerSubsystemBase::ForceLoadBlueprints()
 {
 	bool babala = true;
 	if (babala)
@@ -58,13 +58,13 @@ void UModuleManagerSubsystem::ForceLoadBlueprints()
 
 }
 
-void UModuleManagerSubsystem::OnPostLoadMap(UWorld* World)
+void UModuleManagerSubsystemBase::OnPostLoadMap(UWorld* World)
 {
 	RequestAsyncModuleLoad(World);
 	
 }
 
-void UModuleManagerSubsystem::RequestAsyncModuleLoad(UWorld* WorldContext)
+void UModuleManagerSubsystemBase::RequestAsyncModuleLoad(UWorld* WorldContext)
 {
     // 同步发现所有模块资产（此过程很快，因为它读取的是缓存）
     FAssetRegistryModule& AssetRegistryModule = FModuleManager::LoadModuleChecked<FAssetRegistryModule>("AssetRegistry");
@@ -94,10 +94,10 @@ void UModuleManagerSubsystem::RequestAsyncModuleLoad(UWorld* WorldContext)
     FStreamableManager& StreamableManager = UAssetManager::Get().GetStreamableManager();
     TWeakObjectPtr<UWorld> WeakWorldContext = WorldContext;
 
-    StreamableManager.RequestAsyncLoad(PathsToLoad, FStreamableDelegate::CreateUObject(this,&UModuleManagerSubsystem::AsyncLoadModuleAsset, WeakWorldContext, PathsToLoad));
+    StreamableManager.RequestAsyncLoad(PathsToLoad, FStreamableDelegate::CreateUObject(this,&UModuleManagerSubsystemBase::AsyncLoadModuleAsset, WeakWorldContext, PathsToLoad));
 }
 
-void UModuleManagerSubsystem::AsyncLoadModuleAsset(TWeakObjectPtr<UWorld> WeakWorldContext,TArray<FSoftObjectPath> PathsToLoad)
+void UModuleManagerSubsystemBase::AsyncLoadModuleAsset(TWeakObjectPtr<UWorld> WeakWorldContext,TArray<FSoftObjectPath> PathsToLoad)
 {
 	if (!WeakWorldContext.IsValid())
 	{
@@ -129,7 +129,7 @@ void UModuleManagerSubsystem::AsyncLoadModuleAsset(TWeakObjectPtr<UWorld> WeakWo
 }
 
 //弃置
-TArray<AModuleBaseActor*> UModuleManagerSubsystem::InitModuleSubsystem()
+TArray<AModuleBaseActor*> UModuleManagerSubsystemBase::InitModuleSubsystem()
 {
 	if (ModuleActors.Num() > 0)
 	{
@@ -167,7 +167,7 @@ TArray<AModuleBaseActor*> UModuleManagerSubsystem::InitModuleSubsystem()
 	
 }
 
-AModuleBaseActor* UModuleManagerSubsystem::GetModule(TSubclassOf<AModuleBaseActor> ModuleClass) 
+AModuleBaseActor* UModuleManagerSubsystemBase::GetModule(TSubclassOf<AModuleBaseActor> ModuleClass) 
 {
 
 	return ModuleMap.FindRef(ModuleClass);
