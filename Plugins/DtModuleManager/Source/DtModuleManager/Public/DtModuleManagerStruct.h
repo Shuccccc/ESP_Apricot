@@ -16,13 +16,30 @@ class DTMODULEMANAGER_API UDtModuleManagerStruct : public UObject
 };
 
 USTRUCT(BlueprintType)
+struct FSubModuleData
+{
+	GENERATED_BODY()
+    
+	UPROPERTY(EditDefaultsOnly, meta = (DisplayName = "Module",ToolTip="模块类"), BlueprintReadWrite, Category = "Module")
+	TSubclassOf<ADtModuleBase> Module;
+
+	UPROPERTY(EditDefaultsOnly, meta = (DisplayName = "IsEnabled",ToolTip="是否启用"), BlueprintReadWrite, Category = "isEnabled")
+	bool IsEnabled = true;
+	
+};
+
+USTRUCT(BlueprintType)
 struct FModuleDataTable : public FTableRowBase
 {
 	GENERATED_BODY()
 	
-	UPROPERTY(EditDefaultsOnly,meta = (DisplayName = "Module"), BlueprintReadWrite, Category = "Module")
+	UPROPERTY(EditDefaultsOnly,meta = (DisplayName = "Module",ToolTip="模块类"), BlueprintReadWrite, Category = "Module")
 	TSubclassOf<ADtModuleBase> Module;
 
-	UPROPERTY(EditDefaultsOnly,meta = (DisplayName = "IsEnabled"), BlueprintReadWrite, Category = "isEnabled")
+	UPROPERTY(EditDefaultsOnly,meta = (DisplayName = "IsEnabled",ToolTip="是否启用"), BlueprintReadWrite, Category = "Module")
 	bool IsEnabled = true;
+	
+	/*
+	UPROPERTY(EditDefaultsOnly,meta = (DisplayName = "SubModules",ToolTip="子模块"), BlueprintReadWrite, Category = "SubModules")
+	TArray<FSubModuleData> SubModules;*/
 };
