@@ -120,7 +120,7 @@ void UDtApiManagerSubsystem::InitPlatformIp()
 	{
 		PrivatePlatformUrl.Append(i->PrivateKey+",");
 	}
-	PrivatePlatformUrl.Append(PlatformHeaders::UserAppId+",");
+	PrivatePlatformUrl.Append(FString{PlatformHeaders::UserAppId}+",");
 	PrivatePlatformUrl.Append(PlatformHeaders::UserAppSecret);
 	
 	auto HeaderParameter = GetIndustryAbility();
