@@ -21,7 +21,7 @@ struct FSubModuleData
 	GENERATED_BODY()
     
 	UPROPERTY(EditDefaultsOnly, meta = (DisplayName = "Module",ToolTip="模块类"), BlueprintReadWrite, Category = "Module")
-	TSubclassOf<ADtModuleBase> Module;
+	TSoftClassPtr<ADtModuleBase> Module;
 
 	UPROPERTY(EditDefaultsOnly, meta = (DisplayName = "IsEnabled",ToolTip="是否启用"), BlueprintReadWrite, Category = "isEnabled")
 	bool IsEnabled = true;
@@ -34,7 +34,7 @@ struct FModuleDataTable : public FTableRowBase
 	GENERATED_BODY()
 	
 	UPROPERTY(EditDefaultsOnly,meta = (DisplayName = "Module",ToolTip="模块类"), BlueprintReadWrite, Category = "Module")
-	TSubclassOf<ADtModuleBase> Module;
+	TSoftClassPtr<ADtModuleBase> Module;
 
 	UPROPERTY(EditDefaultsOnly,meta = (DisplayName = "IsEnabled",ToolTip="是否启用"), BlueprintReadWrite, Category = "Module")
 	bool IsEnabled = true;

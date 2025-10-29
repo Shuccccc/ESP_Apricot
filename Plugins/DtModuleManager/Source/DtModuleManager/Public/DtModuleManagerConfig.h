@@ -19,7 +19,7 @@ class DTMODULEMANAGER_API UDtModuleManagerConfig : public UObject
 public:
 
 	UPROPERTY(config, EditAnywhere, Category = "CoreModules", meta = (DisplayName = "CoreModules"))
-	TArray<TSubclassOf<UDtModuleToolBase>> CoreModules;
+	TArray<TSoftClassPtr<UDtModuleToolBase>> CoreModules;
 
 	UPROPERTY(config, EditAnywhere, Category = "ModulesDataTable", meta = (DisplayName = "ModulesDataTable", RequiredAssetDataTags = "RowStructure=/Script/DTModuleManager.ModuleDataTable"))
 	TSoftObjectPtr<UDataTable> ModulesDataTable;
