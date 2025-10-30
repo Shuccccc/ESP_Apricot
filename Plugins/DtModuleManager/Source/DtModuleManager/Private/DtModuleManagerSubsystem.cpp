@@ -7,6 +7,34 @@
 #include "DtModuleBase.h"
 #include "DtModuleToolBase.h"
 #include "Engine/AssetManager.h"
+#include "Kismet/GameplayStatics.h"
+
+
+void UDtModuleManagerSubsystem::Initialize(FSubsystemCollectionBase& Collection)
+{
+//    Collection.InitializeDependency<UDtUIEventBroker>();
+    Super::Initialize(Collection);
+    
+    
+    	OnWorldLoadedDelegateHandle = FCoreUObjectDelegates::PostLoadMapWithWorld.AddUObject(this, &UDtModuleManagerSubsystem::OnWorldLoaded);
+    
+}
+
+void UDtModuleManagerSubsystem::OnWorldLoaded(UWorld* NewWorld)
+{
+    //@TODO 后续转到BeginPlay模块
+
+    FString CurrentMapName = UGameplayStatics::GetCurrentLevelName(NewWorld);
+    const FString StartupMapName = TEXT("M_Startup");
+
+    if (!CurrentMapName.Equals(StartupMapName, ESearchCase::IgnoreCase))
+    {
+        UE_LOG(LogTemp, Log, TEXT("Main map '%s' detected! Starting Core UI initialization..."), *CurrentMapName);
+
+        LoadModules();
+    }
+}
+
 void UDtModuleManagerSubsystem::LoadModules()
 {
 const auto Setting = GetDefault<UDtModuleManagerConfig>();
@@ -37,13 +65,13 @@ const auto Setting = GetDefault<UDtModuleManagerConfig>();
     
     if (LoadedTable)
     {
-        static const FString ContextString(TEXT("Collecting Modules From DataTable"));
+        static const FString ContextString(TEXT("Collecting M_Modules From DataTable"));
         
         TArray<FName> RowNames = LoadedTable->GetRowNames();
         
         for (const FName& RowName : RowNames)
         {
-            FModuleDataTable* RowData = LoadedTable->FindRow<FModuleDataTable>(RowName, ContextString);
+            FModuleDataTable* RowData = LoadedTable->FindRow<FModuleDataTable>(RowName , ContextString);
             
             if (RowData && !RowData->Module.IsNull())
             {
@@ -74,6 +102,19 @@ const auto Setting = GetDefault<UDtModuleManagerConfig>();
     );
 }
 
+TSubclassOf<ADtModuleBase> UDtModuleManagerSubsystem::GetModuleFromClass(TSubclassOf<ADtModuleBase> ModuleClass)
+{
+    for (auto& Module : M_Modules)
+    {
+        if (Module->GetClass() == ModuleClass)
+        {
+            return ModuleClass;
+        }
+        break;
+    }
+    return nullptr;
+}
+
 void UDtModuleManagerSubsystem::OnAllModulesLoaded()
 {
     UE_LOG(LogTemp, Log, TEXT("所有模块加载完毕，系统准备就绪。"));
@@ -96,7 +137,7 @@ void UDtModuleManagerSubsystem::OnAllModulesLoaded()
     
     if (UDataTable* LoadedTable = Setting->ModulesDataTable.Get())
     {
-        static const FString ContextString(TEXT("Spawning Modules"));
+        static const FString ContextString(TEXT("Spawning M_Modules"));
         
         TArray<FName> RowNames = LoadedTable->GetRowNames();
         
@@ -107,7 +148,7 @@ void UDtModuleManagerSubsystem::OnAllModulesLoaded()
             {
                 TSubclassOf<ADtModuleBase> ModuleClass = RowData->Module.Get();
 
-                Modules.Add(temWorld->SpawnActor<ADtModuleBase>(ModuleClass));
+                M_Modules.Add(temWorld->SpawnActor<ADtModuleBase>(ModuleClass));
                 
                 UE_LOG(LogTemp, Log, TEXT("Table Module: %s 已加载"), *ModuleClass->GetName());
             }

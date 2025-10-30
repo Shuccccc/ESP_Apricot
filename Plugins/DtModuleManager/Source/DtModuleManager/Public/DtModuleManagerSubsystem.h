@@ -19,16 +19,26 @@ class DTMODULEMANAGER_API UDtModuleManagerSubsystem : public UGameInstanceSubsys
 
 public:
 
+	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
+	
+	void OnWorldLoaded(UWorld* NewWorld);
 	void LoadModules();
 
 
+	UFUNCTION(BlueprintCallable , Category = "ModuleManager",meta=(DeterminesOutputType = "ModuleClass"))
+	TSubclassOf<ADtModuleBase> GetModuleFromClass(TSubclassOf<ADtModuleBase> ModuleClass);
+	
 
 private:
 
-	void OnAllModulesLoaded();
 
-	
 	TArray<TWeakObjectPtr<UDtModuleToolBase>> CoreModules;
 
-	TArray<TWeakObjectPtr<ADtModuleBase>> Modules; 
+	TArray<TWeakObjectPtr<ADtModuleBase>> M_Modules; 	
+	void OnAllModulesLoaded();
+	
+	FDelegateHandle OnWorldLoadedDelegateHandle;
+	
+	
+
 };
